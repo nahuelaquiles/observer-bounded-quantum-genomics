@@ -116,8 +116,8 @@ def make_figure1():
     # Panel C: Universal Sub-Thermal Coherent Wave No-Go Bound
     axC = fig.add_subplot(gs[1, 0])
     E_grid = wf_df["E0_V_per_m"].values
-    axC.loglog(E_grid, np.maximum(wf_df["thermo_ceiling_dmu_over_mu"].values, 1e-36), color=COL_NAVY, lw=2.0, label=r"Static Kubo ceiling $2\lambda / (k_B T)$")
-    axC.loglog(E_grid, np.maximum(wf_df["dc_gibbs_dmu_over_mu"].values, 1e-36), color=COL_TEAL, ls="--", lw=1.7, label="Exact DC Gibbs shift")
+    axC.loglog(E_grid, np.maximum(wf_df["thermo_ceiling_dmu_over_mu"].values, 1e-36), color=COL_NAVY, lw=2.0, label=r"Static Kubo reference $2\lambda / (k_B T)$")
+    axC.loglog(E_grid, np.maximum(wf_df["dc_gibbs_dmu_over_mu"].values, 1e-36), color=COL_TEAL, ls="--", lw=1.7, label="DC Gibbs excited-state population")
     axC.loglog(E_grid, np.maximum(wf_df["drazin_floquet_subgap_dmu_over_mu"].values, 1e-36), color=COL_PURPLE, lw=2.1,
                label=r"Fixed-bath Floquet Drazin ($\Pi_{E_1(0)}$, $\omega \ll g$)")
     axC.loglog(E_grid, np.maximum(wf_df["drazin_floquet_thz_dmu_over_mu"].values, 1e-36), color=COL_AMBER, ls=":", lw=1.8,
@@ -131,7 +131,7 @@ def make_figure1():
     m50_exp = int(np.floor(np.log10(m50)))
     m50_man = m50 / (10.0 ** m50_exp)
     axC.axhline(m50, color=COL_CRIMSON, ls=(0, (5, 2)), lw=1.6,
-                label=rf"50 mK thermal floor (${m50_man:.2f}\times 10^{{{m50_exp}}}$)")
+                label=rf"50 mK Arrhenius reference (${m50_man:.2f}\times 10^{{{m50_exp}}}$)")
     base_pt = m1["ambient_subgap_1uVm_reference"]
     fl1 = float(base_pt["drazin_floquet_subgap_dmu_over_mu"])
     fl1_exp = int(np.floor(np.log10(fl1)))
@@ -144,8 +144,8 @@ def make_figure1():
     axC.scatter([1e-6], [kms1], color="#2874A6", marker="D", s=44, zorder=6, edgecolor="black", lw=0.7,
                 label=rf"$1\ \mu\mathrm{{V/m}}$ KMS eigen (${kms1_man:.2f}\times 10^{{{kms1_exp}}}$)")
     axC.set_xlabel(r"Non-ionizing electric field amplitude $E_0$ ($\mathrm{V\,m^{-1}}$)")
-    axC.set_ylabel(r"Fractional mutation-hazard shift $|\Delta\mu / \mu|$")
-    axC.set_title("C   Universal Sub-Thermal Wave No-Go Bound", loc="left")
+    axC.set_ylabel(r"Fractional readout shift $|\Delta\mu / \mu|$")
+    axC.set_title("C   Three-State G:C Weak-Field Response", loc="left")
     axC.set_ylim(1e-35, 1e3)
     axC.grid(True, which="major", alpha=0.22, lw=0.6)
     axC.legend(loc="upper left", frameon=True, facecolor="white", framealpha=0.92, fontsize=6.4)

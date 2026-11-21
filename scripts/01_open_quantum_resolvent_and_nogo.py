@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """Module 1: Open-Quantum Liouvillian, Mori-Zwanzig Resolvent Projection,
-Accessible Moment Annihilation, Universal Sub-Thermal Coherent Wave No-Go Bound,
+Accessible Moment Annihilation, Three-State Weak-Field Response,
 and Guanine Radical-Cation Hole-Sink Trapping.
 
 Establishes exact Kubo-Martin-Schwinger (KMS) detailed balance on solvated
 Watson-Crick <-> rare tautomer / anionic base pairs at T = 310.15 K, proves
-short-time accessible derivative annihilation through quadratic order, derives
-a frequency-general sub-thermal electromagnetic perturbation ceiling across
-non-ionizing fields (hbar*omega, lambda << k_B*T), and quantifies duplex
+short-time accessible derivative annihilation through quadratic order, computes
+model-dependent weak-field population shifts, and estimates duplex
 oligo-guanine (G_1..G_5) HOMO hole-sink capture.
 """
 
@@ -225,11 +224,8 @@ def verify_resolvent_and_moment_annihilation():
 
 
 def compute_weak_field_nogo_curves(spectral_gap_s_inv):
-    """Universal sub-thermal electromagnetic perturbation bound across E_0 in [10^-9, 10^5] V/m
-    for static (DC), universal sub-gap AC waves (omega << g_PP: Hz-GHz), and near-gap 1.59 THz
-    (1.0e13 rad/s) waves, including exact Drazin Floquet-Lindblad Eq. (S2) and adiabatic KMS
-    second-order evaluation."""
-    _, evals0, evecs0, _, L0, _ = build_basepair_open_system()
+    """DC and cycle-averaged AC responses of the three-state G:C model."""
+    H0, evals0, evecs0, _, L0, _ = build_basepair_open_system()
     q_idx = [0, 4, 8]
     p_idx = [1, 2, 3, 5, 6, 7]
     L_eff_0 = np.real(L0[np.ix_(q_idx, q_idx)] - L0[np.ix_(q_idx, p_idx)] @ inv(L0[np.ix_(p_idx, p_idx)]) @ L0[np.ix_(p_idx, q_idx)])
@@ -241,6 +237,7 @@ def compute_weak_field_nogo_curves(spectral_gap_s_inv):
     rho_beta = sum(p_gibbs0[k] * (evecs0[:, k:k+1] @ evecs0[:, k:k+1].conj().T) for k in range(3))
     vec_beta = rho_beta.reshape(-1, order="F")
     proj_e1 = evecs0[:, 1:2] @ evecs0[:, 1:2].conj().T
+    p_bare_0 = float(rho_beta[1, 1].real)
 
     # Exact Drazin pseudoinverse L0^+ on trace-zero subspace
     trace_bra = np.array([[1, 0, 0, 0, 1, 0, 0, 0, 1]], dtype=complex)
@@ -253,18 +250,18 @@ def compute_weak_field_nogo_curves(spectral_gap_s_inv):
     Lv_unit = liouvillian_from_ham_and_jumps(V_unit, [])
     rhs_unit = Lv_unit @ vec_beta
 
-    def exact_drazin_unit_ratio(omega_rad_s):
+    def drazin_unit_ratios(omega_rad_s):
         A = np.linalg.solve(1j * omega_rad_s * np.eye(9) - L0_aug, rhs_unit)
         B = np.linalg.solve(-1j * omega_rad_s * np.eye(9) - L0_aug, rhs_unit)
         rho2_unit = (-0.25 * (L0_plus @ (Lv_unit @ (A + B)))).reshape((3, 3), order="F")
-        return float(abs(np.real(np.trace(proj_e1 @ rho2_unit))) / p1_gibbs_0)
+        fixed_eigen = float(abs(np.trace(proj_e1 @ rho2_unit).real) / p1_gibbs_0)
+        fixed_bare = float(abs(rho2_unit[1, 1].real) / p_bare_0)
+        return fixed_eigen, fixed_bare
 
-    drazin_unit_subgap = exact_drazin_unit_ratio(OMEGA_SUBTHERMAL_LOW)
-    drazin_unit_thz = exact_drazin_unit_ratio(OMEGA_THZ_NEAR_GAP)
+    drazin_unit_subgap, drazin_bare_subgap = drazin_unit_ratios(OMEGA_SUBTHERMAL_LOW)
+    drazin_unit_thz, drazin_bare_thz = drazin_unit_ratios(OMEGA_THZ_NEAR_GAP)
 
-    # Exact adiabatic KMS second-order curvature:
-    # (a) Instantaneous eigenstate Boltzmann population |E_1(eps)><E_1(eps)|
-    # (b) Fixed unperturbed projector Pi_{E_1(0)} = |E_1(0)><E_1(0)| applied to rho_beta(H(eps))
+    # Central differences for the three adiabatic readouts.
     eps_fd = 1.0e-6
     H_plus = np.array([[0.0, J_TUNNEL_EV, J_ION_EV], [J_TUNNEL_EV, DELTA_G_TAUT_EV - eps_fd, 0.003], [J_ION_EV, 0.003, DELTA_G_ION_EV]], dtype=complex)
     H_minus = np.array([[0.0, J_TUNNEL_EV, J_ION_EV], [J_TUNNEL_EV, DELTA_G_TAUT_EV + eps_fd, 0.003], [J_ION_EV, 0.003, DELTA_G_ION_EV]], dtype=complex)
@@ -279,6 +276,9 @@ def compute_weak_field_nogo_curves(spectral_gap_s_inv):
     p1_fixed_p = float(np.real(np.trace(proj_e1 @ rho_beta_p)))
     p1_fixed_m = float(np.real(np.trace(proj_e1 @ rho_beta_m)))
     adiabatic_fixed_proj_unit_coeff = float(abs(0.25 * (p1_fixed_p + p1_fixed_m - 2.0 * p1_gibbs_0) / ((eps_fd ** 2) * p1_gibbs_0)))
+    adiabatic_bare_unit_coeff = float(
+        abs((rho_beta_p[1, 1] + rho_beta_m[1, 1]).real - 2 * p_bare_0) / (4 * eps_fd**2 * p_bare_0)
+    )
 
     N_MUT_BASELINE_COHORT = 1.0e5
     delta_T_K = 0.05
@@ -289,7 +289,7 @@ def compute_weak_field_nogo_curves(spectral_gap_s_inv):
     for E0 in e_fields:
         # Pure proton transfer dipole coupling lambda = e * a * E0 (in eV, with a = 1.0 Angstrom)
         lam_ev = E0 * LENGTH_A_M
-        thermo_bound = 2.0 * lam_ev / KBT_EV  # Theorem 2 Eq. (5) static Kubo ceiling
+        thermo_bound = 2.0 * lam_ev / KBT_EV  # Reference scale for the eigenstate populations.
         lam_freq = lam_ev / HBAR_EV_S
 
         # Coherence-sector Lorentzian envelope 0.5 * (lambda / (hbar * sqrt(g_PP^2 + omega^2)))^2
@@ -302,12 +302,15 @@ def compute_weak_field_nogo_curves(spectral_gap_s_inv):
         adiabatic_ac = (lam_ev ** 2) * adiabatic_unit_coeff
         adiabatic_fixed_proj_ac = (lam_ev ** 2) * adiabatic_fixed_proj_unit_coeff
 
-        # Static DC Gibbs equilibrium shift |dp_1 / p_1|
-        dH = np.diag([0.0, -min(lam_ev, 0.25), 0.0]).astype(complex)
-        _, evals_dc, _, _, _, _ = build_basepair_open_system(dH)
-        bdc = np.exp(-(evals_dc - evals_dc[0]) / KBT_EV)
-        p1_dc = float(bdc[1] / np.sum(bdc))
-        dc_rel_shift = abs(p1_dc - p1_gibbs_0) / p1_gibbs_0
+        # Project the perturbed eigenvalue equation onto the unperturbed eigenvectors.
+        # These three states stay nondegenerate and their paired overlaps stay nonzero over the scan.
+        _, evec_dc = np.linalg.eigh(H0 + lam_ev * V_unit)
+        overlaps = np.sum(evecs0.conj() * evec_dc, axis=0)
+        matrix_elements = np.sum(evecs0.conj() * (V_unit @ evec_dc), axis=0)
+        delta_e = lam_ev * (matrix_elements / overlaps).real
+        weight_change = np.expm1(-delta_e / KBT_EV)
+        normalization_change = float(p_gibbs0 @ weight_change)
+        dc_rel_shift = abs(weight_change[1] - normalization_change) / (1 + normalization_change)
 
         snr_ac = np.sqrt(N_MUT_BASELINE_COHORT) * ac_subgap_rectified
         snr_drazin = np.sqrt(N_MUT_BASELINE_COHORT) * drazin_subgap
@@ -323,8 +326,11 @@ def compute_weak_field_nogo_curves(spectral_gap_s_inv):
             "ac_thz_rectified_dmu_over_mu": float(ac_thz_rectified),
             "drazin_floquet_subgap_dmu_over_mu": float(drazin_subgap),
             "drazin_floquet_thz_dmu_over_mu": float(drazin_thz),
+            "drazin_floquet_subgap_bare_tautomer_dmu_over_mu": float(lam_ev**2 * drazin_bare_subgap),
+            "drazin_floquet_thz_bare_tautomer_dmu_over_mu": float(lam_ev**2 * drazin_bare_thz),
             "adiabatic_kms_ac_dmu_over_mu": float(adiabatic_ac),
             "adiabatic_kms_fixed_proj_dmu_over_mu": float(adiabatic_fixed_proj_ac),
+            "adiabatic_kms_bare_tautomer_dmu_over_mu": float(lam_ev**2 * adiabatic_bare_unit_coeff),
             "metabolic_thermal_floor_50mK": float(metabolic_fractional_noise),
             "cohort_poisson_snr_ac_subgap": float(snr_ac),
             "cohort_poisson_snr_drazin_floquet": float(snr_drazin),
@@ -444,6 +450,13 @@ def main():
         "resolvent_error_at_1ps": next(r["op_norm_error"] for r in res_proj["resolvent_curve"] if r["time_s"] >= 1e-12),
         "resolvent_error_at_1ns": next(r["op_norm_error"] for r in res_proj["resolvent_curve"] if r["time_s"] >= 1e-9),
         "ambient_subgap_1uVm_reference": e_ref_row,
+        "weak_field_readouts": {
+            "dc_gibbs_dmu_over_mu": "Instantaneous excited-eigenstate population",
+            "drazin_floquet_subgap_dmu_over_mu": "Fixed unperturbed excited-eigenstate projector",
+            "adiabatic_kms_fixed_proj_dmu_over_mu": "Fixed unperturbed excited-eigenstate projector",
+            "adiabatic_kms_ac_dmu_over_mu": "Instantaneous excited-eigenstate population",
+            "bare_tautomer": "Fixed projector onto the bare chemical tautomer with its own baseline population",
+        },
         "approx_crossover_E0_drazin_V_per_m": e_cross_drazin,
         "approx_crossover_E0_adiabatic_kms_V_per_m": e_cross_kms,
         "approx_crossover_E0_adiabatic_kms_fixed_proj_V_per_m": e_cross_kms_fixed,
@@ -459,7 +472,7 @@ def main():
     print(f"Gibbs stationary Frobenius error ||rho_ss - rho_Gibbs||_F = {summary['gibbs_stationary_fro_err']:.3e}; GKSL perturbation Hermiticity err = {summary['perturbation_hermiticity_err']:.3e}")
     print(f"Resolvent error at 1 ps = {summary['resolvent_error_at_1ps']:.3e}, at 1 ns = {summary['resolvent_error_at_1ns']:.3e}")
     print("Moment annihilation norms:", summary["moment_annihilation_norms"])
-    print(f"1 uV/m: lambda = {e_ref_row['lambda_eV']:.3e} eV, Floquet Drazin = {e_ref_row['drazin_floquet_subgap_dmu_over_mu']:.3e}, KMS fixed-proj = {e_ref_row['adiabatic_kms_fixed_proj_dmu_over_mu']:.3e}, KMS inst-eigen = {e_ref_row['adiabatic_kms_ac_dmu_over_mu']:.3e}, Static ceiling = {e_ref_row['thermo_ceiling_dmu_over_mu']:.3e}")
+    print(f"1 uV/m: lambda = {e_ref_row['lambda_eV']:.3e} eV, Floquet Drazin = {e_ref_row['drazin_floquet_subgap_dmu_over_mu']:.3e}, KMS fixed eigenprojector = {e_ref_row['adiabatic_kms_fixed_proj_dmu_over_mu']:.3e}, KMS instantaneous eigenstate = {e_ref_row['adiabatic_kms_ac_dmu_over_mu']:.3e}, static Kubo reference = {e_ref_row['thermo_ceiling_dmu_over_mu']:.3e}")
     print(pd.DataFrame(hole_rows).to_string(index=False))
 
 

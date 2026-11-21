@@ -120,6 +120,9 @@ def run_row1_thermal_vs_ac_validation():
         "endpoint_definition": "Spontaneous base-pair substitutions (87%-96% transitions in mutS) + small indels (~1/5 of BPS rate)",
         "emp_rel_rates_25_28_37C": rel_rates_emp.tolist(),
         "mod1_predicted_rel_rates_25_28_37C": [round(float(x), 5) for x in rel_rates_mod1],
+        "emp_ratio_28C_vs_25C": round(float(rel_rates_emp[1] / rel_rates_emp[0]), 4),
+        "mod1_predicted_ratio_28C_vs_25C": round(float(rel_rates_mod1[1] / rel_rates_mod1[0]), 4),
+        "chu2018_test_sidedness": "one-sided",
         "emp_ratio_37C_vs_28C": round(emp_ratio_37_over_28, 4),
         "mod1_predicted_ratio_37C_vs_28C": round(mod1_ratio_37_over_28, 4),
         "arrhenius_ratio_agreement_pct": round(pct_agreement_37_28, 2),
@@ -596,6 +599,7 @@ def run_row3_single_cell_erasure_validation():
         "sample_accessions": ISLET_24H_SAMPLES,
         "gene_expression_targets": target_genes,
         "clock_genes": clock_genes,
+        "combined_classifier_genes": [target_genes[i] for i in combined_indices],
         "donor_pseudobulk_consistency": donor_stats,
         "mean_detected_clock_gene_zero_erasure": float(det_clock_df["zero_umi_fraction_all"].mean()),
         "nu1_zero_all_clock_genes_cell_fraction": (n_cells_sub - n_detected_clock_cells) / n_cells_sub,
@@ -1282,7 +1286,6 @@ def main():
     r1, r2, r3, r4, r5 = results
     sc_complete = r3["largest_complete_ensemble"]
 
-    ratio_25_28 = r1["emp_rel_rates_25_28_37C"][0] / r1["emp_rel_rates_25_28_37C"][1]
     summary_table = pd.DataFrame([
         {
             "table6_row": "Row 1",
@@ -1290,7 +1293,8 @@ def main():
             "wetlab_cohort_accession": "Chu et al. 2018 (E. coli REL606 mutS WGS MA at 25, 28, 37 C; BPS + small indels)",
             "sample_size_units": "n=20 MA lines/temperature (60 lines total; published one-sided tests)",
             "key_empirical_metric": (
-                f"25 vs 28 C null (ratio {ratio_25_28:.3f}, Padj={r1['chu2018_25_vs_28C_padj']}); 37 vs 28 C = {r1['emp_ratio_37C_vs_28C']:.3f}x "
+                f"28 vs 25 C = {r1['emp_ratio_28C_vs_25C']:.3f}x observed and {r1['mod1_predicted_ratio_28C_vs_25C']:.3f}x modeled "
+                f"(Padj={r1['chu2018_25_vs_28C_padj']}); 37 vs 28 C = {r1['emp_ratio_37C_vs_28C']:.3f}x "
                 f"(Padj={r1['chu2018_28_vs_37C_padj']:.0e}) vs Mod. 1 a priori {r1['mod1_predicted_ratio_37C_vs_28C']:.3f}x ({r1['arrhenius_ratio_agreement_pct']:.1f}% match); "
                 f"Floquet/KMS <=10 V/m theoretical shift <1.3e-12"
             ),
@@ -1317,7 +1321,8 @@ def main():
                 f"nu=1 zero-UMI fraction for retained clock genes = {100*r3['mean_detected_clock_gene_zero_erasure']:.2f}%; "
                 f"clock AUC={r3['nu1_clock10_auc']:.3f}. At nu={sc_complete['ensemble_cells_nu']}, "
                 f"clock AUC={sc_complete['clock10_roc_auc']:.3f} (LODO={sc_complete['clock10_lodo_roc_auc']:.3f}), "
-                f"combined AUC={sc_complete['combined_clock_redox_roc_auc']:.3f} (LODO={sc_complete['combined_lodo_roc_auc']:.3f})."
+                f"combined {len(r3['combined_classifier_genes'])}-gene AUC={sc_complete['combined_clock_redox_roc_auc']:.3f} "
+                f"(LODO={sc_complete['combined_lodo_roc_auc']:.3f})."
             ),
             "resolution_status": "Exploratory analysis across three donors at one timepoint",
         },

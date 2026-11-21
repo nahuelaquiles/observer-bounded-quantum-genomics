@@ -72,6 +72,7 @@ def make_figure6():
     axA1.plot(t_grid, mod1_curve, color=COL_NAVY, lw=2.1, label="Mod. 1 KMS (0.42 eV)")
     emp_t = np.array([25.0, 28.0, 37.0])
     emp_y = np.array(r1["emp_rel_rates_25_28_37C"])
+    model_y = r1["mod1_predicted_rel_rates_25_28_37C"]
     axA1.plot(
         emp_t, emp_y, "o", color=COL_CRIMSON,
         markersize=6.5, markeredgecolor="white", markeredgewidth=0.7,
@@ -80,7 +81,9 @@ def make_figure6():
     axA1.axhline(1.0, color=COL_SLATE, ls=":", lw=0.8, alpha=0.6)
     axA1.text(
         24.0, 0.96,
-        f"28→37 °C: {r1['emp_ratio_37C_vs_28C']:.2f}× obs\nvs {r1['mod1_predicted_ratio_37C_vs_28C']:.2f}× pred\n({r1['arrhenius_ratio_agreement_pct']:.1f}% match, P = {r1['chu2018_28_vs_37C_padj']:.0e})",
+        "Observed and modeled ratios\n"
+        f"25→28 °C  {emp_y[1] / emp_y[0]:.3f}× and {model_y[1] / model_y[0]:.3f}×\n"
+        f"28→37 °C  {r1['emp_ratio_37C_vs_28C']:.3f}× and {r1['mod1_predicted_ratio_37C_vs_28C']:.3f}×",
         fontsize=6.7, color=COL_NAVY, fontweight="bold", va="top",
         bbox=dict(boxstyle="round,pad=0.24", fc="#F4F6F7", ec="#BDC3C7", lw=0.7),
     )
@@ -147,6 +150,9 @@ def make_figure6():
 
     r3 = m6["row3_single_cell_erasure_and_scaling"]
     has_disjoint_pools = "largest_complete_ensemble" in r3
+    combined_label = "Combined clock and BER/redox ROC-AUC"
+    if "combined_classifier_genes" in r3:
+        combined_label = f"{len(r3['combined_classifier_genes'])}-gene combined-panel ROC-AUC"
     nu = sc_df["ensemble_cells_nu"].values
     axB.axhline(0.50, color=COL_SLATE, ls="--", lw=0.9, alpha=0.7)
     l1 = axB.plot(
@@ -155,7 +161,7 @@ def make_figure6():
     )
     l2 = axB.plot(
         nu, sc_df["combined_clock_redox_roc_auc"], color=COL_TEAL, lw=2.1, marker="s", markersize=4.8,
-        label="Combined clock + BER/redox ROC-AUC", zorder=4,
+        label=combined_label, zorder=4,
     )
     l3 = axB_r.plot(
         nu, 100.0 * sc_df["all_10_clock_genes_zero_frac"], color=COL_CRIMSON, lw=1.9, ls="-.", marker="^", markersize=4.8,
