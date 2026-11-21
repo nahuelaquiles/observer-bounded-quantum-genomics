@@ -59,14 +59,16 @@ All deterministic local Python modules (`01`–`03`, `05`–`09`) ran to exit co
 
 ## 5. Final Verified Submission Deliverables (`data/pipeline_execution_audit.json`)
 
+Code, derived CSV/JSON datasets, and vector figures are also archived on GitHub at `https://github.com/nahuelaquiles/observer-bounded-quantum-genomics` (commit `930b3b1e0213`, `58` files).
+
 | Deliverable File | Pages | Size (Bytes / MB) | SHA-256 Prefix |
 | :--- | :---: | :---: | :--- |
-| `observer_bounded_dna_combined_submission.pdf` | 30 | `5,820,599` (`5.82 MB`) | `145d4a574574b14c` |
-| `observer_bounded_dna_evolution.pdf` | 25 | `5,146,211` (`5.15 MB`) | `adaa93ad25392a7a` |
+| `observer_bounded_dna_combined_submission.pdf` | 30 | `5,820,880` (`5.82 MB`) | `f4092cb44c66ffe4` |
+| `observer_bounded_dna_evolution.pdf` | 25 | `5,146,428` (`5.15 MB`) | `39deaef781305cd5` |
 | `observer_bounded_dna_supplementary_materials.pdf` | 5 | `510,913` (`0.51 MB`) | `402b1134eb647fc7` |
-| `cover_letter_science_advances.pdf` | 2 | `209,252` (`0.21 MB`) | `b1892fe6538fcfb4` |
-| `science_advances_latex_source.zip` | — | `4,878,689` (`4.88 MB`) | `b7e0a1fbc78cca99` |
-| `observer_bounded_dna_evolution.tex` | — | `123,173` | `4636cfeced94e879` |
+| `cover_letter_science_advances.pdf` | 2 | `210,984` (`0.21 MB`) | `41007ad44896e6ad` |
+| `science_advances_latex_source.zip` | — | `4,878,723` (`4.88 MB`) | `8dbc1c074e1f4973` |
+| `observer_bounded_dna_evolution.tex` | — | `123,257` | `c47a8148f64bab5f` |
 | `observer_bounded_dna_supplementary_materials.tex` | — | `22,589` | `b91db215e26d1991` |
-| `cover_letter_science_advances.tex` | — | `6,513` | `f80fdd381392108b` |
+| `cover_letter_science_advances.tex` | — | `6,636` | `b85b70040b0dab60` |
 | `references.bib` | — | `22,385` | `d21f674ae3a2292e` |

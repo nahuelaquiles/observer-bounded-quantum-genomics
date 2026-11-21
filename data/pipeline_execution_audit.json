@@ -329,12 +329,12 @@
   ],
   "module6_final_artifacts": {
     "observer_bounded_dna_evolution.tex": {
-      "bytes": 123173,
-      "sha256": "4636cfeced94e879c6fabb87ef36f03aabd1317f3bc34e37aa04e169c6b5185f"
+      "bytes": 123257,
+      "sha256": "c47a8148f64bab5fd0f20d36f181ce45e6af190dfb98f12e4ed92a22a209c997"
     },
     "observer_bounded_dna_evolution.pdf": {
-      "bytes": 5146211,
-      "sha256": "adaa93ad25392a7a0da3620b86ea70d5db8212c210fbe86850dd8e34f122cf34"
+      "bytes": 5146428,
+      "sha256": "39deaef781305cd5fdd2ce118a0d419fc47ff3c5da7d049df321df0351798eaa"
     },
     "references.bib": {
       "bytes": 22385,
@@ -405,12 +405,12 @@
   },
   "submission_deliverables": {
     "observer_bounded_dna_evolution.tex": {
-      "bytes": 123173,
-      "sha256": "4636cfeced94e879c6fabb87ef36f03aabd1317f3bc34e37aa04e169c6b5185f"
+      "bytes": 123257,
+      "sha256": "c47a8148f64bab5fd0f20d36f181ce45e6af190dfb98f12e4ed92a22a209c997"
     },
     "observer_bounded_dna_evolution.pdf": {
-      "bytes": 5146211,
-      "sha256": "adaa93ad25392a7a0da3620b86ea70d5db8212c210fbe86850dd8e34f122cf34",
+      "bytes": 5146428,
+      "sha256": "39deaef781305cd5fdd2ce118a0d419fc47ff3c5da7d049df321df0351798eaa",
       "pages": 25
     },
     "observer_bounded_dna_supplementary_materials.tex": {
@@ -423,17 +423,17 @@
       "pages": 5
     },
     "observer_bounded_dna_combined_submission.pdf": {
-      "bytes": 5820599,
-      "sha256": "145d4a574574b14c3ae2a85673f724d9f1534d52fe6053cbe30e8f5c4a8901d5",
+      "bytes": 5820880,
+      "sha256": "f4092cb44c66ffe4534f9c1ee78207609598cbf8c773e2be0614612bcad36c5c",
       "pages": 30
     },
     "cover_letter_science_advances.tex": {
-      "bytes": 6513,
-      "sha256": "f80fdd381392108b71767f0c7c99d28163abe6ec6c7ac7161a3de24b8af77ec8"
+      "bytes": 6636,
+      "sha256": "b85b70040b0dab608d22801a0a99308e270b7bdee2e700fe4abd917cc93092a2"
     },
     "cover_letter_science_advances.pdf": {
-      "bytes": 209252,
-      "sha256": "b1892fe6538fcfb43dd1d4bc594a5782b478044243b122819e76e4646a1c5b2a",
+      "bytes": 210984,
+      "sha256": "41007ad44896e6ad62d10ac35cb49bf98f9e90aab005204d70f26922162ea910",
       "pages": 2
     },
     "references.bib": {
@@ -441,9 +441,14 @@
       "sha256": "d21f674ae3a2292e1bca3039b7a8e20e71f7c1da8fed481ab39a34e9a8d16e1c"
     },
     "science_advances_latex_source.zip": {
-      "bytes": 4878689,
-      "sha256": "b7e0a1fbc78cca99433c7c3b5f017e70a06a9f150dcd49d08b6c392a03497cd6"
+      "bytes": 4878723,
+      "sha256": "8dbc1c074e1f49737bf7a51c376fefd176261a5a7403b973254bf97ba416bb33"
     }
   },
-  "audit_timestamp_utc": "2026-11-21T03:45:00Z"
+  "audit_timestamp_utc": "2026-11-21T12:55:00Z",
+  "github_repository": {
+    "url": "https://github.com/nahuelaquiles/observer-bounded-quantum-genomics",
+    "commit_sha": "930b3b1e0213",
+    "uploaded_files_count": 58
+  }
 }
