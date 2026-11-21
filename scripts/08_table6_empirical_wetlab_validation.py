@@ -16,14 +16,11 @@ Datasets & Structural Accessions Analyzed:
   - Row 2 (Theorem 2 — Nucleosomal SHL Rotational Gate on Human OGG1):
       * RCSB PDB 8VWT (hOGG1-NCP SHL -6, 3.3 A), 8VWV (hOGG1-NCP SHL +4, 3.6 A),
         9EOZ (hOGG1-K249Q-NCP SHL 6.0, 3.1 A), and 1KX5 (canonical 147-bp NCP,
-        1.9 A): active-site heavy-atom validation via validate_structure.py plus
-        121-step rigid-body Kabsch rotational clash scan across 0-360 deg minor-
-        groove phase.
+        1.9 A): native heavy-atom contacts and a rigid-body rotational clash scan
+        across the interior base pairs of both DNA strands in 1KX5.
   - Row 3 (Proposition 1 & Theorem 2 — Single-Cell Erasure vs. Ensemble Scaling):
-      * NCBI GEO GSE218316 primary human pancreatic islet scRNA-seq (n = 4,298
-        single cells across 3 human donors D1-D3: 2,201 Untreated vs. 2,097 H2O2
-        cells) + NCBI GEO GDS3342 human monocyte oxidative stress microarray
-        (n = 24 bulk ensembles).
+      * NCBI GEO GSE218316 primary human pancreatic islet scRNA-seq, restricted
+        to the 24 h timepoint shared by all three donors.
   - Row 4 (Module 4 — Hole-Sink Cis Vulnerability in Human HepG2 MPRA):
       * NCBI GEO GSE126550 (Kircher et al. 2019 Nat. Commun. 10:3583) saturation
         mutagenesis MPRA in living human HepG2 cells across LDLR, LDLR.2, F9,
@@ -36,16 +33,15 @@ Datasets & Structural Accessions Analyzed:
         helicity-flip irradiation.
 """
 
+import argparse
 import os
 import re
 import json
 import gzip
 import math
 import time
-import socket
 import tarfile
 import subprocess
-import warnings
 from collections import defaultdict, Counter
 
 import numpy as np
@@ -57,14 +53,10 @@ from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import StratifiedKFold
 from Bio.PDB.MMCIFParser import MMCIFParser
 
-warnings.filterwarnings("ignore")
-socket.setdefaulttimeout(30)
+from analysis_paths import DATA_DIR, RAW_DIR
 
-WORKSPACE = "/home/sandbox/workspace"
-PAPER_DIR = os.path.join(WORKSPACE, "observer_bounded_dna_paper")
-DATA_DIR = os.path.join(PAPER_DIR, "data")
-SCRATCH_DIR = os.path.join(WORKSPACE, "scratch", "table6_run")
-DL_DIR = os.path.join(WORKSPACE, "downloads")
+SCRATCH_DIR = RAW_DIR / "table6"
+DL_DIR = SCRATCH_DIR / "downloads"
 os.makedirs(DATA_DIR, exist_ok=True)
 
 KB_EV_PER_K = 8.617333262145e-5
@@ -79,8 +71,7 @@ def run_row1_thermal_vs_ac_validation():
     # Empirical WGS MA rates in E. coli B REL606 mutS from Chu et al. (2018),
     # BMC Evolutionary Biology 18:126 (DOI: 10.1186/s12862-018-1252-8):
     # 20 independent MA lines per temperature (60 sequenced MA lines total; Welch two-sample df = 29, 32, 33).
-    # Published overall spontaneous mutation-rate comparisons include base-pair substitutions (87%-96% transitions)
-    # plus small indels (~1/5 of BPS rate):
+    # Published one-sided tests for spontaneous base-pair substitutions plus small indels.
     #   25 C vs 37 C: 37% lower at 25 C (ratio 0.63), t = -5.26, df = 32, Padj = 7e-6
     #   28 C vs 37 C: 38% lower at 28 C (ratio 0.62), t = -7.12, df = 33, Padj = 6e-8
     #   25 C vs 28 C: ratio 0.63/0.62 = 1.016, t = 0.08, df = 29, Padj = 0.469 (null over 3 K)
@@ -191,42 +182,15 @@ def get_heavy_atoms_unpacked(chain_list):
 
 def run_row2_nucleosome_ogg1_validation():
     t0 = time.time()
-    val_script = "/home/sandbox/skills/pdb-structural-validation/scripts/validate_structure.py"
     pdb_dir = os.path.join(SCRATCH_DIR, "pdb")
-    val_outputs = {}
-
-    # 1. Run official pdb-structural-validation CLI on 8VWT, 8VWV, 9EOZ
-    specs = [
-        ("8VWT", "SHL_-6_outward_hOGG1", "K:249,K:268,K:270,K:319,K:253,K:42", "J:13"),
-        ("8VWV", "SHL_+4_occluded_hOGG1", "K:249,K:268,K:270,K:319,K:253,K:42", "I:34"),
-        ("9EOZ", "SHL_+6_trapped_K249Q", "A:249,A:268,A:270,A:319,A:253,A:42", "Z:137"),
-    ]
-    for pid, label, res_spec, target_spec in specs:
-        out_json = os.path.join(SCRATCH_DIR, f"pdb_val_{pid}.json")
-        cmd = [
-            "uv", "run", val_script,
-            "--mmcif", os.path.join(pdb_dir, f"{pid}.cif"),
-            "--residues", res_spec,
-            "--target", target_spec,
-            "--heavy-atoms",
-            "--check", "distance",
-            "--output", out_json,
-        ]
-        res = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
-        if os.path.exists(out_json):
-            with open(out_json) as f:
-                val_outputs[pid] = json.load(f)
-        else:
-            val_outputs[pid] = {"stdout": res.stdout, "stderr": res.stderr}
-
     parser = MMCIFParser(QUIET=True)
 
-    # 2. Measure native hOGG1-vs-histone heavy-atom clashes in cryo-EM 8VWT, 8VWV, 9EOZ
+    # Measure native hOGG1-vs-histone heavy-atom clashes in 8VWT, 8VWV and 9EOZ.
     cryo_native_summary = {}
-    for pid, ogg_ch, hist_chs, dna_chs, lesion_ch, lesion_res in [
-        ("8VWT", "K", ["A", "B", "C", "D", "E", "F", "G", "H"], ["I", "J"], "J", 13),
-        ("8VWV", "K", ["A", "B", "C", "D", "E", "F", "G", "H"], ["I", "J"], "I", 34),
-        ("9EOZ", "A", ["B", "E", "F", "G", "H", "K", "L", "M"], ["Y", "Z"], "Z", 137),
+    for pid, ogg_ch, hist_chs in [
+        ("8VWT", "K", ["A", "B", "C", "D", "E", "F", "G", "H"]),
+        ("8VWV", "K", ["A", "B", "C", "D", "E", "F", "G", "H"]),
+        ("9EOZ", "A", ["B", "E", "F", "G", "H", "K", "L", "M"]),
     ]:
         st = parser.get_structure(pid, os.path.join(pdb_dir, f"{pid}.cif"))[0]
         ogg_coords, _, ogg_alt, ogg_occ_min, ogg_occ_max = get_heavy_atoms_unpacked([st[ogg_ch]])
@@ -243,7 +207,7 @@ def run_row2_nucleosome_ogg1_validation():
             "contacts_lt_3p5A": int(np.sum(dists < 3.5)),
         }
 
-    # 3. Rigid-body Kabsch superposition of the active hOGG1 recognition complex (from 8VWT)
+    # Rigid-body Kabsch superposition of the active hOGG1 recognition complex (from 8VWT)
     # across all interior base-pair steps of canonical 1.9 A NCP (1KX5)
     st_8vwt = parser.get_structure("8VWT", os.path.join(pdb_dir, "8VWT.cif"))[0]
     ogg_template_coords, _, _, _, _ = get_heavy_atoms_unpacked([st_8vwt["K"]])
@@ -367,13 +331,6 @@ def run_row2_nucleosome_ogg1_validation():
     intermediate_df = scan_df[(scan_df["inward_angle_deg"] > 60.0) & (scan_df["inward_angle_deg"] < 120.0)]
     inward_df = scan_df[scan_df["inward_angle_deg"] >= 120.0]
 
-    mwu_clashes = stats.mannwhitneyu(
-        inward_df["severe_clashes_lt_2p5A"], outward_df["severe_clashes_lt_2p5A"], alternative="two-sided"
-    )
-    mwu_core_clashes = stats.mannwhitneyu(
-        inward_df["core_clashes_lt_2p5A"], outward_df["core_clashes_lt_2p5A"], alternative="two-sided"
-    )
-
     # Compute exact inward_angle_deg on cryo-EM 8VWT, 8VWV, 9EOZ using the same geometric formula
     cryo_angles = {}
     for pid, ogg_ch, hist_chs, les_ch, les_pos, cmp_ch in [
@@ -408,7 +365,6 @@ def run_row2_nucleosome_ogg1_validation():
 
     return {
         "runtime_s": round(time.time() - t0, 4),
-        "pdb_cli_validation": val_outputs,
         "cryo_em_native_structures": cryo_native_summary,
         "cryo_em_inward_angles_deg": cryo_angles,
         "1kx5_altloc_atoms_checked": int(hist_1kx5_alt),
@@ -423,75 +379,125 @@ def run_row2_nucleosome_ogg1_validation():
         "inward_mean_clashes_2p5A": round(float(inward_df["severe_clashes_lt_2p5A"].mean()), 2),
         "inward_mean_core_clashes_2p5A": round(float(inward_df["core_clashes_lt_2p5A"].mean()), 2),
         "inward_core_nonzero_clash_fraction": round(float((inward_df["core_clashes_lt_2p5A"] > 0).mean()), 4),
-        "mwu_p_inward_vs_outward_clashes": float(mwu_clashes.pvalue),
-        "mwu_p_inward_vs_outward_core_clashes": float(mwu_core_clashes.pvalue),
         "outward_vs_inward_accessibility_ratio": round(acc_ratio, 2),
     }
 
 
 # ==============================================================================
-# ROW 3: SINGLE-CELL ERASURE VS. ENSEMBLE SCALING (GSE218316 + GDS3342)
+# ROW 3: SINGLE-CELL TRANSCRIPT DETECTION AND ENSEMBLE SCALING (GSE218316)
 # ==============================================================================
+def disjoint_ensemble_means(cells, labels, indices, size, rng):
+    """Use each cell at most once per train or test partition at this size."""
+    means = []
+    pooled_labels = []
+    for label in (0, 1):
+        group = indices[labels[indices] == label]
+        n_ensembles = len(group) // size
+        if n_ensembles == 0:
+            return None
+        members = rng.permutation(group)[:n_ensembles * size].reshape(n_ensembles, size)
+        means.append(cells[members].mean(axis=1))
+        pooled_labels.append(np.full(n_ensembles, label, dtype=int))
+    return np.concatenate(means), np.concatenate(pooled_labels)
+
+
+def score_disjoint_ensemble_folds(cells, labels, feature_indices, folds, size, rng):
+    aucs = []
+    test_sizes_by_condition = []
+    for train_indices, test_indices in folds:
+        train = disjoint_ensemble_means(cells, labels, train_indices, size, rng)
+        test = disjoint_ensemble_means(cells, labels, test_indices, size, rng)
+        if train is None or test is None:
+            continue
+        x_train, y_train = train
+        x_test, y_test = test
+        fold_aucs = []
+        for indices in feature_indices:
+            model = LogisticRegression(C=1.0, max_iter=500).fit(x_train[:, indices], y_train)
+            fold_aucs.append(float(roc_auc_score(y_test, model.decision_function(x_test[:, indices]))))
+        aucs.append(fold_aucs)
+        test_sizes_by_condition.append(np.bincount(y_test, minlength=2))
+    mean_auc = np.mean(aucs, axis=0).tolist() if len(aucs) == len(folds) else [None] * len(feature_indices)
+    return mean_auc, np.sum(test_sizes_by_condition, axis=0).tolist() if aucs else [0, 0], len(aucs)
+
+
+ISLET_24H_SAMPLES = {"D1": "GSM6740278", "D2": "GSM6740279", "D3": "GSM6740282"}
+
+
+def load_islet_counts(metadata, target_genes):
+    """Read each donor's matrix against its own Cell Ranger features and barcodes."""
+    raw_dir = SCRATCH_DIR / "gse218316"
+    expression = np.zeros((len(target_genes), len(metadata)), dtype=np.int64)
+    library_sizes = np.zeros(len(metadata), dtype=np.int64)
+    target_index = {gene: idx for idx, gene in enumerate(target_genes)}
+
+    if set(metadata["Donor"]) != set(ISLET_24H_SAMPLES):
+        raise ValueError("Expected all three 24 h donors in GSE218316 metadata")
+
+    for donor, accession in ISLET_24H_SAMPLES.items():
+        stem = f"{accession}_{donor}_24h"
+        with gzip.open(raw_dir / f"{stem}_features.tsv.gz", "rt") as handle:
+            features = [line.rstrip("\n").split("\t") for line in handle]
+        gene_expression = [False] * (len(features) + 1)
+        target_rows = {}
+        for row, (_, gene, feature_type) in enumerate(features, start=1):
+            if feature_type != "Gene Expression":
+                continue
+            gene_expression[row] = True
+            if gene in target_index:
+                if gene in target_rows:
+                    raise ValueError(f"{stem} contains multiple features for {gene}")
+                target_rows[gene] = row
+        if target_rows.keys() != target_index.keys():
+            missing = ", ".join(sorted(target_index.keys() - target_rows.keys()))
+            raise ValueError(f"{stem} is missing expected gene-expression features: {missing}")
+        row_to_target = {row: target_index[gene] for gene, row in target_rows.items()}
+
+        with gzip.open(raw_dir / f"{stem}_barcodes.tsv.gz", "rt") as handle:
+            barcodes = [line.strip().removesuffix("-1") for line in handle]
+        barcode_columns = {barcode: i for i, barcode in enumerate(barcodes, start=1)}
+        donor_meta = metadata.loc[metadata["Donor"].eq(donor), "barcode"]
+        # The series metadata prefixes each barcode with its library ID.
+        donor_barcodes = donor_meta.str.rsplit("_", n=1).str[-1]
+        donor_columns = donor_barcodes.map(barcode_columns)
+        if len(barcode_columns) != len(barcodes) or donor_columns.isna().any() or not donor_columns.is_unique:
+            raise ValueError(f"{stem} barcodes must match uniquely to the series metadata")
+        column_to_cell = dict(zip(donor_columns, donor_meta.index))
+
+        with gzip.open(raw_dir / f"{stem}_matrix.mtx.gz", "rt") as handle:
+            header = next(line for line in handle if not line.startswith("%"))
+            num_rows, num_columns, _ = map(int, header.split())
+            if (num_rows, num_columns) != (len(features), len(barcodes)):
+                raise ValueError(f"{stem} matrix dimensions disagree with its features or barcodes")
+            for record in handle:
+                row, column, count = record.split()
+                cell = column_to_cell.get(int(column))
+                if cell is None:
+                    continue
+                row_index = int(row)
+                if gene_expression[row_index]:
+                    value = int(count)
+                    library_sizes[cell] += value
+                    target = row_to_target.get(row_index)
+                    if target is not None:
+                        expression[target, cell] += value
+    if np.any(library_sizes <= 0):
+        raise ValueError("Every selected islet cell must have gene-expression counts")
+    return expression, library_sizes
+
+
 def run_row3_single_cell_erasure_validation():
     t0 = time.time()
     meta_p = os.path.join(DL_DIR, "GSE218316_metadata_percell.csv.gz")
-    gene_p = os.path.join(SCRATCH_DIR, "gse218316", "GSE218316_filtered_counts_gene.tsv.gz")
-    bc_p = os.path.join(SCRATCH_DIR, "gse218316", "GSE218316_filtered_counts_barcodes.tsv.gz")
-    mtx_p = os.path.join(DL_DIR, "GSE218316_filtered_counts_data.mtx.gz")
-
-    meta_df = pd.read_csv(meta_p)
-    meta_df = meta_df.rename(columns={"Unnamed: 0": "barcode"})
-    with gzip.open(bc_p, "rt") as f:
-        barcodes = [line.strip() for line in f if line.strip()]
-    with gzip.open(gene_p, "rt") as f:
-        genes = [line.strip().split("\t")[0] for line in f if line.strip()]
-
-    bc_to_col = {b: i for i, b in enumerate(barcodes)}
-    sub_meta = meta_df[meta_df["Condition"].isin(["Untreated", "H2O2"])].copy()
-    sub_meta["col_idx"] = sub_meta["barcode"].map(bc_to_col)
-    sub_meta = sub_meta.dropna(subset=["col_idx"]).copy()
-    sub_meta["col_idx"] = sub_meta["col_idx"].astype(int)
-
-    keep_cols = set(sub_meta["col_idx"].tolist())
-    col_remap = {orig_c: new_c for new_c, orig_c in enumerate(sorted(keep_cols))}
-    sub_meta["local_idx"] = sub_meta["col_idx"].map(col_remap)
-    sub_meta = sub_meta.sort_values("local_idx").reset_index(drop=True)
+    meta_df = pd.read_csv(meta_p).rename(columns={"Unnamed: 0": "barcode"})
+    condition_mask = meta_df["Condition"].isin(["Untreated", "H2O2"])
+    sub_meta = meta_df.loc[condition_mask & meta_df["Timepoint"].eq("24h")].reset_index(drop=True)
     n_cells_sub = len(sub_meta)
 
     clock_genes = ["ARNTL", "CLOCK", "CRY1", "CRY2", "PER1", "PER2", "NR1D1", "NR1D2", "DBP", "NPAS2"]
     redox_ber_genes = ["OGG1", "MUTYH", "APEX1", "PARP1", "NFE2L2", "HMOX1", "NQO1", "TXNRD1", "GCLC", "GCLM", "SOD1", "PRDX1"]
     target_genes = clock_genes + redox_ber_genes
-    gene_to_row = {g: idx + 1 for idx, g in enumerate(genes) if g in set(target_genes)}  # 1-based MTX row index
-    row_to_tpos = {r_idx: i for i, (g, r_idx) in enumerate(gene_to_row.items())}
-    ordered_target_genes = [g for g in gene_to_row.keys()]
-
-    absent_below_filter_genes = [g for g in target_genes if g not in gene_to_row]
-    expr_counts = np.zeros((len(ordered_target_genes), n_cells_sub), dtype=np.float32)
-    lib_sizes = np.zeros(n_cells_sub, dtype=np.float64)
-
-    # Stream MatrixMarket gzip file cleanly using C gzip -dc for fast decompression
-    proc_mtx = subprocess.Popen(["gzip", "-dc", mtx_p], stdout=subprocess.PIPE, text=True, bufsize=1048576)
-    header_seen = False
-    for line in proc_mtx.stdout:
-        if line[0] == "%":
-            continue
-        if not header_seen:
-            header_seen = True
-            continue
-        parts = line.split()
-        if len(parts) < 3:
-            continue
-        c_idx = int(parts[1]) - 1
-        loc_c = col_remap.get(c_idx)
-        if loc_c is None:
-            continue
-        val = float(parts[2])
-        lib_sizes[loc_c] += val
-        r_idx = int(parts[0])
-        tpos = row_to_tpos.get(r_idx)
-        if tpos is not None:
-            expr_counts[tpos, loc_c] = val
-    proc_mtx.wait()
+    expr_counts, lib_sizes = load_islet_counts(sub_meta, target_genes)
 
     # Log1p CP10K normalized expression
     cp10k = np.log1p((expr_counts / np.maximum(lib_sizes[None, :], 1.0)) * 1.0e4)
@@ -501,7 +507,7 @@ def run_row3_single_cell_erasure_validation():
 
     # Single-cell erasure diagnostics per gene
     per_gene_erasure = []
-    for gi, gname in enumerate(ordered_target_genes):
+    for gi, gname in enumerate(target_genes):
         raw_g = expr_counts[gi, :]
         z_all = float(np.mean(raw_g == 0))
         z_untr = float(np.mean(raw_g[untreated_mask] == 0))
@@ -511,37 +517,26 @@ def run_row3_single_cell_erasure_validation():
         per_gene_erasure.append({
             "gene": gname,
             "panel": "circadian_clock" if gname in clock_genes else "BER_redox",
-            "status_in_filtered_atlas": "detected_sparse",
+            "status_in_feature_table": "identified_in_all_three_libraries",
             "zero_umi_fraction_all": round(z_all, 5),
             "zero_umi_fraction_untreated": round(z_untr, 5),
             "zero_umi_fraction_H2O2": round(z_h2o2, 5),
             "mean_log1p_cp10k_untreated": round(mean_cp10k_untr, 4),
             "mean_log1p_cp10k_H2O2": round(mean_cp10k_h2o2, 4),
         })
-    for gname in absent_below_filter_genes:
-        per_gene_erasure.append({
-            "gene": gname,
-            "panel": "circadian_clock" if gname in clock_genes else "BER_redox",
-            "status_in_filtered_atlas": "below_min_cell_detection_threshold",
-            "zero_umi_fraction_all": 1.0,
-            "zero_umi_fraction_untreated": 1.0,
-            "zero_umi_fraction_H2O2": 1.0,
-            "mean_log1p_cp10k_untreated": 0.0,
-            "mean_log1p_cp10k_H2O2": 0.0,
-        })
     erasure_df = pd.DataFrame(per_gene_erasure)
 
-    clock_indices = [ordered_target_genes.index(g) for g in clock_genes if g in ordered_target_genes]
-    ber_ox_indices = [ordered_target_genes.index(g) for g in ["OGG1", "MUTYH", "APEX1", "HMOX1", "NQO1", "TXNRD1", "GCLC", "GCLM", "PRDX1"] if g in ordered_target_genes]
-    combined_indices = clock_indices + ber_ox_indices
+    clock_indices = list(range(len(clock_genes)))
+    ber_panel = {"OGG1", "MUTYH", "APEX1", "HMOX1", "NQO1", "TXNRD1", "GCLC", "GCLM", "PRDX1"}
+    combined_indices = clock_indices + [i for i, gene in enumerate(target_genes) if gene in ber_panel]
 
-    # Donor-level independent unit check (n=3 human donors x 2 conditions = 6 independent donor pseudobulks)
+    # Descriptive treatment differences within each donor.
     donor_stats = []
     for d_id, d_df in sub_meta.groupby("Donor"):
-        u_idx = d_df[d_df["Condition"] == "Untreated"]["local_idx"].values
-        h_idx = d_df[d_df["Condition"] == "H2O2"]["local_idx"].values
-        tx_i = ordered_target_genes.index("TXNRD1")
-        hm_i = ordered_target_genes.index("HMOX1")
+        u_idx = d_df.index[d_df["Condition"] == "Untreated"].to_numpy()
+        h_idx = d_df.index[d_df["Condition"] == "H2O2"].to_numpy()
+        tx_i = target_genes.index("TXNRD1")
+        hm_i = target_genes.index("HMOX1")
         donor_stats.append({
             "donor": d_id,
             "n_untreated": int(len(u_idx)),
@@ -550,170 +545,63 @@ def run_row3_single_cell_erasure_validation():
             "HMOX1_delta_log1p_cp10k": round(float(cp10k[hm_i, h_idx].mean() - cp10k[hm_i, u_idx].mean()), 4),
         })
 
-    # Leak-free cell-disjoint 5-fold stratified CV (stratified by Donor x Condition) + LODO CV
     rng = np.random.default_rng(202606)
-    u_pool = np.where(untreated_mask)[0]
-    h_pool = np.where(h2o2_mask)[0]
-    nu_grid = [1, 2, 5, 10, 25, 50, 100, 250, 500, 1000]
+    cells = cp10k.T
+    donors = sub_meta["Donor"].to_numpy()
     strat_key = sub_meta["Donor"].astype(str) + "_" + sub_meta["Condition"].astype(str)
-    skf_cells = StratifiedKFold(n_splits=5, shuffle=True, random_state=2026)
-    donors_arr = sub_meta["Donor"].values
-
-    def build_disjoint_ensembles(feat_idx, cell_indices, nu_sz, n_ens, rng_obj):
-        if nu_sz == 1:
-            return cp10k[np.ix_(feat_idx, cell_indices)].T, y_cond[cell_indices]
-        u_i = cell_indices[y_cond[cell_indices] == 0]
-        h_i = cell_indices[y_cond[cell_indices] == 1]
-        Xu = np.vstack([
-            cp10k[np.ix_(feat_idx, rng_obj.choice(u_i, size=nu_sz, replace=(nu_sz > len(u_i))))].mean(axis=1)
-            for _ in range(n_ens)
-        ])
-        Xh = np.vstack([
-            cp10k[np.ix_(feat_idx, rng_obj.choice(h_i, size=nu_sz, replace=(nu_sz > len(h_i))))].mean(axis=1)
-            for _ in range(n_ens)
-        ])
-        return np.vstack([Xu, Xh]), np.array([0] * n_ens + [1] * n_ens)
+    cell_folds = list(StratifiedKFold(n_splits=5, shuffle=True, random_state=2026).split(cells, strat_key))
+    donor_folds = [(np.flatnonzero(donors != d), np.flatnonzero(donors == d)) for d in np.unique(donors)]
+    feature_indices = [clock_indices, combined_indices]
+    n_detected_clock_cells = int(np.count_nonzero(np.any(expr_counts[clock_indices] > 0, axis=0)))
 
     scaling_rows = []
-    lodo_nu1000 = {}
-    for nu in nu_grid:
-        aucs_clk_fold, accs_clk_fold = [], []
-        aucs_cmb_fold, accs_cmb_fold, mib_cmb_fold = [], [], []
-
-        for tr_idx, te_idx in skf_cells.split(np.zeros(n_cells_sub), strat_key):
-            for fidx, auc_l, acc_l, mib_l in [
-                (clock_indices, aucs_clk_fold, accs_clk_fold, None),
-                (combined_indices, aucs_cmb_fold, accs_cmb_fold, mib_cmb_fold),
-            ]:
-                Xtr, ytr = build_disjoint_ensembles(fidx, tr_idx, nu, 120, rng)
-                Xte, yte = build_disjoint_ensembles(fidx, te_idx, nu, 80, rng)
-                clf = LogisticRegression(C=1.0, max_iter=500).fit(Xtr, ytr)
-                prob = np.clip(clf.predict_proba(Xte)[:, 1], 1e-6, 1.0 - 1e-6)
-                auc_l.append(float(roc_auc_score(yte, prob)))
-                acc_l.append(float(np.mean((prob >= 0.5) == yte)))
-                if mib_l is not None:
-                    ce = -np.mean(yte * np.log2(prob) + (1 - yte) * np.log2(1.0 - prob))
-                    mib_l.append(max(0.0, 1.0 - float(ce)))
-
-        # Leave-One-Donor-Out (LODO) CV across all 3 human donors
-        lodo_clk, lodo_cmb = [], []
-        for d_te in np.unique(donors_arr):
-            tr_d = np.where(donors_arr != d_te)[0]
-            te_d = np.where(donors_arr == d_te)[0]
-            for fidx, l_lst in [(clock_indices, lodo_clk), (combined_indices, lodo_cmb)]:
-                Xtr_d, ytr_d = build_disjoint_ensembles(fidx, tr_d, nu, 150, rng)
-                Xte_d, yte_d = build_disjoint_ensembles(fidx, te_d, nu, 100, rng)
-                clf_d = LogisticRegression(C=1.0, max_iter=500).fit(Xtr_d, ytr_d)
-                l_lst.append(float(roc_auc_score(yte_d, clf_d.predict_proba(Xte_d)[:, 1])))
-        if nu in (1, 500, 1000):
-            lodo_nu1000[f"nu_{nu}"] = {
-                "clock_lodo_mean": round(float(np.mean(lodo_clk)), 4),
-                "clock_lodo_per_donor": [round(x, 4) for x in lodo_clk],
-                "combined_lodo_mean": round(float(np.mean(lodo_cmb)), 4),
-                "combined_lodo_per_donor": [round(x, 4) for x in lodo_cmb],
-            }
-
-        # Mahalanobis SNR & Gaussian channel capacity on empirical ensemble means
-        def calc_snr_bits(feat_idx):
-            Xu = np.vstack([cp10k[np.ix_(feat_idx, rng.choice(u_pool, size=nu, replace=True))].mean(axis=1) for _ in range(300)])
-            Xh = np.vstack([cp10k[np.ix_(feat_idx, rng.choice(h_pool, size=nu, replace=True))].mean(axis=1) for _ in range(300)])
-            diff_mu = Xh.mean(axis=0) - Xu.mean(axis=0)
-            cov_pool = 0.5 * (np.cov(Xu, rowvar=False) + np.cov(Xh, rowvar=False)) + 1e-5 * np.eye(len(feat_idx))
-            d2_mahal = float(diff_mu @ np.linalg.solve(cov_pool, diff_mu))
-            return d2_mahal, 0.5 * math.log2(1.0 + 0.25 * d2_mahal)
-
-        snr_clk, mig_clk = calc_snr_bits(clock_indices)
-        snr_cmb, mig_cmb = calc_snr_bits(combined_indices)
-
-        zero_all_clock_frac = float(
-            np.mean([
-                np.all(expr_counts[np.ix_(clock_indices, rng.choice(h_pool, size=nu, replace=True))].sum(axis=1) == 0)
-                for _ in range(200)
-            ])
+    for size in (1, 2, 5, 10, 25, 50, 100, 250, 500, 1000):
+        cv_auc, cv_counts, n_cv = score_disjoint_ensemble_folds(
+            cells, y_cond, feature_indices, cell_folds, size, rng
         )
-
+        lodo_auc, lodo_counts, n_lodo = score_disjoint_ensemble_folds(
+            cells, y_cond, feature_indices, donor_folds, size, rng
+        )
         scaling_rows.append({
-            "ensemble_cells_nu": nu,
-            "all_10_clock_genes_zero_frac": round(zero_all_clock_frac, 4),
-            "clock10_roc_auc": round(float(np.mean(aucs_clk_fold)), 4),
-            "clock10_roc_auc_sd": round(float(np.std(aucs_clk_fold, ddof=1)), 4),
-            "clock10_lodo_roc_auc": round(float(np.mean(lodo_clk)), 4),
-            "clock10_accuracy": round(float(np.mean(accs_clk_fold)), 4),
-            "clock10_mahalanobis_snr": round(snr_clk, 4),
-            "clock10_gaussian_channel_bits": round(mig_clk, 4),
-            "combined_clock_redox_roc_auc": round(float(np.mean(aucs_cmb_fold)), 4),
-            "combined_clock_redox_roc_auc_sd": round(float(np.std(aucs_cmb_fold, ddof=1)), 4),
-            "combined_lodo_roc_auc": round(float(np.mean(lodo_cmb)), 4),
-            "combined_clock_redox_accuracy": round(float(np.mean(accs_cmb_fold)), 4),
-            "combined_mahalanobis_snr": round(snr_cmb, 4),
-            "combined_gaussian_channel_bits": round(mig_cmb, 4),
-            "combined_bernoulli_mi_bits": round(float(np.mean(mib_cmb_fold)), 4),
+            "ensemble_cells_nu": size,
+            "all_10_clock_genes_zero_frac": float(stats.hypergeom.pmf(0, n_cells_sub, n_detected_clock_cells, size)),
+            "clock10_roc_auc": cv_auc[0],
+            "clock10_lodo_roc_auc": lodo_auc[0],
+            "combined_clock_redox_roc_auc": cv_auc[1],
+            "combined_lodo_roc_auc": lodo_auc[1],
+            "cv_folds_evaluable": n_cv,
+            "cv_test_ensembles_untreated": cv_counts[0],
+            "cv_test_ensembles_H2O2": cv_counts[1],
+            "lodo_folds_evaluable": n_lodo,
+            "lodo_test_ensembles_untreated": lodo_counts[0],
+            "lodo_test_ensembles_H2O2": lodo_counts[1],
         })
 
-    scaling_df = pd.DataFrame(scaling_rows)
-    scaling_df.to_csv(os.path.join(DATA_DIR, "module6_sc_h2o2_ensemble_scaling.csv"), index=False)
+    pd.DataFrame(scaling_rows).to_csv(os.path.join(DATA_DIR, "module6_sc_h2o2_ensemble_scaling.csv"), index=False)
     erasure_df.to_csv(os.path.join(DATA_DIR, "module6_sc_h2o2_gene_erasure.csv"), index=False)
-
-    with open(os.path.join(SCRATCH_DIR, "geo_GDS3342_expr.json")) as f:
-        gds_json = json.load(f)
-
-    # Compute exact two-sided Welch t-test p-values across GDS3342 probes (n=12 ctrl vs n=12 oxidative stress)
-    gds_probe_stats = []
-    for p_rec in gds_json.get("probes", []):
-        gene_sym = (p_rec.get("genes") or [p_rec.get("identifier", "")])[0]
-        cmp = (p_rec.get("comparisons") or [{}])[0]
-        grps = cmp.get("groups", [])
-        if len(grps) == 2 and "welch_vs_reference" in grps[1]:
-            t_v = float(grps[1]["welch_vs_reference"]["t"])
-            df_v = float(grps[1]["welch_vs_reference"]["df"])
-            p_2s = float(2.0 * stats.t.sf(abs(t_v), df=df_v))
-            gds_probe_stats.append({
-                "gene": gene_sym,
-                "probe_id": p_rec.get("probe_id"),
-                "log2_fc": float(grps[1]["log2_fold_change_vs_reference"]),
-                "welch_t": t_v,
-                "df": df_v,
-                "p_two_sided": p_2s,
-            })
-    gds_sig_probes = sorted([g for g in gds_probe_stats if g["p_two_sided"] < 0.05], key=lambda x: x["p_two_sided"])
-
-    det_clock_df = erasure_df[(erasure_df["panel"] == "circadian_clock") & (erasure_df["status_in_filtered_atlas"] == "detected_sparse")]
-    mean_detected_clock_zero_nu1 = float(det_clock_df["zero_umi_fraction_all"].mean())
-    mean_all10_clock_zero_nu1 = float(erasure_df[erasure_df["panel"] == "circadian_clock"]["zero_umi_fraction_all"].mean())
-    nu1_all_clock_zero_frac = float(scaling_df.loc[scaling_df["ensemble_cells_nu"] == 1, "all_10_clock_genes_zero_frac"].iloc[0])
-
+    largest_complete = next(
+        row for row in reversed(scaling_rows)
+        if row["cv_folds_evaluable"] == len(cell_folds) and row["lodo_folds_evaluable"] == len(donor_folds)
+    )
+    det_clock_df = erasure_df.loc[erasure_df["panel"].eq("circadian_clock")]
     return {
         "runtime_s": round(time.time() - t0, 4),
+        "analysis_timepoint": "24h",
+        "gse218316_untreated_or_H2O2_cells_all_timepoints": int(condition_mask.sum()),
         "gse218316_n_untreated_cells": int(untreated_mask.sum()),
         "gse218316_n_H2O2_cells": int(h2o2_mask.sum()),
         "gse218316_total_cells_analyzed": int(n_cells_sub),
-        "gse218316_n_donors": 3,
-        "cv_protocol": "cell_disjoint_5fold_stratified_plus_LODO",
-        "detected_target_genes": ordered_target_genes,
-        "detected_clock_genes": [g for g in clock_genes if g in ordered_target_genes],
-        "absent_below_filter_genes": absent_below_filter_genes,
+        "gse218316_n_donors": len(donor_folds),
+        "cv_protocol": "Stratified five-fold and leave-one-donor-out CV with disjoint pools within each fold",
+        "sample_accessions": ISLET_24H_SAMPLES,
+        "gene_expression_targets": target_genes,
+        "clock_genes": clock_genes,
         "donor_pseudobulk_consistency": donor_stats,
-        "lodo_cv_summary": lodo_nu1000,
-        "mean_detected_clock_gene_zero_erasure": round(mean_detected_clock_zero_nu1, 5),
-        "mean_all10_clock_gene_zero_erasure": round(mean_all10_clock_zero_nu1, 5),
-        "nu1_zero_all_clock_genes_cell_fraction": round(nu1_all_clock_zero_frac, 4),
-        "nu1_clock10_auc": float(scaling_df.loc[scaling_df["ensemble_cells_nu"] == 1, "clock10_roc_auc"].iloc[0]),
-        "nu1_combined_auc": float(scaling_df.loc[scaling_df["ensemble_cells_nu"] == 1, "combined_clock_redox_roc_auc"].iloc[0]),
-        "nu1_combined_bits": float(scaling_df.loc[scaling_df["ensemble_cells_nu"] == 1, "combined_gaussian_channel_bits"].iloc[0]),
-        "nu1000_clock10_auc": float(scaling_df.loc[scaling_df["ensemble_cells_nu"] == 1000, "clock10_roc_auc"].iloc[0]),
-        "nu1000_clock10_lodo_auc": float(scaling_df.loc[scaling_df["ensemble_cells_nu"] == 1000, "clock10_lodo_roc_auc"].iloc[0]),
-        "nu1000_combined_auc": float(scaling_df.loc[scaling_df["ensemble_cells_nu"] == 1000, "combined_clock_redox_roc_auc"].iloc[0]),
-        "nu1000_combined_lodo_auc": float(scaling_df.loc[scaling_df["ensemble_cells_nu"] == 1000, "combined_lodo_roc_auc"].iloc[0]),
-        "nu1000_combined_bits": float(scaling_df.loc[scaling_df["ensemble_cells_nu"] == 1000, "combined_gaussian_channel_bits"].iloc[0]),
-        "snr_scaling_slope_log10": round(float(
-            stats.linregress(
-                np.log10(scaling_df["ensemble_cells_nu"].values),
-                np.log10(np.maximum(scaling_df["combined_mahalanobis_snr"].values, 1e-6)),
-            ).slope
-        ), 4),
-        "gds3342_bulk_monocyte_n": 24,
-        "gds3342_records_retrieved": len(gds_probe_stats),
-        "gds3342_significant_probes_p_lt_0p05": gds_sig_probes,
+        "mean_detected_clock_gene_zero_erasure": float(det_clock_df["zero_umi_fraction_all"].mean()),
+        "nu1_zero_all_clock_genes_cell_fraction": (n_cells_sub - n_detected_clock_cells) / n_cells_sub,
+        "nu1_clock10_auc": scaling_rows[0]["clock10_roc_auc"],
+        "nu1_combined_auc": scaling_rows[0]["combined_clock_redox_roc_auc"],
+        "largest_complete_ensemble": largest_complete,
     }
 
 
@@ -1366,23 +1254,33 @@ def run_row5_ecoli_go_and_beamline_validation():
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Run Module 6 empirical analyses.")
+    parser.add_argument("--row", type=int, choices=range(1, 6), help="Run one numbered row.")
+    args = parser.parse_args()
+    row_functions = (
+        run_row1_thermal_vs_ac_validation,
+        run_row2_nucleosome_ogg1_validation,
+        run_row3_single_cell_erasure_validation,
+        run_row4_hepg2_mpra_validation,
+        run_row5_ecoli_go_and_beamline_validation,
+    )
+
+    if args.row is not None:
+        result = row_functions[args.row - 1]()
+        with (DATA_DIR / f"module6_row{args.row}_summary.json").open("w", encoding="utf-8") as f:
+            json.dump(result, f, indent=2)
+        print(json.dumps(result, indent=2))
+        return
+
     t_start = time.time()
     print("Running Module 6 stage-specific empirical consistency checks across Table 4...")
 
-    r1 = run_row1_thermal_vs_ac_validation()
-    print("[Row 1 DONE]", json.dumps({k: v for k, v in r1.items() if k != "ac_bounds"}, indent=2))
-
-    r2 = run_row2_nucleosome_ogg1_validation()
-    print("[Row 2 DONE]", json.dumps({k: v for k, v in r2.items() if k != "pdb_cli_validation"}, indent=2))
-
-    r3 = run_row3_single_cell_erasure_validation()
-    print("[Row 3 DONE]", json.dumps(r3, indent=2))
-
-    r4 = run_row4_hepg2_mpra_validation()
-    print("[Row 4 DONE]", json.dumps(r4, indent=2))
-
-    r5 = run_row5_ecoli_go_and_beamline_validation()
-    print("[Row 5 DONE]", json.dumps(r5, indent=2))
+    results = []
+    for row, run in enumerate(row_functions, start=1):
+        results.append(run())
+        print(f"[Row {row} DONE]", flush=True)
+    r1, r2, r3, r4, r5 = results
+    sc_complete = r3["largest_complete_ensemble"]
 
     ratio_25_28 = r1["emp_rel_rates_25_28_37C"][0] / r1["emp_rel_rates_25_28_37C"][1]
     summary_table = pd.DataFrame([
@@ -1390,7 +1288,7 @@ def main():
             "table6_row": "Row 1",
             "channel_stage_tested": "Thermal B->X Arrhenius gate vs. theoretical Floquet/KMS AC ceiling (Thm. 2)",
             "wetlab_cohort_accession": "Chu et al. 2018 (E. coli REL606 mutS WGS MA at 25, 28, 37 C; BPS + small indels)",
-            "sample_size_units": "n=20 MA lines/temperature (60 lines total; Welch df=29, 32, 33)",
+            "sample_size_units": "n=20 MA lines/temperature (60 lines total; published one-sided tests)",
             "key_empirical_metric": (
                 f"25 vs 28 C null (ratio {ratio_25_28:.3f}, Padj={r1['chu2018_25_vs_28C_padj']}); 37 vs 28 C = {r1['emp_ratio_37C_vs_28C']:.3f}x "
                 f"(Padj={r1['chu2018_28_vs_37C_padj']:.0e}) vs Mod. 1 a priori {r1['mod1_predicted_ratio_37C_vs_28C']:.3f}x ({r1['arrhenius_ratio_agreement_pct']:.1f}% match); "
@@ -1405,23 +1303,23 @@ def main():
             "sample_size_units": f"3 cryo-EM hOGG1-NCP structures + {r2['n_nucleosome_positions_scanned']} 1KX5 bp steps",
             "key_empirical_metric": (
                 f"Outward (<=60 deg): {r2['outward_mean_core_clashes_2p5A']:.2f} core clashes ({100*r2['outward_core_zero_clash_fraction']:.1f}% clash-free); "
-                f"Inward (>=120 deg): {r2['inward_mean_core_clashes_2p5A']:.1f} core clashes (p={r2['mwu_p_inward_vs_outward_core_clashes']:.2e}; "
-                f"{r2['outward_vs_inward_accessibility_ratio']:.1f}x accessibility gate)"
+                f"Inward (>=120 deg): {r2['inward_mean_core_clashes_2p5A']:.1f} core clashes. "
+                f"Modeled outward/inward accessibility: {r2['outward_vs_inward_accessibility_ratio']:.1f}x."
             ),
-            "resolution_status": "STAGE-CONSISTENT (Chromatin Steric Gate K_chrom)",
+            "resolution_status": "Descriptive steric scan of one nucleosome template",
         },
         {
             "table6_row": "Row 3",
-            "channel_stage_tested": "Single-cell transcriptomic observer capture sparsity vs. ensemble pooling (Prop. 1)",
-            "wetlab_cohort_accession": "NCBI GEO GSE218316 (human islet scRNA-seq +/- H2O2) + GDS3342 (human monocytes)",
-            "sample_size_units": f"{r3['gse218316_total_cells_analyzed']:,} primary human cells ({r3['gse218316_n_donors']} donors) + {r3['gds3342_bulk_monocyte_n']} bulk arrays",
+            "channel_stage_tested": "Transcript detection and H2O2 classification in pooled transcriptomes",
+            "wetlab_cohort_accession": "NCBI GEO GSE218316 (human islet scRNA-seq, 24 h)",
+            "sample_size_units": f"{r3['gse218316_total_cells_analyzed']:,} primary human cells ({r3['gse218316_n_donors']} donors)",
             "key_empirical_metric": (
-                f"nu=1 detected clock (NR1D1/DBP) 0-UMI dropout = {100*r3['mean_detected_clock_gene_zero_erasure']:.2f}% "
-                f"(8 clock + OGG1/MUTYH < filter, AUC={r3['nu1_clock10_auc']:.3f}); "
-                f"nu=1,000 Clock AUC={r3['nu1000_clock10_auc']:.3f} (LODO={r3['nu1000_clock10_lodo_auc']:.3f}), "
-                f"Combined AUC={r3['nu1000_combined_auc']:.3f} ({r3['nu1000_combined_bits']:.2f} bits)"
+                f"nu=1 zero-UMI fraction for retained clock genes = {100*r3['mean_detected_clock_gene_zero_erasure']:.2f}%; "
+                f"clock AUC={r3['nu1_clock10_auc']:.3f}. At nu={sc_complete['ensemble_cells_nu']}, "
+                f"clock AUC={sc_complete['clock10_roc_auc']:.3f} (LODO={sc_complete['clock10_lodo_roc_auc']:.3f}), "
+                f"combined AUC={sc_complete['combined_clock_redox_roc_auc']:.3f} (LODO={sc_complete['combined_lodo_roc_auc']:.3f})."
             ),
-            "resolution_status": "STAGE-CONSISTENT (Transcriptomic Observer Sparsity Pi_O)",
+            "resolution_status": "Exploratory analysis across three donors at one timepoint",
         },
         {
             "table6_row": "Row 4",

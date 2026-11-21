@@ -19,7 +19,8 @@ import pandas as pd
 from scipy import constants as const
 from scipy.linalg import expm, inv, eigvals
 
-OUT_DATA = "/home/sandbox/workspace/observer_bounded_dna_paper/data"
+from analysis_paths import DATA_DIR as OUT_DATA
+
 os.makedirs(OUT_DATA, exist_ok=True)
 
 HBAR_EV_S = const.hbar / const.e          # 6.582119569e-16 eV*s
@@ -154,17 +155,38 @@ def verify_resolvent_and_moment_annihilation():
             "op_norm_error": op_err,
             "open_coherence_l2": coh_open,
             "closed_coherence_l2": coh_closed,
-            "analytic_upper_bound": float(
+            "heuristic_error_scale": float(
                 min(2.0, (np.linalg.norm(L_QP, 2) * np.linalg.norm(L_PQ, 2)) / (spectral_gap_s_inv ** 2) * (1.0 / max(spectral_gap_s_inv * t, 1.0) + np.exp(-spectral_gap_s_inv * t)))
             ),
         })
 
-    # Accessible Moment Annihilation Theorem check (Theorem 1): Perturbation purely in P-sector
-    rng = np.random.default_rng(20260417)
-    A_rand = rng.standard_normal((6, 6)) + 1j * rng.standard_normal((6, 6))
-    delta_PP = -0.15 * spectral_gap_s_inv * (A_rand @ A_rand.conj().T) / np.linalg.norm(A_rand, 2) ** 2
-    delta_L = np.zeros((9, 9), dtype=complex)
-    delta_L[np.ix_(p_idx, p_idx)] = delta_PP
+    # Accessible Moment Annihilation Theorem check (Theorem 1):
+    # Genuine GKSL Lindblad pure-dephasing perturbation in the bare chemical basis (strictly inside P-sector,
+    # preserving trace, Hermiticity, and complete positivity identically).
+    bare_deph_jumps = [
+        (0.12 * spectral_gap_s_inv, np.diag([1.0, 0.0, 0.0]).astype(complex)),
+        (0.18 * spectral_gap_s_inv, np.diag([0.0, 1.0, 0.0]).astype(complex)),
+        (0.24 * spectral_gap_s_inv, np.diag([0.0, 0.0, 1.0]).astype(complex)),
+        (0.09 * spectral_gap_s_inv, np.diag([1.0, -1.0, 0.5]).astype(complex)),
+    ]
+    delta_L = liouvillian_from_ham_and_jumps(np.zeros((3, 3), dtype=complex), bare_deph_jumps)
+    delta_PP = delta_L[np.ix_(p_idx, p_idx)]
+    non_pp_mask = np.ones((9, 9), dtype=bool)
+    non_pp_mask[np.ix_(p_idx, p_idx)] = False
+    max_non_pp_entry = float(np.max(np.abs(delta_L[non_pp_mask])))
+    delta_trace_err = float(np.max(np.abs(trace_bra @ delta_L)))
+
+    # Verify Hermiticity preservation: (delta_L(X))^\dagger == delta_L(X^\dagger) across all 3x3 basis matrices
+    herm_errs = []
+    for r_i in range(3):
+        for c_i in range(3):
+            for ph in (1.0, 1j):
+                X = np.zeros((3, 3), dtype=complex)
+                X[r_i, c_i] = ph
+                LX = (delta_L @ X.reshape(-1, order="F")).reshape((3, 3), order="F")
+                LXdag = (delta_L @ X.conj().T.reshape(-1, order="F")).reshape((3, 3), order="F")
+                herm_errs.append(float(np.linalg.norm(LX.conj().T - LXdag, ord="fro")))
+    hermiticity_err = float(max(herm_errs))
 
     L_pert = L0 + delta_L
     moment_norms = {}
@@ -180,6 +202,9 @@ def verify_resolvent_and_moment_annihilation():
         "eigenvector_cond_kappa2_V": kappa_2_V,
         "tau_mem_fs": 1e15 / spectral_gap_s_inv,
         "col_sums_max": col_sums_max,
+        "perturbation_trace_err": delta_trace_err,
+        "perturbation_hermiticity_err": hermiticity_err,
+        "perturbation_non_PP_leakage": max_non_pp_entry,
         "gibbs_stationary_fro_err": gibbs_trace_err,
         "eigenstate_gibbs_populations": {
             "E0_ground": float(p_eigen_gibbs[0]),
@@ -237,13 +262,23 @@ def compute_weak_field_nogo_curves(spectral_gap_s_inv):
     drazin_unit_subgap = exact_drazin_unit_ratio(OMEGA_SUBTHERMAL_LOW)
     drazin_unit_thz = exact_drazin_unit_ratio(OMEGA_THZ_NEAR_GAP)
 
-    # Exact adiabatic KMS second-order curvature 0.25 * (1/p1) * d^2 p1 / d(eps)^2 at eps=1e-6 eV
+    # Exact adiabatic KMS second-order curvature:
+    # (a) Instantaneous eigenstate Boltzmann population |E_1(eps)><E_1(eps)|
+    # (b) Fixed unperturbed projector Pi_{E_1(0)} = |E_1(0)><E_1(0)| applied to rho_beta(H(eps))
     eps_fd = 1.0e-6
-    ev_p = np.linalg.eigvalsh(np.array([[0.0, J_TUNNEL_EV, J_ION_EV], [J_TUNNEL_EV, DELTA_G_TAUT_EV - eps_fd, 0.003], [J_ION_EV, 0.003, DELTA_G_ION_EV]]))
-    ev_m = np.linalg.eigvalsh(np.array([[0.0, J_TUNNEL_EV, J_ION_EV], [J_TUNNEL_EV, DELTA_G_TAUT_EV + eps_fd, 0.003], [J_ION_EV, 0.003, DELTA_G_ION_EV]]))
-    bp = np.exp(-(ev_p - ev_p[0]) / KBT_EV); p1_p = float(bp[1] / np.sum(bp))
-    bm = np.exp(-(ev_m - ev_m[0]) / KBT_EV); p1_m = float(bm[1] / np.sum(bm))
+    H_plus = np.array([[0.0, J_TUNNEL_EV, J_ION_EV], [J_TUNNEL_EV, DELTA_G_TAUT_EV - eps_fd, 0.003], [J_ION_EV, 0.003, DELTA_G_ION_EV]], dtype=complex)
+    H_minus = np.array([[0.0, J_TUNNEL_EV, J_ION_EV], [J_TUNNEL_EV, DELTA_G_TAUT_EV + eps_fd, 0.003], [J_ION_EV, 0.003, DELTA_G_ION_EV]], dtype=complex)
+    ev_p, evec_p = np.linalg.eigh(H_plus)
+    ev_m, evec_m = np.linalg.eigh(H_minus)
+    bp = np.exp(-(ev_p - ev_p[0]) / KBT_EV); p_vec_p = bp / np.sum(bp); p1_p = float(p_vec_p[1])
+    bm = np.exp(-(ev_m - ev_m[0]) / KBT_EV); p_vec_m = bm / np.sum(bm); p1_m = float(p_vec_m[1])
     adiabatic_unit_coeff = float(abs(0.25 * (p1_p + p1_m - 2.0 * p1_gibbs_0) / ((eps_fd ** 2) * p1_gibbs_0)))
+
+    rho_beta_p = sum(float(p_vec_p[k]) * (evec_p[:, k:k+1] @ evec_p[:, k:k+1].conj().T) for k in range(3))
+    rho_beta_m = sum(float(p_vec_m[k]) * (evec_m[:, k:k+1] @ evec_m[:, k:k+1].conj().T) for k in range(3))
+    p1_fixed_p = float(np.real(np.trace(proj_e1 @ rho_beta_p)))
+    p1_fixed_m = float(np.real(np.trace(proj_e1 @ rho_beta_m)))
+    adiabatic_fixed_proj_unit_coeff = float(abs(0.25 * (p1_fixed_p + p1_fixed_m - 2.0 * p1_gibbs_0) / ((eps_fd ** 2) * p1_gibbs_0)))
 
     N_MUT_BASELINE_COHORT = 1.0e5
     delta_T_K = 0.05
@@ -265,6 +300,7 @@ def compute_weak_field_nogo_curves(spectral_gap_s_inv):
         drazin_subgap = (lam_ev ** 2) * drazin_unit_subgap
         drazin_thz = (lam_ev ** 2) * drazin_unit_thz
         adiabatic_ac = (lam_ev ** 2) * adiabatic_unit_coeff
+        adiabatic_fixed_proj_ac = (lam_ev ** 2) * adiabatic_fixed_proj_unit_coeff
 
         # Static DC Gibbs equilibrium shift |dp_1 / p_1|
         dH = np.diag([0.0, -min(lam_ev, 0.25), 0.0]).astype(complex)
@@ -288,6 +324,7 @@ def compute_weak_field_nogo_curves(spectral_gap_s_inv):
             "drazin_floquet_subgap_dmu_over_mu": float(drazin_subgap),
             "drazin_floquet_thz_dmu_over_mu": float(drazin_thz),
             "adiabatic_kms_ac_dmu_over_mu": float(adiabatic_ac),
+            "adiabatic_kms_fixed_proj_dmu_over_mu": float(adiabatic_fixed_proj_ac),
             "metabolic_thermal_floor_50mK": float(metabolic_fractional_noise),
             "cohort_poisson_snr_ac_subgap": float(snr_ac),
             "cohort_poisson_snr_drazin_floquet": float(snr_drazin),
@@ -385,6 +422,7 @@ def main():
     e_ref_row = min(nogo_rows, key=lambda r: abs(np.log10(r["E0_V_per_m"]) - (-6.0)))
     e_cross_drazin = float(1.0e-6 * np.sqrt(met_floor / e_ref_row["drazin_floquet_subgap_dmu_over_mu"]))
     e_cross_kms = float(1.0e-6 * np.sqrt(met_floor / e_ref_row["adiabatic_kms_ac_dmu_over_mu"]))
+    e_cross_kms_fixed = float(1.0e-6 * np.sqrt(met_floor / e_ref_row["adiabatic_kms_fixed_proj_dmu_over_mu"]))
     summary = {
         "runtime_seconds": elapsed_s,
         "temperature_K": TEMP_K,
@@ -394,6 +432,9 @@ def main():
         "eigenvector_cond_kappa2_V": res_proj["eigenvector_cond_kappa2_V"],
         "tau_mem_fs": res_proj["tau_mem_fs"],
         "trace_conservation_err": res_proj["col_sums_max"],
+        "perturbation_trace_err": res_proj["perturbation_trace_err"],
+        "perturbation_hermiticity_err": res_proj["perturbation_hermiticity_err"],
+        "perturbation_non_PP_leakage": res_proj["perturbation_non_PP_leakage"],
         "gibbs_stationary_fro_err": res_proj["gibbs_stationary_fro_err"],
         "eigenstate_gibbs_populations": res_proj["eigenstate_gibbs_populations"],
         "bare_basis_populations_with_tunnel_dressing": res_proj["bare_basis_populations_with_tunnel_dressing"],
@@ -405,6 +446,7 @@ def main():
         "ambient_subgap_1uVm_reference": e_ref_row,
         "approx_crossover_E0_drazin_V_per_m": e_cross_drazin,
         "approx_crossover_E0_adiabatic_kms_V_per_m": e_cross_kms,
+        "approx_crossover_E0_adiabatic_kms_fixed_proj_V_per_m": e_cross_kms_fixed,
         "approx_crossover_E0_V_per_m": e_cross_drazin,
         "metabolic_50mK_noise_floor": met_floor,
         "guanine_hole_trapping": hole_rows,
@@ -414,10 +456,10 @@ def main():
 
     print(f"=== MODULE 1 SUMMARY (runtime = {elapsed_s:.3f} s) ===")
     print(f"Spectral gap g(L_PP) = {summary['spectral_gap_s_inv']:.4e} s^-1, coercivity g_2(L_PP) = {summary['numerical_coercivity_s_inv']:.4e} s^-1, cond kappa_2(V) = {summary['eigenvector_cond_kappa2_V']:.6f}")
-    print(f"Gibbs stationary Frobenius error ||rho_ss - rho_Gibbs||_F = {summary['gibbs_stationary_fro_err']:.3e}")
+    print(f"Gibbs stationary Frobenius error ||rho_ss - rho_Gibbs||_F = {summary['gibbs_stationary_fro_err']:.3e}; GKSL perturbation Hermiticity err = {summary['perturbation_hermiticity_err']:.3e}")
     print(f"Resolvent error at 1 ps = {summary['resolvent_error_at_1ps']:.3e}, at 1 ns = {summary['resolvent_error_at_1ns']:.3e}")
     print("Moment annihilation norms:", summary["moment_annihilation_norms"])
-    print(f"1 uV/m: lambda = {e_ref_row['lambda_eV']:.3e} eV, Floquet Drazin = {e_ref_row['drazin_floquet_subgap_dmu_over_mu']:.3e}, Adiabatic KMS = {e_ref_row['adiabatic_kms_ac_dmu_over_mu']:.3e}, Static ceiling = {e_ref_row['thermo_ceiling_dmu_over_mu']:.3e}")
+    print(f"1 uV/m: lambda = {e_ref_row['lambda_eV']:.3e} eV, Floquet Drazin = {e_ref_row['drazin_floquet_subgap_dmu_over_mu']:.3e}, KMS fixed-proj = {e_ref_row['adiabatic_kms_fixed_proj_dmu_over_mu']:.3e}, KMS inst-eigen = {e_ref_row['adiabatic_kms_ac_dmu_over_mu']:.3e}, Static ceiling = {e_ref_row['thermo_ceiling_dmu_over_mu']:.3e}")
     print(pd.DataFrame(hole_rows).to_string(index=False))
 
 

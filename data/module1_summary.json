@@ -1,5 +1,5 @@
 {
-  "runtime_seconds": 0.32311703899904387,
+  "runtime_seconds": 0.39269872099976055,
   "temperature_K": 310.15,
   "kBT_eV": 0.02672665911254327,
   "spectral_gap_s_inv": 10109877135313.5,
@@ -7,6 +7,9 @@
   "eigenvector_cond_kappa2_V": 1.0000933527211047,
   "tau_mem_fs": 98.91317041895887,
   "trace_conservation_err": 0.001033782958984375,
+  "perturbation_trace_err": 0.0,
+  "perturbation_hermiticity_err": 0.0,
+  "perturbation_non_PP_leakage": 0.0,
   "gibbs_stationary_fro_err": 1.6056053676340845e-11,
   "eigenstate_gibbs_populations": {
     "E0_ground": 0.9999998523408644,
@@ -23,11 +26,11 @@
     "m=0": 0.0,
     "m=1": 0.0,
     "m=2": 0.0,
-    "m=3": 7.003246302821999e+38,
-    "m=4": 3.262056377190693e+53,
-    "m=5": 9.958822092198259e+68
+    "m=3": 4.667192886966402e+39,
+    "m=4": 2.9639870176036537e+53,
+    "m=5": 5.858931752353901e+69
   },
-  "m3_identity_rel_err": 2.6540883574356932e-14,
+  "m3_identity_rel_err": 7.77078973738587e-16,
   "resolvent_error_at_1ps": 0.0024197753985335316,
   "resolvent_error_at_1ns": 2.8792662250423644e-11,
   "ambient_subgap_1uVm_reference": {
@@ -39,15 +42,17 @@
     "ac_thz_rectified_dmu_over_mu": 5.707378381325978e-29,
     "drazin_floquet_subgap_dmu_over_mu": 1.2628757969774461e-26,
     "drazin_floquet_thz_dmu_over_mu": 1.263803114226377e-26,
-    "adiabatic_kms_ac_dmu_over_mu": 3.484086422762612e-30,
+    "adiabatic_kms_ac_dmu_over_mu": 3.4840818906954904e-30,
+    "adiabatic_kms_fixed_proj_dmu_over_mu": 1.5989729858364484e-28,
     "metabolic_thermal_floor_50mK": 0.0025333945666646636,
     "cohort_poisson_snr_ac_subgap": 3.57064395236086e-26,
     "cohort_poisson_snr_drazin_floquet": 3.993563920349116e-24,
-    "cohort_poisson_snr_adiabatic_kms": 1.1017648660798171e-27,
+    "cohort_poisson_snr_adiabatic_kms": 1.101763432914356e-27,
     "cohort_poisson_snr_dc": 1.1465323689581574e-12
   },
   "approx_crossover_E0_drazin_V_per_m": 447889.7228464287,
-  "approx_crossover_E0_adiabatic_kms_V_per_m": 26965405.644153457,
+  "approx_crossover_E0_adiabatic_kms_V_per_m": 26965423.182344634,
+  "approx_crossover_E0_adiabatic_kms_fixed_proj_V_per_m": 3980437.9126195014,
   "approx_crossover_E0_V_per_m": 447889.7228464287,
   "metabolic_50mK_noise_floor": 0.0025333945666646636,
   "guanine_hole_trapping": [

@@ -18,5 +18,36 @@
       "prior_over_origin_trace_ratio": 2.2611147027861165
     }
   },
-  "all_empirical_above_van_trees_bound": true
+  "single_cell_snapshot_occupancy_sparsity": [
+    {
+      "baseline_8oxoG_per_G": 1e-06,
+      "K_eff_guanines": 400,
+      "mean_lesions_per_promoter_per_cell": 0.00039999999999999996,
+      "prob_zero_lesions_single_cell": 0.9996000799893344,
+      "prob_at_least_one_lesion": 0.00039992001066560003,
+      "binary_occupancy_entropy_bits": 0.005091144675205548
+    },
+    {
+      "baseline_8oxoG_per_G": 3e-06,
+      "K_eff_guanines": 400,
+      "mean_lesions_per_promoter_per_cell": 0.0012000000000000001,
+      "prob_zero_lesions_single_cell": 0.9988007197120864,
+      "prob_at_least_one_lesion": 0.001199280287913621,
+      "binary_occupancy_entropy_bits": 0.013366512496055633
+    },
+    {
+      "baseline_8oxoG_per_G": 1e-05,
+      "K_eff_guanines": 400,
+      "mean_lesions_per_promoter_per_cell": 0.004,
+      "prob_zero_lesions_single_cell": 0.9960079893439915,
+      "prob_at_least_one_lesion": 0.003992010656008528,
+      "binary_occupancy_entropy_bits": 0.03755875356393682
+    }
+  ],
+  "nu1_gaussian_fisher_proxy_bits": {
+    "rhythmic_OGG1": 0.004682911975711297,
+    "flat_equal_OGG1": 0.004675622642821396,
+    "inward_occluded_SHL": 0.0006683812826671727
+  },
+  "all_empirical_within_two_sem_of_or_above_estimated_bound": true
 }

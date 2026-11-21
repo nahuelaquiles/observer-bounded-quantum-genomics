@@ -1,10 +1,10 @@
 {
   "wall_clock_timings_s": {
-    "part1_rel606_2000_windows_s": 31.22,
-    "part2_8766h_ephemeris_and_neutrinos_s": 0.0048,
-    "part3a_240k_3d_monte_carlo_scattering_s": 7.5303,
-    "part3b_chiral_channels_and_odes_s": 0.2074,
-    "total_module5_wall_clock_s": 40.4825
+    "part1_rel606_2000_windows_s": 39.3107,
+    "part2_8766h_ephemeris_and_neutrinos_s": 0.0058,
+    "part3a_240k_3d_monte_carlo_scattering_s": 9.0981,
+    "part3b_chiral_channels_and_odes_s": 0.1042,
+    "total_module5_wall_clock_s": 50.3605
   },
   "github_audit_and_upgrade": {
     "trace_orig_nc": 0.9199999999999999,
@@ -95,9 +95,10 @@
     "whole_cell_nu_e_scatter_rate_per_yr": 6.855363480890414e-13,
     "human_body_37T_cells_nu_e_events_per_yr": 25.36484487929453,
     "diploid_DNA_CEvNS_8B_rate_per_yr": 3.86528530754479e-16,
-    "be7_max_12C_nuclear_recoil_eV": 132.88589014134908,
+    "be7_max_12C_nuclear_recoil_eV": 132.86540286201708,
     "stodolsky_coherent_WNC_splitting_eV": 2.7310258030377803e-37,
-    "cells_required_5sigma_orbital_clock_1yr": 6.5312965317613176e+16,
+    "whole_cells_required_5sigma_orbital_clock_1yr": 6.5312965317613176e+16,
+    "diploid_DNA_targets_required_5sigma_orbital_clock_1yr": 1.0786456890863725e+19,
     "branches": [
       {
         "branch": "pp_continuum",
@@ -227,7 +228,7 @@
     "g4_hole_sink_enrichment_fold": 17.950962377857877,
     "g4_hole_sink_capture_fraction": 0.9565751699537648,
     "ambient_1uVm_floquet_drazin_shift": 1.2628757969774461e-26,
-    "ambient_1uVm_adiabatic_kms_shift": 3.484086422762612e-30,
+    "ambient_1uVm_adiabatic_kms_shift": 3.4840818906954904e-30,
     "chiral_bias_1keV_isotropic_positron": 6.256118898421263e-10,
     "chiral_bias_100eV_isotropic_positron": 6.2314070098091796e-09,
     "chiral_bias_100eV_zenith_oriented_positron": 7.984063725506588e-09,
@@ -241,7 +242,6 @@
     "cr_8oxoG_events_per_diploid_cell_yr": 0.1768,
     "young_sun_1000x_SEP_8oxoG_per_cell_yr": 176.8,
     "tau_99pct_no_conflict_dM_1e6": 5293304.824724492,
-    "repair_uncollapsing_gain_mutM_mutY_mutS": 83.61,
     "min_GtoT_counts_3sigma_at_1e3_asym": 9000000.0,
     "min_GtoT_counts_3sigma_point_coulomb_500eV": 192949355231047.75
   }

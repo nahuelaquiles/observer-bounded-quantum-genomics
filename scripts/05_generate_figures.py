@@ -14,8 +14,8 @@ import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 from scipy import stats
 
-DATA_DIR = "/home/sandbox/workspace/observer_bounded_dna_paper/data"
-ASSET_DIR = "/home/sandbox/workspace/observer_bounded_dna_paper/assets"
+from analysis_paths import ASSET_DIR, DATA_DIR, REPO_ROOT
+
 os.makedirs(ASSET_DIR, exist_ok=True)
 
 plt.rcParams.update({
@@ -99,10 +99,10 @@ def make_figure1():
     for m_idx in [0, 1, 2]:
         axB.text(m_idx, 3e-22, "Exact 0", ha="center", va="bottom", fontsize=7.8, fontweight="bold", color=COL_TEAL)
     axB.annotate(
-        r"Cubic onset: $\mathcal{L}_{QP}\,\delta\mathcal{L}_{PP}\,\mathcal{L}_{PQ} \neq 0$",
-        xy=(2.72, dimless[3] * 0.35), xytext=(0.05, 4e-4),
+        r"GKSL pure-dephasing cubic onset: $\mathcal{L}_{QP}\,\delta\mathcal{L}_{PP}\,\mathcal{L}_{PQ} \neq 0$",
+        xy=(2.72, dimless[3] * 0.35), xytext=(0.02, 4e-4),
         arrowprops=dict(arrowstyle="->", color=COL_CRIMSON, lw=1.15),
-        fontsize=8.2, color=COL_CRIMSON, fontweight="bold",
+        fontsize=7.7, color=COL_CRIMSON, fontweight="bold",
         bbox=dict(boxstyle="round,pad=0.22", facecolor="white", edgecolor=COL_CRIMSON, lw=0.6, alpha=0.94)
     )
     axB.set_xticks(ms)
@@ -119,11 +119,14 @@ def make_figure1():
     axC.loglog(E_grid, np.maximum(wf_df["thermo_ceiling_dmu_over_mu"].values, 1e-36), color=COL_NAVY, lw=2.0, label=r"Static Kubo ceiling $2\lambda / (k_B T)$")
     axC.loglog(E_grid, np.maximum(wf_df["dc_gibbs_dmu_over_mu"].values, 1e-36), color=COL_TEAL, ls="--", lw=1.7, label="Exact DC Gibbs shift")
     axC.loglog(E_grid, np.maximum(wf_df["drazin_floquet_subgap_dmu_over_mu"].values, 1e-36), color=COL_PURPLE, lw=2.1,
-               label=r"Fixed-bath Floquet Drazin ($\omega \ll g$: Hz--GHz)")
+               label=r"Fixed-bath Floquet Drazin ($\Pi_{E_1(0)}$, $\omega \ll g$)")
     axC.loglog(E_grid, np.maximum(wf_df["drazin_floquet_thz_dmu_over_mu"].values, 1e-36), color=COL_AMBER, ls=":", lw=1.8,
                label=r"Near-gap THz Floquet ($\omega = 10^{13}\,\mathrm{rad/s}$)")
+    if "adiabatic_kms_fixed_proj_dmu_over_mu" in wf_df.columns:
+        axC.loglog(E_grid, np.maximum(wf_df["adiabatic_kms_fixed_proj_dmu_over_mu"].values, 1e-36), color="#1F618D", ls=(0, (3, 1, 1, 1)), lw=1.6,
+                   label=r"Adiabatic KMS ($\Pi_{E_1(0)}$ fixed projector)")
     axC.loglog(E_grid, np.maximum(wf_df["adiabatic_kms_ac_dmu_over_mu"].values, 1e-36), color="#2874A6", ls="-.", lw=1.7,
-               label=r"Adiabatic KMS bath curvature")
+               label=r"Adiabatic KMS ($|E_1(t)\rangle$ eigenstate)")
     m50 = float(m1["metabolic_50mK_noise_floor"])
     m50_exp = int(np.floor(np.log10(m50)))
     m50_man = m50 / (10.0 ** m50_exp)
@@ -139,13 +142,13 @@ def make_figure1():
     axC.scatter([1e-6], [fl1], color=COL_PURPLE, s=54, zorder=6, edgecolor="black", lw=0.8,
                 label=rf"$1\ \mu\mathrm{{V/m}}$ Floquet (${fl1_man:.2f}\times 10^{{{fl1_exp}}}$)")
     axC.scatter([1e-6], [kms1], color="#2874A6", marker="D", s=44, zorder=6, edgecolor="black", lw=0.7,
-                label=rf"$1\ \mu\mathrm{{V/m}}$ KMS (${kms1_man:.2f}\times 10^{{{kms1_exp}}}$)")
+                label=rf"$1\ \mu\mathrm{{V/m}}$ KMS eigen (${kms1_man:.2f}\times 10^{{{kms1_exp}}}$)")
     axC.set_xlabel(r"Non-ionizing electric field amplitude $E_0$ ($\mathrm{V\,m^{-1}}$)")
     axC.set_ylabel(r"Fractional mutation-hazard shift $|\Delta\mu / \mu|$")
     axC.set_title("C   Universal Sub-Thermal Wave No-Go Bound", loc="left")
     axC.set_ylim(1e-35, 1e3)
     axC.grid(True, which="major", alpha=0.22, lw=0.6)
-    axC.legend(loc="upper left", frameon=True, facecolor="white", framealpha=0.92, fontsize=6.8)
+    axC.legend(loc="upper left", frameon=True, facecolor="white", framealpha=0.92, fontsize=6.4)
 
     # Panel D: Duplex Guanine Stack Hole-Sink Enrichment
     axD = fig.add_subplot(gs[1, 1])
@@ -210,11 +213,15 @@ def make_figure2():
     axA.grid(True, which="major", alpha=0.22, lw=0.6)
     axA.legend(loc="center right", frameon=True, facecolor="white", framealpha=0.93, fontsize=7.8)
 
-    # Panel B: Normalized Waveform Distortion D / sigma^2 vs Clarke-Barron BCRB
+    # Panel B: Normalized waveform distortion and the Monte Carlo van Trees estimate.
     axB = fig.add_subplot(gs[0, 1])
+    information_col = (
+        "gaussian_fisher_information_proxy_bits"
+        if "gaussian_fisher_information_proxy_bits" in rd_df else "mutual_info_bits"
+    )
     rd_1e5 = rd_df[rd_df["nu_cells"] == 100000].set_index("schedule")
-    mi_rhy = float(rd_1e5.loc["rhythmic_OGG1", "mutual_info_bits"])
-    mi_flt = float(rd_1e5.loc["flat_equal_OGG1", "mutual_info_bits"])
+    mi_rhy = float(rd_1e5.loc["rhythmic_OGG1", information_col])
+    mi_flt = float(rd_1e5.loc["flat_equal_OGG1", information_col])
     sched_cfg = [
         ("rhythmic_OGG1", COL_NAVY, "o", "Open SHL (-6), circadian OGG1 (8VWT)"),
         ("flat_equal_OGG1", COL_TEAL, "s", "Open SHL (-6), flat equal-mean OGG1"),
@@ -228,7 +235,7 @@ def make_figure2():
         bcrb = sub["bcrb_D_over_sigma2"].values
         axB.loglog(nu, bcrb, color=col, ls="--", lw=1.5, alpha=0.85)
         axB.errorbar(nu, emp, yerr=se, fmt=mk, color=col, ms=5.5, capsize=2.5, lw=1.2, label=lbl)
-    axB.plot([], [], color=COL_SLATE, ls="--", lw=1.5, label=r"Exact van Trees bound $\frac{1}{K}\mathrm{Tr}(I+\nu\sigma^2 \mathbb{E}_\Theta[F_1])^{-1}$")
+    axB.plot([], [], color=COL_SLATE, ls="--", lw=1.5, label="Van Trees bound (Monte Carlo Fisher estimate)")
     axB.set_xlabel(r"Synchronized hepatocyte ensemble size $\nu$")
     axB.set_ylabel(r"Normalized waveform MSE $D / \sigma^2$")
     axB.set_ylim(7e-4, 2.2)
@@ -236,7 +243,7 @@ def make_figure2():
     axB.grid(True, which="major", alpha=0.22, lw=0.6)
     axB.legend(loc="lower left", frameon=True, facecolor="white", framealpha=0.93, fontsize=7.4)
 
-    # Panel C: Mutual Information Scaling I(X; Y_{1:nu})
+    # Panel C: Gaussian Fisher approximation to information scaling.
     axC = fig.add_subplot(gs[1, 0])
     c_labels = {
         "rhythmic_OGG1": "Open SHL (-6), circadian OGG1 (8VWT)",
@@ -245,15 +252,15 @@ def make_figure2():
     }
     for skey, col, mk, _ in sched_cfg:
         sub = rd_df[rd_df["schedule"] == skey].sort_values("nu_cells")
-        axC.semilogx(sub["nu_cells"].values, sub["mutual_info_bits"].values, color=col, marker=mk, lw=2.0, ms=5.5, label=c_labels[skey])
-    axC.annotate(f"Equal-mean rhythmic vs. flat OGG1\nyield identical passive capacity\n({mi_rhy:.2f} vs. {mi_flt:.2f} bits at $\\nu=10^5$)",
+        axC.semilogx(sub["nu_cells"].values, sub[information_col].values, color=col, marker=mk, lw=2.0, ms=5.5, label=c_labels[skey])
+    axC.annotate(f"Rhythmic and flat OGG1\n({mi_rhy:.2f} and {mi_flt:.2f} bits at $\\nu=10^5$)",
                  xy=(1e5, mi_rhy), xytext=(8e1, 21.0),
                  arrowprops=dict(arrowstyle="->", color=COL_NAVY, lw=1.1),
                  fontsize=8.0, color=COL_NAVY)
     axC.set_xlabel(r"Synchronized hepatocyte ensemble size $\nu$")
-    axC.set_ylabel(r"Ensemble mutual information $I(X; Y_{1:\nu})$ (bits)")
+    axC.set_ylabel("Gaussian Fisher approximation (bits)")
     axC.set_ylim(-1.0, 32.5)
-    axC.set_title("C   Clarke-Barron Logarithmic Capacity Scaling", loc="left")
+    axC.set_title("C   Information Scaling in the Poisson Model", loc="left")
     axC.grid(True, which="major", alpha=0.22, lw=0.6)
     axC.legend(loc="upper left", frameon=True, facecolor="white", framealpha=0.93, fontsize=7.8)
 
@@ -266,7 +273,7 @@ def make_figure2():
         sub = cx_df[cx_df["C_B_bits"] == cb].sort_values("K_modes")
         axD.semilogy(sub["K_modes"].values, sub["D_effective_lower_bound_norm"].values, color=col, marker="o", ms=3.8, lw=1.8, label=rf"Register bound $C_B = {int(cb)}$ bits")
     axD.set_xlabel("Decoded harmonic dimension $K$ (Fourier modes)")
-    axD.set_ylabel(r"Minimax two-stage distortion $D_{\mathrm{tot}} / \sigma^2$")
+    axD.set_ylabel(r"Two-stage lower bound on $D / \sigma^2$")
     axD.set_xlim(0.5, 24.5)
     axD.set_ylim(7e-3, 1.4)
     axD.set_title("D   Sensing-Limited vs. Memory-Limited Crossover", loc="left")
@@ -432,10 +439,9 @@ def make_figure4():
     min_bh_q = float(sub_c["bh_fdr_q"].dropna().min())
 
     axA.axvline(0.0, color="#1C2833", lw=1.0)
-    axA.axvspan(-0.35, 0.35, color="#EAFAF1", alpha=0.75, label="Matched equivalence zone ($|\\Delta_{\\mathrm{std}}| \\leq 0.35$)")
-    axA.scatter(d_unadj, y_pos + 0.14, color=COL_AMBER, marker="D", s=38, alpha=0.88, label="Unadjusted vs. 4,560 MANE background")
+    axA.scatter(d_unadj, y_pos + 0.14, color=COL_AMBER, marker="D", s=38, alpha=0.88, label="Unadjusted vs. 4,560 promoters (clock SD units)")
     axA.errorbar(d_matched, y_pos - 0.14, xerr=1.96 * se_hedges, fmt="o", color=COL_NAVY, ms=5.2, lw=1.3, capsize=2.5,
-                 label=f"Propensity-matched vs. {int(n_ctl):,} CGI controls (all BH q >= {min_bh_q:.2f})")
+                 label=f"Mahalanobis-matched vs. {int(n_ctl):,} CGI controls (all BH q ≥ {min_bh_q:.2f})")
     axA.axhline(6.5, color=COL_SLATE, ls=":", lw=0.9)
     axA.set_yticks(y_pos)
     axA.set_yticklabels([label_map[f] for f in sub_c["feature"].values], fontsize=8.0)
@@ -451,15 +457,11 @@ def make_figure4():
     rel_x = ism_dnase["pos_1based"].values - 107093585
     acgt_mat = ism_dnase[["A", "C", "G", "T"]].values
     l2_imp = np.linalg.norm(acgt_mat, axis=1)
-    # Verify exact hg38 reference bases from human_grch38_mane_promoters.feather for CRY1 (minus strand, TSS=107093549)
-    mane_df = pd.read_feather("/home/sandbox/workspace/scratch/observer_bounded_dna/raw/human_grch38_mane_promoters.feather")
-    cry1_row = mane_df[mane_df["gene_name"] == "CRY1"].iloc[0]
-    cry1_seq_sense = cry1_row["seq_sense_1001bp"]  # [-500..+500] in 5'->3' gene sense orientation; index 500 = TSS (107093549)
-    sense_bases = []
-    for p1 in ism_dnase["pos_1based"].values:
-        # On minus strand, genomic pos > TSS is upstream (negative gene offset = TSS - p1)
-        idx_sense = 500 + (int(cry1_row["tss_1based"]) - int(p1))
-        sense_bases.append(cry1_seq_sense[idx_sense] if 0 <= idx_sense < len(cry1_seq_sense) else "N")
+    # CRY1 is on the minus strand. Complement the GRCh38 plus-strand bases at each plotted position.
+    reference = pd.read_csv(REPO_ROOT / "data" / "module4_cry1_reference_bases.csv").set_index("pos_1based")
+    reference_bases = reference.loc[ism_dnase["pos_1based"], "ref_plus"].tolist()
+    complement = str.maketrans("ACGT", "TGCA")
+    sense_bases = [base.translate(complement) for base in reference_bases]
     b_cols = [COL_CRIMSON if sb == "G" else (COL_NAVY if sb == "C" else COL_SLATE) for sb in sense_bases]
     axB.bar(rel_x, l2_imp, color=b_cols, width=0.78, edgecolor="#1C2833", lw=0.45)
     for x_i, imp_i, sb in zip(rel_x, l2_imp, sense_bases):
@@ -470,7 +472,7 @@ def make_figure4():
     axB.set_xlabel("Genomic offset relative to CRY1 -36 bp C>A (sense G>T) locus (bp)")
     axB.set_ylabel("AlphaGenome liver DNase ISM attribution")
     axB.set_ylim(0, np.max(l2_imp) * 1.25)
-    axB.set_title("B   AlphaGenome 1-Mb ISM Across CRY1 Hole-Sink Motif", loc="left")
+    axB.set_title("B   AlphaGenome 32-bp ISM Across the CRY1 Motif", loc="left")
     axB.grid(True, axis="y", alpha=0.22, lw=0.6)
     axB.legend(loc="upper left", frameon=True, facecolor="white", framealpha=0.93, fontsize=7.6)
 

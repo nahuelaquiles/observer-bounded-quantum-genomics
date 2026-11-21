@@ -9,7 +9,7 @@ Flanking Guanine Variant Analysis Across Core Human Circadian Clock Promoters
 2. Scores 8-oxoG -> T oxidative transversions (G>T on coding strand, i.e., G>T on
    plus strand for '+' genes and C>A on plus strand for '-' genes) across 6
    AlphaGenome modalities (DNASE, ATAC, CAGE, RNA_SEQ, CHIP_TF, CHIP_HISTONE)
-   in human liver (UBERON:0002107) and HepG2 (EFO:0001187).
+   in human liver (UBERON:0002107).
 3. Saves numerical 32-bp ISM attribution matrices (DNASE & CAGE) and 1-bp local
    REF vs ALT regulatory tracks around the CRY1 -36 bp SP1/G5 hole-sink variant
    (chr12:107093585:C>A), plus clickable AlphaGenome Atlas deep links.
@@ -22,18 +22,14 @@ import urllib.parse
 import numpy as np
 import pandas as pd
 
-from alphagenome.data import genome
-from alphagenome.interpretation import ism
-from alphagenome.models.v1 import dna_client
-from alphagenome.models.v1 import variant_scorers
+from analysis_paths import DATA_DIR as OUT_DATA, load_human_mane_promoters
 
-RAW_DIR = "/home/sandbox/workspace/scratch/observer_bounded_dna/raw"
-OUT_DATA = "/home/sandbox/workspace/observer_bounded_dna_paper/data"
 os.makedirs(OUT_DATA, exist_ok=True)
+LIVER_ONTOLOGY = "UBERON:0002107"
 
 
 def select_verified_promoter_variants():
-    prom_df = pd.read_feather(f"{RAW_DIR}/human_grch38_mane_promoters.feather")
+    prom_df = load_human_mane_promoters()
     targets = ["CRY1", "PER1", "PER2", "BMAL1"]
     selected = []
 
@@ -132,6 +128,10 @@ def main():
     if not api_key:
         raise RuntimeError("ALPHAGENOME_API_KEY not found in environment")
 
+    from alphagenome.data import genome
+    from alphagenome.interpretation import ism
+    from alphagenome.models.v1 import dna_client, variant_scorers
+
     dna_model = dna_client.create(
         api_key=api_key,
         address="dns:///gdmscience.googleapis.com:443",
@@ -143,7 +143,6 @@ def main():
 
     scorer_names = ["DNASE", "ATAC", "CAGE", "RNA_SEQ", "CHIP_TF", "CHIP_HISTONE"]
     scorers = [variant_scorers.RECOMMENDED_VARIANT_SCORERS[k] for k in scorer_names]
-    target_ontologies = ["UBERON:0002107", "EFO:0001187"]  # Human liver & HepG2 hepatocytes
 
     all_rows = []
     for _, vrow in cand_df.iterrows():
@@ -181,7 +180,9 @@ def main():
                 rec[f"{mod}_max_abs_quantile"] = np.nan
                 continue
 
-            sub_liv = sub_mod[sub_mod["ontology_curie"].isin(target_ontologies)] if "ontology_curie" in sub_mod.columns else pd.DataFrame()
+            sub_liv = sub_mod[sub_mod["ontology_curie"].eq(LIVER_ONTOLOGY)].dropna(
+                subset=["quantile_score", "raw_score"]
+            )
             if not sub_liv.empty:
                 idx_top = sub_liv["quantile_score"].abs().idxmax()
                 rec[f"{mod}_liver_raw"] = float(sub_liv.loc[idx_top, "raw_score"])
@@ -190,8 +191,10 @@ def main():
                 rec[f"{mod}_liver_raw"] = np.nan
                 rec[f"{mod}_liver_quantile"] = np.nan
 
-            idx_all = sub_mod["quantile_score"].abs().idxmax()
-            rec[f"{mod}_max_abs_quantile"] = float(sub_mod.loc[idx_all, "quantile_score"])
+            quantiles = sub_mod["quantile_score"].dropna()
+            rec[f"{mod}_max_abs_quantile"] = (
+                float(quantiles.iloc[quantiles.abs().argmax()]) if not quantiles.empty else np.nan
+            )
 
         all_rows.append(rec)
         print(f"  Scored {v_id} ({vrow['gene']} {vrow['category']}): DNASE_liv_q={rec.get('DNASE_liver_quantile')}, CAGE_liv_q={rec.get('CAGE_liver_quantile')}, RNA_liv_q={rec.get('RNA_SEQ_liver_quantile')}")
@@ -214,8 +217,10 @@ def main():
         scores_flat, vars_flat = [], []
         for adata, *_ in ism_res:
             v_obj = adata.uns["variant"]
-            col_mask = adata.var["ontology_curie"] == "UBERON:0002107"
-            val = float(np.nanmean(adata.X[:, col_mask])) if col_mask.any() else float(np.nanmean(adata.X))
+            col_mask = adata.var["ontology_curie"].eq(LIVER_ONTOLOGY)
+            if not col_mask.any():
+                raise ValueError(f"AlphaGenome returned no adult-liver {mod_name} tracks for CRY1 ISM")
+            val = float(np.nanmean(adata.X[:, col_mask]))
             scores_flat.append(val)
             vars_flat.append(v_obj)
         mat = ism.ism_matrix(scores_flat, variants=vars_flat)
@@ -255,8 +260,9 @@ def main():
     from scipy import stats
     sink = res_df[res_df["category"] == "Hole_Sink_Motif"]
     iso = res_df[res_df["category"] == "Isolated_Flanking_G"]
+    mod_list = ["DNASE", "ATAC", "CAGE", "RNA_SEQ", "CHIP_TF", "CHIP_HISTONE"]
     comp_summary = {}
-    for mod in ["DNASE", "ATAC", "CAGE", "RNA_SEQ", "CHIP_TF", "CHIP_HISTONE"]:
+    for mod in mod_list:
         x1 = sink[f"{mod}_liver_raw"].dropna().abs().values
         x2 = iso[f"{mod}_liver_raw"].dropna().abs().values
         q1 = sink[f"{mod}_liver_quantile"].dropna().abs().values
@@ -264,6 +270,9 @@ def main():
         if len(x1) > 0 and len(x2) > 0:
             _, p_raw = stats.mannwhitneyu(x1, x2, alternative="two-sided")
             comp_summary[mod] = {
+                "liver_ontology_curie": LIVER_ONTOLOGY,
+                "n_sink_variants": int(len(x1)),
+                "n_isolated_variants": int(len(x2)),
                 "sink_mean_abs_raw": float(np.mean(x1)),
                 "isolated_mean_abs_raw": float(np.mean(x2)),
                 "fold_raw_ratio": float(np.mean(x1) / max(np.mean(x2), 1e-9)),
@@ -271,10 +280,21 @@ def main():
                 "isolated_mean_abs_quantile": float(np.mean(q2)),
                 "mannwhitney_p_raw": float(p_raw),
             }
+
+    valid_mods = [m for m in mod_list if m in comp_summary]
+    p_arr = np.array([comp_summary[m]["mannwhitney_p_raw"] for m in valid_mods], dtype=float)
+    m_tot = len(p_arr)
+    ord_idx = np.argsort(p_arr)
+    q_sorted = np.minimum.accumulate((p_arr[ord_idx] * m_tot / np.arange(1, m_tot + 1))[::-1])[::-1]
+    q_arr = np.empty_like(p_arr)
+    q_arr[ord_idx] = np.clip(q_sorted, 0.0, 1.0)
+    for m, qv in zip(valid_mods, q_arr):
+        comp_summary[m]["bh_fdr_q_6modalities"] = float(qv)
+
     with open(f"{OUT_DATA}/module4_summary.json", "w", encoding="utf-8") as f:
         json.dump(comp_summary, f, indent=2)
 
-    print("\n=== MODULE 4 ALPHAGENOME SUMMARY (HOLE-SINK MOTIFS vs ISOLATED FLANKING GUANINES) ===")
+    print("\n=== MODULE 4 ALPHAGENOME SUMMARY (HOLE-SINK MOTIFS vs ISOLATED FLANKING GUANINES, UBERON:0002107) ===")
     print(json.dumps(comp_summary, indent=2))
 
 

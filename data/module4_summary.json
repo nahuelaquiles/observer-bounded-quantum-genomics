@@ -1,50 +1,74 @@
 {
   "DNASE": {
-    "sink_mean_abs_raw": 0.20160913467407227,
-    "isolated_mean_abs_raw": 0.02359905242919922,
-    "fold_raw_ratio": 8.543102960550243,
-    "sink_mean_abs_quantile": 0.8592813089489937,
-    "isolated_mean_abs_quantile": 0.5386883616447449,
-    "mannwhitney_p_raw": 0.12742812742812742
+    "liver_ontology_curie": "UBERON:0002107",
+    "n_sink_variants": 8,
+    "n_isolated_variants": 5,
+    "sink_mean_abs_raw": 0.19657957553863525,
+    "isolated_mean_abs_raw": 0.015429878234863281,
+    "fold_raw_ratio": 12.740189685649653,
+    "sink_mean_abs_quantile": 0.7467765863984823,
+    "isolated_mean_abs_quantile": 0.36654868721961975,
+    "mannwhitney_p_raw": 0.04506604506604507,
+    "bh_fdr_q_6modalities": 0.1864801864801865
   },
   "ATAC": {
-    "sink_mean_abs_raw": 0.128090500831604,
-    "isolated_mean_abs_raw": 0.029724311828613282,
-    "fold_raw_ratio": 4.309283981750631,
-    "sink_mean_abs_quantile": 0.8913506418466568,
-    "isolated_mean_abs_quantile": 0.590491646528244,
-    "mannwhitney_p_raw": 0.029526029526029528
+    "liver_ontology_curie": "UBERON:0002107",
+    "n_sink_variants": 8,
+    "n_isolated_variants": 5,
+    "sink_mean_abs_raw": 0.10090100765228271,
+    "isolated_mean_abs_raw": 0.013149833679199219,
+    "fold_raw_ratio": 7.673177479947203,
+    "sink_mean_abs_quantile": 0.8004335686564445,
+    "isolated_mean_abs_quantile": 0.5010071024298668,
+    "mannwhitney_p_raw": 0.09324009324009325,
+    "bh_fdr_q_6modalities": 0.1864801864801865
   },
   "CAGE": {
-    "sink_mean_abs_raw": 0.2034374177455902,
-    "isolated_mean_abs_raw": 0.1178633689880371,
-    "fold_raw_ratio": 1.726044482626648,
-    "sink_mean_abs_quantile": 0.9708922654390335,
-    "isolated_mean_abs_quantile": 0.9269275546073914,
-    "mannwhitney_p_raw": 0.5236985236985237
+    "liver_ontology_curie": "UBERON:0002107",
+    "n_sink_variants": 8,
+    "n_isolated_variants": 5,
+    "sink_mean_abs_raw": 0.18518930673599243,
+    "isolated_mean_abs_raw": 0.07899932861328125,
+    "fold_raw_ratio": 2.3441883619357577,
+    "sink_mean_abs_quantile": 0.9604686424136162,
+    "isolated_mean_abs_quantile": 0.9149922966957093,
+    "mannwhitney_p_raw": 0.5236985236985237,
+    "bh_fdr_q_6modalities": 0.5236985236985237
   },
   "RNA_SEQ": {
-    "sink_mean_abs_raw": 0.0709746778011322,
-    "isolated_mean_abs_raw": 0.039243340492248535,
-    "fold_raw_ratio": 1.8085789056400878,
-    "sink_mean_abs_quantile": 0.9996009916067123,
-    "isolated_mean_abs_quantile": 0.9966857433319092,
-    "mannwhitney_p_raw": 0.17094017094017094
+    "liver_ontology_curie": "UBERON:0002107",
+    "n_sink_variants": 8,
+    "n_isolated_variants": 5,
+    "sink_mean_abs_raw": 0.05946359038352966,
+    "isolated_mean_abs_raw": 0.03208569288253784,
+    "fold_raw_ratio": 1.8532743114265684,
+    "sink_mean_abs_quantile": 0.9995191693305969,
+    "isolated_mean_abs_quantile": 0.9353836655616761,
+    "mannwhitney_p_raw": 0.06526806526806528,
+    "bh_fdr_q_6modalities": 0.1864801864801865
   },
   "CHIP_TF": {
-    "sink_mean_abs_raw": 0.3102365732192993,
-    "isolated_mean_abs_raw": 0.2114564895629883,
-    "fold_raw_ratio": 1.46714141457875,
-    "sink_mean_abs_quantile": 0.989804320037365,
-    "isolated_mean_abs_quantile": 0.9576574683189392,
-    "mannwhitney_p_raw": 0.12742812742812742
+    "liver_ontology_curie": "UBERON:0002107",
+    "n_sink_variants": 8,
+    "n_isolated_variants": 5,
+    "sink_mean_abs_raw": 0.19471758604049683,
+    "isolated_mean_abs_raw": 0.13165874481201173,
+    "fold_raw_ratio": 1.4789567249674402,
+    "sink_mean_abs_quantile": 0.9722483530640602,
+    "isolated_mean_abs_quantile": 0.8935922503471374,
+    "mannwhitney_p_raw": 0.2222222222222222,
+    "bh_fdr_q_6modalities": 0.26666666666666666
   },
   "CHIP_HISTONE": {
-    "sink_mean_abs_raw": 0.11305892467498779,
-    "isolated_mean_abs_raw": 0.05137958526611328,
-    "fold_raw_ratio": 2.2004639408709727,
-    "sink_mean_abs_quantile": 0.987591527402401,
-    "isolated_mean_abs_quantile": 0.9354035496711731,
-    "mannwhitney_p_raw": 0.09324009324009325
+    "liver_ontology_curie": "UBERON:0002107",
+    "n_sink_variants": 8,
+    "n_isolated_variants": 5,
+    "sink_mean_abs_raw": 0.05507844686508179,
+    "isolated_mean_abs_raw": 0.029376792907714843,
+    "fold_raw_ratio": 1.8748965225069634,
+    "sink_mean_abs_quantile": 0.915504015982151,
+    "isolated_mean_abs_quantile": 0.8117705702781677,
+    "mannwhitney_p_raw": 0.17094017094017094,
+    "bh_fdr_q_6modalities": 0.2564102564102564
   }
 }

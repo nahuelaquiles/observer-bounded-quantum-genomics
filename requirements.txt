@@ -1,8 +1,0 @@
-numpy
-scipy
-pandas
-pyarrow
-matplotlib
-scikit-learn
-biopython
-alphagenome

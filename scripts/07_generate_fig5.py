@@ -20,8 +20,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 
-DATA_DIR = "/home/sandbox/workspace/observer_bounded_dna_paper/data"
-ASSET_DIR = "/home/sandbox/workspace/observer_bounded_dna_paper/assets"
+from analysis_paths import ASSET_DIR, DATA_DIR
+
 os.makedirs(ASSET_DIR, exist_ok=True)
 
 plt.rcParams.update({
@@ -224,7 +224,7 @@ def make_figure5():
     axC.set_ylim(-ylim_c, ylim_c)
     axC.set_xlabel(f"3D Monte Carlo trajectories per ensemble $N_{{\\mathrm{{traj}}}}$ (${n_tot_traj:,}$ total)")
     axC.set_ylabel(f"Mean chiral radial deflection $\\langle\\Delta r\\rangle$ ($10^{{{exp_scale}}}$ m)")
-    axC.set_title("C   3D Monte Carlo Helical B-DNA Chiral Deflection Convergence", loc="left")
+    axC.set_title("C   Exploratory 3D Helical B-DNA Chiral Deflection", loc="left")
     axC.grid(True, which="major", alpha=0.22, lw=0.6)
     axC.legend(loc="upper right", bbox_to_anchor=(0.99, 0.84), frameon=True, facecolor="white", framealpha=0.95, fontsize=6.9)
 
@@ -241,27 +241,29 @@ def make_figure5():
         axD.semilogx(sub["generations_tau"], sub["ee_no_conflict"], color=col, ls="--", lw=1.35, alpha=0.8,
                      label=f"$\\delta M = 10^{{{exp_int}}}$ (pure $\\tanh(\\delta M \\tau / 2)$)")
 
-    nu_rate = m5["solar_neutrino_astrodynamics"]["diploid_DNA_nu_e_scatter_rate_per_yr"]
+    nu_s = m5["solar_neutrino_astrodynamics"]
+    nu_rate = nu_s["diploid_DNA_nu_e_scatter_rate_per_yr"]
+    dna_req = nu_s["diploid_DNA_targets_required_5sigma_orbital_clock_1yr"]
+    cell_req = nu_s["whole_cells_required_5sigma_orbital_clock_1yr"]
     em_ratio = m5["solar_modulated_muon_astrodynamics"]["electromagnetic_to_weak_cross_section_ratio"]
     axD.axhline(0.99, color=COL_CRIMSON, ls=":", lw=1.2)
     axD.text(1.5e2, 0.94, "Homochiral fixation ($\\mathrm{e.e.} = 0.99$)", fontsize=7.6, color=COL_CRIMSON)
     axD.text(
-        1.45e2, 0.50,
+        1.45e2, 0.49,
         f"Direct solar $\\nu_e$ ($G_F^2$ gated):\n"
-        f"  $\\Gamma_{{\\nu,\\mathrm{{DNA}}}} = {nu_rate:.1e}\\ \\mathrm{{cell^{{-1}}\\,yr^{{-1}}}}$\n"
-        f"  (needs $\\sim 10^{{17}}$ cells / $100$-t Borexino)\n"
+        f"  $\\Gamma_{{\\nu,\\mathrm{{DNA}}}} = {nu_rate:.1e}\\ \\mathrm{{yr^{{-1}}}}$ ($\\sim {dna_req:.1e}$ genomes;\n"
+        f"  whole-cell $\\sim {cell_req:.1e}$ cells / $65$-t water)\n"
         f"Weak decay $\\pi^+ \\to \\mu^+ + \\nu_\\mu$:\n"
-        f"  transfers $\\nu$ chirality to EM $\\mu^+/e^+$\n"
-        f"  ($\\sigma_{{\\mathrm{{ion}}}}/\\sigma_{{\\nu e}} \\approx {em_ratio:.1e}\\times$ stronger!)",
-        fontsize=7.35, color="#1B2631",
-        bbox=dict(boxstyle="round,pad=0.34", facecolor="#F8F9F9", edgecolor=COL_SLATE, lw=0.7),
+        f"  EM vs. weak $\\sigma_{{\\mathrm{{ion}}}}/\\sigma_{{\\nu e}} \\approx {em_ratio:.1e}\\times$",
+        fontsize=7.15, color="#1B2631",
+        bbox=dict(boxstyle="round,pad=0.32", facecolor="#F8F9F9", edgecolor=COL_SLATE, lw=0.7),
     )
 
     axD.set_xlim(1e2, 1e8)
     axD.set_ylim(-0.02, 1.05)
     axD.set_xlabel("Evolutionary radiation-weighted turnovers $\\tau$")
     axD.set_ylabel("Biopolymer enantiomeric excess $\\mathrm{e.e.}(\\tau)$")
-    axD.set_title("D   Solar $\\nu_e$ Bottleneck vs. Polarized $\\mu^+/e^+$ Homochiralization", loc="left")
+    axD.set_title("D   Exploratory Solar $\\nu_e$ vs. Polarized $\\mu^+/e^+$ Model", loc="left")
     axD.grid(True, which="major", alpha=0.22, lw=0.6)
     axD.legend(loc="lower right", frameon=True, facecolor="white", framealpha=0.93, fontsize=7.1)
 

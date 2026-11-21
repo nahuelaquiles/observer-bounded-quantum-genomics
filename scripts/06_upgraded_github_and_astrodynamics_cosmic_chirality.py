@@ -46,7 +46,8 @@ from scipy.linalg import expm
 from scipy.integrate import solve_ivp
 from scipy.stats import mannwhitneyu
 
-OUT_DATA = "/home/sandbox/workspace/observer_bounded_dna_paper/data"
+from analysis_paths import DATA_DIR as OUT_DATA, RAW_DIR
+
 os.makedirs(OUT_DATA, exist_ok=True)
 
 HBAR_EV_S = const.hbar / const.e          # 6.582119569e-16 eV*s
@@ -221,15 +222,15 @@ def audit_and_upgrade_github_scripts() -> tuple[pd.DataFrame, dict, float]:
 
     # Large-scale real genome audit across E. coli REL606 (target: 1,000 CDS + 1,000 intergenic 150-bp windows)
     fna_candidates = (
-        glob.glob("/home/sandbox/workspace/scratch/observer_bounded_dna/**/*REL606*.fna", recursive=True)
-        + glob.glob("/home/sandbox/workspace/scratch/observer_bounded_dna/**/*REL606*.fasta", recursive=True)
-        + glob.glob("/home/sandbox/workspace/scratch/observer_bounded_dna/**/*rel606*.fa*", recursive=True)
+        sorted(glob.glob(f"{RAW_DIR}/**/REL606*.fna", recursive=True))
+        + sorted(glob.glob(f"{RAW_DIR}/**/REL606*.fasta", recursive=True))
+        + sorted(glob.glob(f"{RAW_DIR}/**/rel606*.fa*", recursive=True))
     )
     gff_candidates = (
-        glob.glob("/home/sandbox/workspace/scratch/observer_bounded_dna/**/*REL606*.gff*", recursive=True)
-        + glob.glob("/home/sandbox/workspace/scratch/observer_bounded_dna/**/*rel606*.gff*", recursive=True)
+        sorted(glob.glob(f"{RAW_DIR}/**/REL606*.gff*", recursive=True))
+        + sorted(glob.glob(f"{RAW_DIR}/**/rel606*.gff*", recursive=True))
     )
-    gbk_candidates = glob.glob("/home/sandbox/workspace/scratch/observer_bounded_dna/**/*REL606*.gb*", recursive=True)
+    gbk_candidates = sorted(glob.glob(f"{RAW_DIR}/**/REL606*.gb*", recursive=True))
 
     full_genome = ""
     cds_intervals = []
@@ -358,6 +359,9 @@ def audit_and_upgrade_github_scripts() -> tuple[pd.DataFrame, dict, float]:
             "coding_G3plus_hole_frac": c_g3,
             "intergenic_G3plus_hole_frac": nc_g3,
         }).to_csv(f"{OUT_DATA}/module5_rel606_coding_vs_intergenic_windows.csv", index=False)
+
+    if not real_window_summary:
+        raise FileNotFoundError(f"Provide the REL606 reference FASTA and GFF3 or GenBank under {RAW_DIR}")
 
     # Tunneling unit-mismatch & Euler wave-shift audit (evaluated purely against generic ambient 1 uV/m dipole)
     lam_si_j = const.e * 1.0e-6 * 1.0e-10                    # 1.6022e-35 J (1 uV/m over 1.0 A)
@@ -597,8 +601,8 @@ def compute_solar_neutrino_and_muon_astrodynamics() -> tuple[pd.DataFrame, pd.Da
     hbar_c_mev_cm = HBAR_C_MEV_FM * 1.0e-13
     sig_cevns_8b_cm2 = ((gf_mev2 ** 2) * (6.70 ** 2) * (7.0 ** 2) / (4.0 * np.pi)) * (hbar_c_mev_cm ** 2)
     rate_cevns_8b_dna_yr = 5.16e6 * sig_cevns_8b_cm2 * (6.4e9 * 40.0) * sec_per_yr
-    # Maximum nuclear recoil of 7Be (861.8 keV) on 12C (M = 11.178 GeV):
-    t_nuc_max_be7_12c_ev = (2.0 * (861.8e3 ** 2)) / 11.178e9  # ~ 0.133 eV << I_G (7.75 eV)!
+    # Maximum nuclear recoil of a 861.8 keV neutrino on 12C (M = 11.178 GeV).
+    t_nuc_max_be7_12c_ev = (2.0 * (861.8e3 ** 2)) / (11.178e9 + 2.0 * 861.8e3)
 
     # Stodolsky coherent weak neutral-current spin/chiral energy splitting: dE_WNC = sqrt(2) * G_F * (hbar*c)^3 * n_nu
     n_nu_cm3 = 6.46e10 / (C_LIGHT * 100.0)  # ~ 2.155 cm^-3
@@ -673,7 +677,10 @@ def compute_solar_neutrino_and_muon_astrodynamics() -> tuple[pd.DataFrame, pd.Da
         "diploid_DNA_CEvNS_8B_rate_per_yr": float(rate_cevns_8b_dna_yr),
         "be7_max_12C_nuclear_recoil_eV": float(t_nuc_max_be7_12c_ev),
         "stodolsky_coherent_WNC_splitting_eV": float(de_stodolsky_ev),
-        "cells_required_5sigma_orbital_clock_1yr": float(cells_needed_1yr_5sigma),
+        "whole_cells_required_5sigma_orbital_clock_1yr": float(cells_needed_1yr_5sigma),
+        "diploid_DNA_targets_required_5sigma_orbital_clock_1yr": float(
+            n_events_5sigma_orbital / (tot_rate_dna_s * sec_per_yr)
+        ),
         "branches": branch_rates,
     }
 
@@ -923,14 +930,6 @@ def compute_chiral_channels_and_homochiralization(
     met_50mk_floor = float(mod1["metabolic_50mK_noise_floor"])
     tau_mem_fs = float(mod1["tau_mem_fs"])
 
-    mod6_path = f"{OUT_DATA}/module6_summary.json"
-    if os.path.exists(mod6_path):
-        with open(mod6_path, "r") as fh:
-            mod6 = json.load(fh)
-        go_uncollapse_gain = float(mod6["row5_ecoli_go_and_beamline"]["mutMmutY_vs_MMR_fraction_ratio"])
-    else:
-        go_uncollapse_gain = float("nan")
-
     m_e_ev = 510998.95
     m_mu_ev = 105.6583755e6
     c_geom = mc_summary["c_geom_calibrated"]
@@ -983,7 +982,10 @@ def compute_chiral_channels_and_homochiralization(
             "fractional_hazard_or_chiral_shift": float(nu_summary["keplerian_flux_peak_to_trough_pct"] / 100.0),
             "dna_events_per_diploid_cell_yr": float(nu_summary["diploid_DNA_nu_e_scatter_rate_per_yr"]),
             "dominant_mechanism": "Exact 2D Keplerian flux-Doppler clock gated by G_F^2 (sigma ~ 3.6e-45 cm^2)",
-            "biological_detectability": f"Requires ~10^17 cells (100-ton Borexino scale); {nu_summary['diploid_DNA_nu_e_scatter_rate_per_yr']:.2e} DNA hits/cell/yr",
+            "biological_detectability": (
+                f"Idealized one-year count requires {nu_summary['whole_cells_required_5sigma_orbital_clock_1yr']:.2e} whole-cell targets "
+                f"or {nu_summary['diploid_DNA_targets_required_5sigma_orbital_clock_1yr']:.2e} diploid DNA targets"
+            ),
         },
         {
             "channel": "Intracellular_50mK_Thermal_Noise",
@@ -1024,10 +1026,10 @@ def compute_chiral_channels_and_homochiralization(
         {
             "channel": "Lab_Polarized_500eV_Beam_DeltaRepair",
             "quantum_energy_eV": 500.0,
-            "regime": "Controlled |L|=0.80 e+/- beam + Delta mutM/mutY/mutS",
+            "regime": "Proposed polarized-lepton experiment",
             "fractional_hazard_or_chiral_shift": float(bias_lab_500ev),
-            "dna_events_per_diploid_cell_yr": 1.0e6,
-            "dominant_mechanism": f"Pure point-Coulomb SO={bias_lab_500ev:.2e} (needs >1.9e14 events) vs CISS/DEA 10^-3 (9.0e6 events); {go_uncollapse_gain:.1f}x GO gain",
+            "dna_events_per_diploid_cell_yr": None,
+            "dominant_mechanism": f"Calibrated point-Coulomb spin-orbit estimate {bias_lab_500ev:.2e}",
             "biological_detectability": "Distinguishes CISS/DEA exchange (10^-3) from pure point-Coulomb SO (2.2e-7)",
         },
     ]
@@ -1079,7 +1081,6 @@ def compute_chiral_channels_and_homochiralization(
         "cr_8oxoG_events_per_diploid_cell_yr": float(cr_8oxog_per_cell_yr),
         "young_sun_1000x_SEP_8oxoG_per_cell_yr": float(young_sun_sep_8oxog_per_cell_yr),
         "tau_99pct_no_conflict_dM_1e6": float(np.arctanh(0.99) * 2.0 / 1.0e-6),
-        "repair_uncollapsing_gain_mutM_mutY_mutS": go_uncollapse_gain,
         "min_GtoT_counts_3sigma_at_1e3_asym": float((3.0 / 1.0e-3) ** 2),
         "min_GtoT_counts_3sigma_point_coulomb_500eV": float((3.0 / max(bias_lab_500ev, 1e-30)) ** 2),
     }
