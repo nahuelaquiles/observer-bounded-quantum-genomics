@@ -9,6 +9,7 @@ so MMR-deficient lineages (mutS/mutL/uvrD) are cleanly separated from
 8-oxo-dGTPase (mutT) lineages and repair-proficient WT lineages.
 """
 
+import argparse
 import glob
 import json
 import os
@@ -17,8 +18,8 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-RAW_DIR = "/home/sandbox/workspace/scratch/observer_bounded_dna/raw"
-OUT_DATA = "/home/sandbox/workspace/observer_bounded_dna_paper/data"
+from analysis_paths import DATA_DIR as OUT_DATA, RAW_DIR
+
 os.makedirs(OUT_DATA, exist_ok=True)
 
 COMP = str.maketrans("ACGT", "TGCA")
@@ -528,7 +529,7 @@ def analyze_human_promoters_matched_1500():
     return clock_df, matched_1500, comp_df
 
 
-def main():
+def run_ecoli_analysis():
     rel_seq, opp_96, repair_intervals = load_rel606_genome_and_repair_loci()
     ecoli_res = parse_ecoli_gd_cohorts(rel_seq, opp_96, repair_intervals)
 
@@ -544,21 +545,34 @@ def main():
         sbs_rows.append(row)
     pd.DataFrame(sbs_rows).to_csv(f"{OUT_DATA}/module3_ecoli_sbs96_spectra.csv", index=False)
 
-    clock_df, matched_1500, comp_df = analyze_human_promoters_matched_1500()
-    clock_df.to_csv(f"{OUT_DATA}/module3_human_circadian_10_promoters.csv", index=False)
-    matched_1500.to_csv(f"{OUT_DATA}/module3_human_matched_1500_controls.csv", index=False)
-    comp_df.to_csv(f"{OUT_DATA}/module3_human_promoter_comparison.csv", index=False)
-
     with open(f"{OUT_DATA}/module3_summary.json", "w", encoding="utf-8") as f:
         json.dump(ecoli_res["metrics"], f, indent=2)
 
     print("\n=== MODULE 3A KEY METRICS ===")
     for k, v in ecoli_res["metrics"].items():
         print(f"  {k}: {v}")
+
+
+def run_promoter_analysis():
+    clock_df, matched_1500, comp_df = analyze_human_promoters_matched_1500()
+    clock_df.to_csv(f"{OUT_DATA}/module3_human_circadian_10_promoters.csv", index=False)
+    matched_1500.to_csv(f"{OUT_DATA}/module3_human_matched_1500_controls.csv", index=False)
+    comp_df.to_csv(f"{OUT_DATA}/module3_human_promoter_comparison.csv", index=False)
+
     print("\n=== MODULE 3B CIRCADIAN PROMOTERS (n=10) ===")
     print(clock_df[["gene_name", "chrom", "tss_1based", "strand", "gc_frac", "cpg_oe", "max_g_run", "g3plus_tracts", "g4hunter_max", "psd_10_4bp_dinuc_snr", "sp1_GGGCGG_count", "ebox_CACGTG_count"]].to_string(index=False))
     print("\n=== MODULE 3B MATCHED COMPARISON (n=10 vs n=1,500) ===")
     print(comp_df.to_string(index=False))
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Run the Module 3 analyses.")
+    parser.add_argument("--section", choices=("all", "ecoli", "promoters"), default="all")
+    args = parser.parse_args()
+    if args.section in ("all", "ecoli"):
+        run_ecoli_analysis()
+    if args.section in ("all", "promoters"):
+        run_promoter_analysis()
 
 
 if __name__ == "__main__":

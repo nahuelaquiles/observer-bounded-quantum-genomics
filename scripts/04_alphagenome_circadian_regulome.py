@@ -9,7 +9,7 @@ Flanking Guanine Variant Analysis Across Core Human Circadian Clock Promoters
 2. Scores 8-oxoG -> T oxidative transversions (G>T on coding strand, i.e., G>T on
    plus strand for '+' genes and C>A on plus strand for '-' genes) across 6
    AlphaGenome modalities (DNASE, ATAC, CAGE, RNA_SEQ, CHIP_TF, CHIP_HISTONE)
-   in human liver (UBERON:0002107) and HepG2 (EFO:0001187).
+   in human liver (UBERON:0002107).
 3. Saves numerical 32-bp ISM attribution matrices (DNASE & CAGE) and 1-bp local
    REF vs ALT regulatory tracks around the CRY1 -36 bp SP1/G5 hole-sink variant
    (chr12:107093585:C>A), plus clickable AlphaGenome Atlas deep links.
@@ -22,14 +22,10 @@ import urllib.parse
 import numpy as np
 import pandas as pd
 
-from alphagenome.data import genome
-from alphagenome.interpretation import ism
-from alphagenome.models.v1 import dna_client
-from alphagenome.models.v1 import variant_scorers
+from analysis_paths import DATA_DIR as OUT_DATA, RAW_DIR
 
-RAW_DIR = "/home/sandbox/workspace/scratch/observer_bounded_dna/raw"
-OUT_DATA = "/home/sandbox/workspace/observer_bounded_dna_paper/data"
 os.makedirs(OUT_DATA, exist_ok=True)
+LIVER_ONTOLOGY = "UBERON:0002107"
 
 
 def select_verified_promoter_variants():
@@ -132,6 +128,10 @@ def main():
     if not api_key:
         raise RuntimeError("ALPHAGENOME_API_KEY not found in environment")
 
+    from alphagenome.data import genome
+    from alphagenome.interpretation import ism
+    from alphagenome.models.v1 import dna_client, variant_scorers
+
     dna_model = dna_client.create(
         api_key=api_key,
         address="dns:///gdmscience.googleapis.com:443",
@@ -143,7 +143,6 @@ def main():
 
     scorer_names = ["DNASE", "ATAC", "CAGE", "RNA_SEQ", "CHIP_TF", "CHIP_HISTONE"]
     scorers = [variant_scorers.RECOMMENDED_VARIANT_SCORERS[k] for k in scorer_names]
-    target_ontologies = ["UBERON:0002107", "EFO:0001187"]  # Human liver & HepG2 hepatocytes
 
     all_rows = []
     for _, vrow in cand_df.iterrows():
@@ -181,7 +180,9 @@ def main():
                 rec[f"{mod}_max_abs_quantile"] = np.nan
                 continue
 
-            sub_liv = sub_mod[sub_mod["ontology_curie"].isin(target_ontologies)] if "ontology_curie" in sub_mod.columns else pd.DataFrame()
+            sub_liv = sub_mod[sub_mod["ontology_curie"].eq(LIVER_ONTOLOGY)].dropna(
+                subset=["quantile_score", "raw_score"]
+            )
             if not sub_liv.empty:
                 idx_top = sub_liv["quantile_score"].abs().idxmax()
                 rec[f"{mod}_liver_raw"] = float(sub_liv.loc[idx_top, "raw_score"])
@@ -190,8 +191,10 @@ def main():
                 rec[f"{mod}_liver_raw"] = np.nan
                 rec[f"{mod}_liver_quantile"] = np.nan
 
-            idx_all = sub_mod["quantile_score"].abs().idxmax()
-            rec[f"{mod}_max_abs_quantile"] = float(sub_mod.loc[idx_all, "quantile_score"])
+            quantiles = sub_mod["quantile_score"].dropna()
+            rec[f"{mod}_max_abs_quantile"] = (
+                float(quantiles.iloc[quantiles.abs().argmax()]) if not quantiles.empty else np.nan
+            )
 
         all_rows.append(rec)
         print(f"  Scored {v_id} ({vrow['gene']} {vrow['category']}): DNASE_liv_q={rec.get('DNASE_liver_quantile')}, CAGE_liv_q={rec.get('CAGE_liver_quantile')}, RNA_liv_q={rec.get('RNA_SEQ_liver_quantile')}")
@@ -214,8 +217,10 @@ def main():
         scores_flat, vars_flat = [], []
         for adata, *_ in ism_res:
             v_obj = adata.uns["variant"]
-            col_mask = adata.var["ontology_curie"] == "UBERON:0002107"
-            val = float(np.nanmean(adata.X[:, col_mask])) if col_mask.any() else float(np.nanmean(adata.X))
+            col_mask = adata.var["ontology_curie"].eq(LIVER_ONTOLOGY)
+            if not col_mask.any():
+                raise ValueError(f"AlphaGenome returned no adult-liver {mod_name} tracks for CRY1 ISM")
+            val = float(np.nanmean(adata.X[:, col_mask]))
             scores_flat.append(val)
             vars_flat.append(v_obj)
         mat = ism.ism_matrix(scores_flat, variants=vars_flat)

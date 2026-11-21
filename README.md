@@ -40,16 +40,48 @@ Rather than treating microscopic quantum mechanics, chromatin repair, single-cel
 - `RESPONSE_TO_EDITORIAL_REVIEW.md` / `response_to_editorial_review.tex` — Point-by-point technical response and scientific rebuttal.
 - `SUBMISSION_GUIDE_SCIENCE_ADVANCES.md` & `PRE_SUBMISSION_AUDIT_REPORT.md` — Submission checklist and independent audit report.
 
-## Reproducing All Calculations and Figures
+## Rerunning the analyses
+
+The checked-in manuscript, tables and figures document the original submission. The audit branch corrects the islet gene mapping and ensemble evaluation. A fresh run produces revised results for that analysis.
+
+Install `requirements.txt` in a Python environment. The audit used Python 3.12, NumPy 2.3.5, SciPy 1.17.0, pandas 2.2.3, scikit-learn 1.8.0 and Biopython 1.88. Run the commands below from the repository root. The scripts default to `data/`, `assets/` and `raw/` in the checkout. Direct output to a separate directory to keep the archived results available for comparison.
 
 ```bash
+export OBQG_DATA_DIR="${PWD}/rerun/data"
+export OBQG_ASSET_DIR="${PWD}/rerun/assets"
+export OBQG_RAW_DIR="${PWD}/raw"
+mkdir -p "$OBQG_DATA_DIR" "$OBQG_ASSET_DIR" "$OBQG_RAW_DIR"
+cp data/module3_human_*.csv data/module4_*.csv data/module4_summary.json "$OBQG_DATA_DIR/"
+
 python3 scripts/01_open_quantum_resolvent_and_nogo.py
 python3 scripts/02_rate_distortion_and_circadian_kinetics.py
-python3 scripts/03_ecoli_mmr_quotient_and_human_promoters.py
-# scripts/04_alphagenome_circadian_regulome.py queries AlphaGenome API (cached outputs in data/module4_*)
-python3 scripts/05_generate_figures.py
+python3 scripts/03_ecoli_mmr_quotient_and_human_promoters.py --section ecoli
 python3 scripts/06_upgraded_github_and_astrodynamics_cosmic_chirality.py
-python3 scripts/07_generate_fig5.py
 python3 scripts/08_table6_empirical_wetlab_validation.py
+python3 scripts/05_generate_figures.py
+python3 scripts/07_generate_fig5.py
 python3 scripts/09_generate_fig6.py
 ```
+
+### Public inputs for those commands
+
+Paths below are relative to `OBQG_RAW_DIR`.
+
+| Analyses | Inputs |
+| --- | --- |
+| Modules 3A and 5 | Copy `reference/REL606.fna` and `reference/REL606.gff3` to `ltee_reference/`, `summary/count.*.masked.csv` to `ltee_summary/`, `LTEE-clone-curated/*50000gen*.gd` to `gd_ltee50k/` and `MAE-clone-curated/JEB*.gd` to `gd_mae/`. [LTEE-Ecoli source commit](https://github.com/barricklab/LTEE-Ecoli/tree/2307710381e66f9ee9b651bb850fdb15b2002a53) |
+| Module 6, Row 1 | The script uses the published rounded rates and one-sided test results. [Chu et al., 2018](https://pmc.ncbi.nlm.nih.gov/articles/PMC6116381/) |
+| Module 6, Row 2 | Put the mmCIF files `8VWT.cif`, `8VWV.cif`, `9EOZ.cif` and `1KX5.cif` in `table6/pdb/`. Download each from `https://files.rcsb.org/download/<PDB ID>.cif`. [RCSB PDB](https://www.rcsb.org/) |
+| Module 6, Row 3 | Put `GSE218316_metadata_percell.csv.gz` in `table6/downloads/`. Put the sample-specific `*_features.tsv.gz`, `*_barcodes.tsv.gz` and `*_matrix.mtx.gz` from GSM6740278, GSM6740279 and GSM6740282 in `table6/gse218316/`. These are the three 24 h libraries. [GEO series and sample files](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE218316) |
+| Module 6, Row 4 | Put the promoter FASTA and barcode-to-variant files from GSM3604135, GSM3604143, GSM3604144 and GSM3604148 in `table6/gse126550/`. Use the FASTA from GSM3604144 for both LDLR libraries. Put the 24 count files from GSM3604164–GSM3604169, GSM3604212–GSM3604223 and GSM3604248–GSM3604253 in `table6/downloads/`. [GEO MPRA series](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE126550) |
+| Module 6, Row 5 | Copy `vcf/` and `BSgenome_Ecoli_genomes/` into `table6/ecoli_wgs/`. [Ecoli_MutationalSignatures source commit](https://github.com/garushyants/Ecoli_MutationalSignatures/tree/49545490ee8c335ad0580658320c294be60f41ec) |
+
+Pass `--row 1` through `--row 5` to script `08` to rerun an individual row. Each row writes its own summary. A full `08` run writes the combined summary used by `09`.
+
+The islet analysis joins the published cell metadata to each sample's own Cell Ranger barcode and feature files. The series-level count matrix contains 33,540 rows and its supplementary gene list contains 2,000 entries. For each fold, the revised analysis groups distinct cells within each condition. The output records how many folds and test ensembles support each result. AUCs are reported when every fold supports the requested size.
+
+### Human promoters and AlphaGenome
+
+The commands above use cached human-promoter and AlphaGenome tables for Figure 4. A from-inputs human-promoter rerun requires the original 4,570-promoter `human_grch38_mane_promoters.feather` in `OBQG_RAW_DIR`. The file needs the original MANE Select cohort and extraction coordinates. Run script `03` with `--section promoters` after running `01`.
+
+Script `04` also requires that Feather file and an `ALPHAGENOME_API_KEY`. The revised scorer selects adult-liver tracks using `UBERON:0002107`. The 32-position CRY1 ISM call uses a 16-kb model context. The variant scores and reference/alternate predictions use a 1-Mb context. The Figure 4 reference-base annotations were checked against the UCSC hg38 reference. [UCSC Genome Browser sequence API](https://api.genome.ucsc.edu/getData/sequence?genome=hg38&chrom=chr12&start=107093569&end=107093601)

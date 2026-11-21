@@ -13,8 +13,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec, GridSpecFromSubplotSpec
 
-DATA_DIR = "/home/sandbox/workspace/observer_bounded_dna_paper/data"
-ASSET_DIR = "/home/sandbox/workspace/observer_bounded_dna_paper/assets"
+from analysis_paths import ASSET_DIR, DATA_DIR
+
 os.makedirs(ASSET_DIR, exist_ok=True)
 
 plt.rcParams.update({
@@ -109,11 +109,11 @@ def make_figure6():
     )
     bins = np.linspace(0, 180, 10)
     clash_df["ang_bin"] = pd.cut(clash_df["inward_angle_deg"], bins=bins, include_lowest=True)
-    bstats = clash_df.groupby("ang_bin", observed=False)["core_clashes_lt_2p5A"].agg(["mean", "count", "std"]).reset_index()
+    bstats = clash_df.groupby("ang_bin", observed=False)["core_clashes_lt_2p5A"].agg(["mean", "std"]).reset_index()
     bcenters = 0.5 * (bins[:-1] + bins[1:])
-    bsem = (bstats["std"] / np.sqrt(np.maximum(bstats["count"], 1))).fillna(0.0)
-    axA2.plot(bcenters, bstats["mean"], color=COL_NAVY, lw=2.2, marker="s", markersize=4.2, label="Octamer core mean")
-    axA2.fill_between(bcenters, np.maximum(0, bstats["mean"] - bsem), bstats["mean"] + bsem, color=COL_NAVY, alpha=0.18)
+    pose_sd = bstats["std"].fillna(0.0)
+    axA2.plot(bcenters, bstats["mean"], color=COL_NAVY, lw=2.2, marker="s", markersize=4.2, label="Pose mean ± SD")
+    axA2.fill_between(bcenters, np.maximum(0, bstats["mean"] - pose_sd), bstats["mean"] + pose_sd, color=COL_NAVY, alpha=0.18)
 
     cryo_ang_dict = r2["cryo_em_inward_angles_deg"]
     cryo_x = [cryo_ang_dict["8VWV"], cryo_ang_dict["8VWT"], cryo_ang_dict["9EOZ"]]
@@ -126,7 +126,7 @@ def make_figure6():
     axA2.text(114.0, 1015, f"Inward occluded\n(mean {r2['inward_mean_core_clashes_2p5A']:.0f})", fontsize=6.9, color=COL_CRIMSON, fontweight="bold")
     axA2.text(
         62.0, 790,
-        f"p = {r2['mwu_p_inward_vs_outward_core_clashes']:.1e}\n{r2['outward_vs_inward_accessibility_ratio']:.1f}× gate",
+        f"{r2['outward_vs_inward_accessibility_ratio']:.1f}× modeled\naccessibility ratio",
         fontsize=7.0, color=COL_NAVY, fontweight="bold",
         bbox=dict(boxstyle="round,pad=0.22", fc="white", ec="#BDC3C7", lw=0.7),
     )
@@ -146,11 +146,12 @@ def make_figure6():
     axB_r.spines["top"].set_visible(False)
 
     r3 = m6["row3_single_cell_erasure_and_scaling"]
+    has_disjoint_pools = "largest_complete_ensemble" in r3
     nu = sc_df["ensemble_cells_nu"].values
     axB.axhline(0.50, color=COL_SLATE, ls="--", lw=0.9, alpha=0.7)
     l1 = axB.plot(
         nu, sc_df["clock10_roc_auc"], color=COL_NAVY, lw=2.3, marker="o", markersize=5.4,
-        label="Circadian clock ROC-AUC (NR1D1/DBP)", zorder=5,
+        label="Clock-panel ROC-AUC", zorder=5,
     )
     l2 = axB.plot(
         nu, sc_df["combined_clock_redox_roc_auc"], color=COL_TEAL, lw=2.1, marker="s", markersize=4.8,
@@ -158,32 +159,36 @@ def make_figure6():
     )
     l3 = axB_r.plot(
         nu, 100.0 * sc_df["all_10_clock_genes_zero_frac"], color=COL_CRIMSON, lw=1.9, ls="-.", marker="^", markersize=4.8,
-        label="Zero-UMI clock dropout (%)", zorder=3,
+        label="Zero UMIs across retained clock genes (%)", zorder=3,
     )
 
     axB.set_xscale("log")
     axB.set_xlim(0.8, 1900)
-    axB.set_ylim(0.46, 1.04)
+    axB.set_ylim(0.0, 1.04)
     axB_r.set_ylim(-4, 108)
     axB.set_xlabel("Pooled primary human pancreatic islet ensemble size ν (cells, log scale)")
-    axB.set_ylabel("Cell-disjoint 5-fold CV H₂O₂ ROC-AUC", color=COL_NAVY)
-    axB_r.set_ylabel("Zero-UMI clock capture dropout (%)", color=COL_CRIMSON)
+    axB.set_ylabel("Distinct-cell five-fold ROC-AUC" if has_disjoint_pools else "Archived resampling ROC-AUC", color=COL_NAVY)
+    axB_r.set_ylabel("Zero clock UMIs (%)", color=COL_CRIMSON)
     axB_r.tick_params(axis="y", colors=COL_CRIMSON)
 
     axB.annotate(
-        f"ν = 1 droplet capture:\n{100*r3['mean_detected_clock_gene_zero_erasure']:.2f}% NR1D1/DBP 0-UMI\n(8 clock + OGG1/MUTYH < filter)\nClock AUC = {r3['nu1_clock10_auc']:.3f}",
+        f"ν = 1 cell\n{100*r3['mean_detected_clock_gene_zero_erasure']:.2f}% zero UMIs per retained clock gene\nClock AUC = {r3['nu1_clock10_auc']:.3f}",
         xy=(1.0, r3["nu1_clock10_auc"]), xytext=(1.55, 0.59),
         arrowprops=dict(arrowstyle="->", color=COL_CRIMSON, lw=1.0),
         fontsize=6.9, color=COL_CRIMSON, fontweight="bold",
         bbox=dict(boxstyle="round,pad=0.24", fc="#FDEDEC", ec=COL_CRIMSON, lw=0.7),
     )
-    axB.annotate(
-        f"ν = 1,000 human cells:\nClock AUC = {r3['nu1000_clock10_auc']:.3f} (LODO {r3['nu1000_clock10_lodo_auc']:.3f})\nCombined AUC = {r3['nu1000_combined_auc']:.3f}\nCapacity = {r3['nu1000_combined_bits']:.3f} bits",
-        xy=(1000.0, r3["nu1000_clock10_auc"]), xytext=(42.0, 0.875),
-        arrowprops=dict(arrowstyle="->", color=COL_NAVY, lw=1.0),
-        fontsize=6.9, color=COL_NAVY, fontweight="bold",
-        bbox=dict(boxstyle="round,pad=0.24", fc="#EBF5FB", ec=COL_NAVY, lw=0.7),
-    )
+    if has_disjoint_pools:
+        largest = r3["largest_complete_ensemble"]
+        axB.annotate(
+            f"ν = {largest['ensemble_cells_nu']} cells\n"
+            f"Clock LODO AUC = {largest['clock10_lodo_roc_auc']:.3f}\n"
+            f"Combined LODO AUC = {largest['combined_lodo_roc_auc']:.3f}",
+            xy=(largest["ensemble_cells_nu"], largest["clock10_roc_auc"]), xytext=(24.0, 0.89),
+            arrowprops=dict(arrowstyle="->", color=COL_NAVY, lw=1.0),
+            fontsize=6.9, color=COL_NAVY, fontweight="bold",
+            bbox=dict(boxstyle="round,pad=0.24", fc="#EBF5FB", ec=COL_NAVY, lw=0.7),
+        )
     axB.set_title(f"B. Row 3: Transcriptomic Capture Sparsity vs. Ensemble Scaling (GSE218316, n = {r3['gse218316_total_cells_analyzed']:,})", loc="left", pad=6)
 
     lines_B = l1 + l2 + l3

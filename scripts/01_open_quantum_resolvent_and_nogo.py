@@ -19,7 +19,8 @@ import pandas as pd
 from scipy import constants as const
 from scipy.linalg import expm, inv, eigvals
 
-OUT_DATA = "/home/sandbox/workspace/observer_bounded_dna_paper/data"
+from analysis_paths import DATA_DIR as OUT_DATA
+
 os.makedirs(OUT_DATA, exist_ok=True)
 
 HBAR_EV_S = const.hbar / const.e          # 6.582119569e-16 eV*s
@@ -154,7 +155,7 @@ def verify_resolvent_and_moment_annihilation():
             "op_norm_error": op_err,
             "open_coherence_l2": coh_open,
             "closed_coherence_l2": coh_closed,
-            "analytic_upper_bound": float(
+            "heuristic_error_scale": float(
                 min(2.0, (np.linalg.norm(L_QP, 2) * np.linalg.norm(L_PQ, 2)) / (spectral_gap_s_inv ** 2) * (1.0 / max(spectral_gap_s_inv * t, 1.0) + np.exp(-spectral_gap_s_inv * t)))
             ),
         })

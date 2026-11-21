@@ -20,8 +20,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 
-DATA_DIR = "/home/sandbox/workspace/observer_bounded_dna_paper/data"
-ASSET_DIR = "/home/sandbox/workspace/observer_bounded_dna_paper/assets"
+from analysis_paths import ASSET_DIR, DATA_DIR
+
 os.makedirs(ASSET_DIR, exist_ok=True)
 
 plt.rcParams.update({
