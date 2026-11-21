@@ -76,9 +76,9 @@
     },
     {
       "relative_path": "assets/fig2_circadian_rate_distortion.png",
-      "size_bytes": 810724,
-      "sha256_prefix": "771a2c03e3b9ec1c",
-      "sha256": "771a2c03e3b9ec1ce82940dc578a8c9084c8fc5ad7f4ca04fcdbe1516ea6e457"
+      "size_bytes": 293176,
+      "sha256_prefix": "d3c20baa0afbd266",
+      "sha256": "d3c20baa0afbd26659e60b9e55b142ec8534188d25f98a89d227367fcc917d84"
     },
     {
       "relative_path": "assets/fig2_circadian_rate_distortion.svg",
@@ -100,9 +100,9 @@
     },
     {
       "relative_path": "assets/fig4_human_promoters_and_alphagenome.png",
-      "size_bytes": 865279,
-      "sha256_prefix": "322e80d1e2149414",
-      "sha256": "322e80d1e2149414b7c2a07efcd369910ff838ce157cb05b3b0daeeae666b009"
+      "size_bytes": 305968,
+      "sha256_prefix": "2263fbef980fe220",
+      "sha256": "2263fbef980fe220a0ef74b5cb9529208897c35a16e42e13df4b7f0eb5c13a75"
     },
     {
       "relative_path": "assets/fig4_human_promoters_and_alphagenome.svg",
@@ -112,9 +112,9 @@
     },
     {
       "relative_path": "assets/fig5_astrodynamics_and_cosmic_chirality.png",
-      "size_bytes": 1123184,
-      "sha256_prefix": "456ea2c5f1b2f043",
-      "sha256": "456ea2c5f1b2f0430878c63f94b1c4962c9e07e9e918c08d4f73180a40f32e8a"
+      "size_bytes": 389038,
+      "sha256_prefix": "6b260293042e7ce6",
+      "sha256": "6b260293042e7ce6e670af8be771ac67807e5d14422303ab4be263477ba1d404"
     },
     {
       "relative_path": "assets/fig5_astrodynamics_and_cosmic_chirality.svg",
@@ -124,9 +124,9 @@
     },
     {
       "relative_path": "assets/fig6_table6_empirical_wetlab_validation.png",
-      "size_bytes": 1248775,
-      "sha256_prefix": "64a380da1951e4fc",
-      "sha256": "64a380da1951e4fcb52339c6a72b61b8d502219789f15ad84bb3ebcbd522ebfd"
+      "size_bytes": 412678,
+      "sha256_prefix": "2f0ce5d29502c079",
+      "sha256": "2f0ce5d29502c07992bb3d06740bf00450b9e3910172b8f2ed3c750ae2f0cc06"
     },
     {
       "relative_path": "assets/fig6_table6_empirical_wetlab_validation.svg",
@@ -412,9 +412,9 @@
     },
     {
       "relative_path": "science_advances_latex_source.zip",
-      "size_bytes": 4947195,
-      "sha256_prefix": "067535a8cb3f42a1",
-      "sha256": "067535a8cb3f42a1ae3f33212b17e7b6a695423747d0b993698238ba7a6d9a7c"
+      "size_bytes": 2566863,
+      "sha256_prefix": "46f972fe4ee62536",
+      "sha256": "46f972fe4ee62536ce5db649b37be019422a752b4360828e8711eb447a938a4f"
     },
     {
       "relative_path": "scripts/01_open_quantum_resolvent_and_nogo.py",
