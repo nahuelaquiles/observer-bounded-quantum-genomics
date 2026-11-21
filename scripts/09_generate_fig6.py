@@ -79,10 +79,12 @@ def make_figure6():
     )
     axA1.axhline(1.0, color=COL_SLATE, ls=":", lw=0.8, alpha=0.6)
     axA1.text(
-        24.0, 0.96,
-        f"28→37 °C: {r1['emp_ratio_37C_vs_28C']:.2f}× obs\nvs {r1['mod1_predicted_ratio_37C_vs_28C']:.2f}× pred\n({r1['arrhenius_ratio_agreement_pct']:.1f}% match, P = {r1['chu2018_28_vs_37C_padj']:.0e})",
-        fontsize=6.7, color=COL_NAVY, fontweight="bold", va="top",
-        bbox=dict(boxstyle="round,pad=0.24", fc="#F4F6F7", ec="#BDC3C7", lw=0.7),
+        23.85, 0.99,
+        f"28→37 °C: {r1['emp_ratio_37C_vs_28C']:.2f}× obs vs {r1['mod1_predicted_ratio_37C_vs_28C']:.2f}× pred\n"
+        f"  ({r1['arrhenius_ratio_agreement_pct']:.1f}% match, 1-sided P={r1['chu2018_28_vs_37C_padj']:.0e})\n"
+        f"25→28 °C: {r1['emp_ratio_28C_vs_25C']:.2f}× obs vs {r1['mod1_predicted_ratio_28C_vs_25C']:.2f}× pred (P={r1['chu2018_25_vs_28C_padj']:.2f})",
+        fontsize=6.15, color=COL_NAVY, fontweight="bold", va="top",
+        bbox=dict(boxstyle="round,pad=0.22", fc="#F4F6F7", ec="#BDC3C7", lw=0.7),
     )
     axA1.text(
         28.4, 0.43,
@@ -151,15 +153,21 @@ def make_figure6():
     axB.axhline(0.50, color=COL_SLATE, ls="--", lw=0.9, alpha=0.7)
     l1 = axB.plot(
         nu, sc_df["clock10_roc_auc"], color=COL_NAVY, lw=2.3, marker="o", markersize=5.4,
-        label="Clock-panel ROC-AUC", zorder=5,
+        label="Clock-10 ROC-AUC", zorder=5,
     )
+    l_red = []
+    if "redox12_roc_auc" in sc_df.columns:
+        l_red = axB.plot(
+            nu, sc_df["redox12_roc_auc"], color=COL_AMBER, lw=2.2, ls="--", marker="D", markersize=4.6,
+            label="BER/NRF2-12 only ROC-AUC", zorder=6,
+        )
     l2 = axB.plot(
-        nu, sc_df["combined_clock_redox_roc_auc"], color=COL_TEAL, lw=2.1, marker="s", markersize=4.8,
-        label="Combined clock + BER/redox ROC-AUC", zorder=4,
+        nu, sc_df["combined_clock_redox_roc_auc"], color=COL_TEAL, lw=2.0, marker="s", markersize=4.8,
+        label="Combined-22 (Clock-10 + BER/NRF2-12) ROC-AUC", zorder=4,
     )
     l3 = axB_r.plot(
         nu, 100.0 * sc_df["all_10_clock_genes_zero_frac"], color=COL_CRIMSON, lw=1.9, ls="-.", marker="^", markersize=4.8,
-        label="Zero UMIs across retained clock genes (%)", zorder=3,
+        label="Zero UMIs across all 10 clock genes (%)", zorder=3,
     )
 
     axB.set_xscale("log")
@@ -172,28 +180,29 @@ def make_figure6():
     axB_r.tick_params(axis="y", colors=COL_CRIMSON)
 
     axB.annotate(
-        f"ν = 1 cell\n{100*r3['mean_detected_clock_gene_zero_erasure']:.2f}% zero UMIs per retained clock gene\nClock AUC = {r3['nu1_clock10_auc']:.3f}",
+        f"ν = 1 cell\n{100*r3['mean_detected_clock_gene_zero_erasure']:.2f}% zero UMIs per clock gene\nClock-10 AUC = {r3['nu1_clock10_auc']:.3f}",
         xy=(1.0, r3["nu1_clock10_auc"]), xytext=(1.08, 0.80),
         arrowprops=dict(arrowstyle="->", color=COL_CRIMSON, lw=1.0),
-        fontsize=6.9, color=COL_CRIMSON, fontweight="bold",
+        fontsize=6.8, color=COL_CRIMSON, fontweight="bold",
         bbox=dict(boxstyle="round,pad=0.24", fc="#FDEDEC", ec=COL_CRIMSON, lw=0.7),
     )
     if has_disjoint_pools:
         largest = r3["largest_complete_ensemble"]
+        red_lodo = largest.get("redox12_lodo_roc_auc", largest["combined_lodo_roc_auc"])
         axB.annotate(
-            f"ν = {largest['ensemble_cells_nu']} cells\n"
-            f"Clock LODO AUC = {largest['clock10_lodo_roc_auc']:.3f}\n"
-            f"Combined LODO AUC = {largest['combined_lodo_roc_auc']:.3f}",
-            xy=(largest["ensemble_cells_nu"], largest["clock10_roc_auc"]), xytext=(145.0, 0.58),
+            f"ν = {largest['ensemble_cells_nu']} cells (LODO across 3 donors):\n"
+            f"Clock-10 = {largest['clock10_lodo_roc_auc']:.3f} | BER/NRF2-12 = {red_lodo:.3f}\n"
+            f"Combined-22 = {largest['combined_lodo_roc_auc']:.3f}",
+            xy=(largest["ensemble_cells_nu"], largest["clock10_roc_auc"]), xytext=(120.0, 0.54),
             arrowprops=dict(arrowstyle="->", color=COL_NAVY, lw=1.0),
-            fontsize=6.9, color=COL_NAVY, fontweight="bold",
+            fontsize=6.6, color=COL_NAVY, fontweight="bold",
             bbox=dict(boxstyle="round,pad=0.24", fc="#EBF5FB", ec=COL_NAVY, lw=0.7),
         )
     axB.set_title(f"B. Row 3: Transcriptomic Capture Sparsity vs. Ensemble Scaling (GSE218316, n = {r3['gse218316_total_cells_analyzed']:,})", loc="left", pad=6)
 
-    lines_B = l1 + l2 + l3
+    lines_B = l1 + l_red + l2 + l3
     labels_B = [ln.get_label() for ln in lines_B]
-    axB.legend(lines_B, labels_B, loc="upper left", bbox_to_anchor=(0.0, -0.18), ncol=2, frameon=False, fontsize=6.9)
+    axB.legend(lines_B, labels_B, loc="upper left", bbox_to_anchor=(0.0, -0.18), ncol=2, frameon=False, fontsize=6.6)
 
     # =========================================================================
     # PANEL C (gs_outer[1, 0]): Row 4 Stratified HepG2 & K562 MPRA (GSE126550)

@@ -116,17 +116,20 @@ def make_figure1():
     # Panel C: Universal Sub-Thermal Coherent Wave No-Go Bound
     axC = fig.add_subplot(gs[1, 0])
     E_grid = wf_df["E0_V_per_m"].values
-    axC.loglog(E_grid, np.maximum(wf_df["thermo_ceiling_dmu_over_mu"].values, 1e-36), color=COL_NAVY, lw=2.0, label=r"Static Kubo ceiling $2\lambda / (k_B T)$")
-    axC.loglog(E_grid, np.maximum(wf_df["dc_gibbs_dmu_over_mu"].values, 1e-36), color=COL_TEAL, ls="--", lw=1.7, label="Exact DC Gibbs shift")
+    axC.loglog(E_grid, np.maximum(wf_df["thermo_ceiling_dmu_over_mu"].values, 1e-36), color=COL_NAVY, lw=2.0, label=r"Static Kubo ceiling $2\lambda / (k_B T)$ ($[\Pi,H_0]=0$)")
+    axC.loglog(E_grid, np.maximum(wf_df["dc_gibbs_dmu_over_mu"].values, 1e-36), color=COL_TEAL, ls="--", lw=1.7, label=r"Exact DC Gibbs shift ($\Pi_{\varepsilon_1(0)}$)")
     axC.loglog(E_grid, np.maximum(wf_df["drazin_floquet_subgap_dmu_over_mu"].values, 1e-36), color=COL_PURPLE, lw=2.1,
-               label=r"Fixed-bath Floquet Drazin ($\Pi_{E_1(0)}$, $\omega \ll g$)")
+               label=r"Fixed-bath Floquet Drazin ($\Pi_{\varepsilon_1(0)}$, $\omega \ll g$)")
     axC.loglog(E_grid, np.maximum(wf_df["drazin_floquet_thz_dmu_over_mu"].values, 1e-36), color=COL_AMBER, ls=":", lw=1.8,
-               label=r"Near-gap THz Floquet ($\omega = 10^{13}\,\mathrm{rad/s}$)")
+               label=r"Near-gap THz Floquet ($\Pi_{\varepsilon_1(0)}$, $10^{13}\,\mathrm{rad/s}$)")
     if "adiabatic_kms_fixed_proj_dmu_over_mu" in wf_df.columns:
         axC.loglog(E_grid, np.maximum(wf_df["adiabatic_kms_fixed_proj_dmu_over_mu"].values, 1e-36), color="#1F618D", ls=(0, (3, 1, 1, 1)), lw=1.6,
-                   label=r"Adiabatic KMS ($\Pi_{E_1(0)}$ fixed projector)")
+                   label=r"Adiabatic KMS ($\Pi_{\varepsilon_1(0)}$ fixed eigenproj.)")
     axC.loglog(E_grid, np.maximum(wf_df["adiabatic_kms_ac_dmu_over_mu"].values, 1e-36), color="#2874A6", ls="-.", lw=1.7,
-               label=r"Adiabatic KMS ($|E_1(t)\rangle$ eigenstate)")
+               label=r"Adiabatic KMS ($|\varepsilon_1(t)\rangle$ inst. eigenstate)")
+    if "adiabatic_kms_bare_tautomer_dmu_over_mu" in wf_df.columns:
+        axC.loglog(E_grid, np.maximum(wf_df["adiabatic_kms_bare_tautomer_dmu_over_mu"].values, 1e-36), color=COL_SLATE, ls=(0, (1, 1.5)), lw=1.4,
+                   label=r"Cycle-avg KMS ($|\mathrm{G}^*\text{:}\mathrm{C}^*\rangle$ bare taut.)")
     m50 = float(m1["metabolic_50mK_noise_floor"])
     m50_exp = int(np.floor(np.log10(m50)))
     m50_man = m50 / (10.0 ** m50_exp)
@@ -140,15 +143,15 @@ def make_figure1():
     kms1_exp = int(np.floor(np.log10(kms1)))
     kms1_man = kms1 / (10.0 ** kms1_exp)
     axC.scatter([1e-6], [fl1], color=COL_PURPLE, s=54, zorder=6, edgecolor="black", lw=0.8,
-                label=rf"$1\ \mu\mathrm{{V/m}}$ Floquet (${fl1_man:.2f}\times 10^{{{fl1_exp}}}$)")
+                label=rf"$1\ \mu\mathrm{{V/m}}$ Floquet $\Pi_{{\varepsilon_1(0)}}$ (${fl1_man:.2f}\times 10^{{{fl1_exp}}}$)")
     axC.scatter([1e-6], [kms1], color="#2874A6", marker="D", s=44, zorder=6, edgecolor="black", lw=0.7,
-                label=rf"$1\ \mu\mathrm{{V/m}}$ KMS eigen (${kms1_man:.2f}\times 10^{{{kms1_exp}}}$)")
+                label=rf"$1\ \mu\mathrm{{V/m}}$ KMS $|\varepsilon_1(t)\rangle$ (${kms1_man:.2f}\times 10^{{{kms1_exp}}}$)")
     axC.set_xlabel(r"Non-ionizing electric field amplitude $E_0$ ($\mathrm{V\,m^{-1}}$)")
     axC.set_ylabel(r"Fractional mutation-hazard shift $|\Delta\mu / \mu|$")
     axC.set_title("C   Universal Sub-Thermal Wave No-Go Bound", loc="left")
     axC.set_ylim(1e-35, 1e3)
     axC.grid(True, which="major", alpha=0.22, lw=0.6)
-    axC.legend(loc="upper left", frameon=True, facecolor="white", framealpha=0.92, fontsize=6.4)
+    axC.legend(loc="upper left", frameon=True, facecolor="white", framealpha=0.92, fontsize=6.0)
 
     # Panel D: Duplex Guanine Stack Hole-Sink Enrichment
     axD = fig.add_subplot(gs[1, 1])
@@ -414,7 +417,7 @@ def make_figure4():
     fig = plt.figure(figsize=(12.6, 9.2), constrained_layout=True)
     gs = GridSpec(2, 2, figure=fig, hspace=0.16, wspace=0.14)
 
-    # Panel A: Propensity-matched forest plot (10 clock promoters vs 1,500 matched CGI controls vs 4,560 genome-wide)
+    # Panel A: Propensity-matched forest plot (10 clock promoters vs 1,500 matched CGI controls vs 4,560 10-chr MANE background)
     axA = fig.add_subplot(gs[0, 0])
     label_map = {
         "gc_frac": "GC fraction (matched)",
@@ -439,7 +442,7 @@ def make_figure4():
     min_bh_q = float(sub_c["bh_fdr_q"].dropna().min())
 
     axA.axvline(0.0, color="#1C2833", lw=1.0)
-    axA.scatter(d_unadj, y_pos + 0.14, color=COL_AMBER, marker="D", s=38, alpha=0.88, label="Unadjusted vs. 4,560 promoters (clock SD units)")
+    axA.scatter(d_unadj, y_pos + 0.14, color=COL_AMBER, marker="D", s=38, alpha=0.88, label="Unadjusted vs. 4,560 10-chr MANE promoters")
     axA.errorbar(d_matched, y_pos - 0.14, xerr=1.96 * se_hedges, fmt="o", color=COL_NAVY, ms=5.2, lw=1.3, capsize=2.5,
                  label=f"Mahalanobis-matched vs. {int(n_ctl):,} CGI controls (all BH q ≥ {min_bh_q:.2f})")
     axA.axhline(6.5, color=COL_SLATE, ls=":", lw=0.9)

@@ -1,101 +1,89 @@
 {
-  "abstract_words": 141,
-  "body_words_detex": 10657,
-  "body_words_regex": 13132,
-  "n_figures": 6,
-  "n_tables": 4,
-  "pronoun_hits_main": [],
-  "pronoun_hits_supp": [],
-  "etal_hits": {
-    "main": [],
-    "supp": [],
-    "bib": []
-  },
-  "legacy_hits": [],
+  "audit_round": "round_2_synchronized",
+  "abstract_pdf_words": 149,
+  "main_prose_words": 6871,
+  "main_math_inclusive_tokens": 11500,
+  "reference_count": 49,
   "deliverables": {
     "observer_bounded_dna_combined_submission.pdf": {
-      "bytes": 3457002,
-      "mb": 3.46,
-      "pages": 32,
-      "sha256_16": "cdde2b917cd90a24",
-      "qmarks": []
+      "bytes": 3493302,
+      "sha256": "65e34e48ebcdc8a313b96417dc271c3624f03bdba8db3bde451b11fb14011409",
+      "sha256_prefix16": "65e34e48ebcdc8a3",
+      "pages": 34,
+      "unresolved_qmarks": []
     },
     "observer_bounded_dna_evolution.pdf": {
-      "bytes": 2760735,
-      "mb": 2.76,
-      "pages": 27,
-      "sha256_16": "2bd6d098169ad75d",
-      "qmarks": []
+      "bytes": 2787847,
+      "sha256": "21455364ab8d284c3c3ecfe911f20d034b21a39b3f4a96d2c89f273863c210ff",
+      "sha256_prefix16": "21455364ab8d284c",
+      "pages": 28,
+      "unresolved_qmarks": []
     },
     "observer_bounded_dna_supplementary_materials.pdf": {
-      "bytes": 531315,
-      "mb": 0.53,
-      "pages": 5,
-      "sha256_16": "90fb7a7f730cc522",
-      "qmarks": []
+      "bytes": 538152,
+      "sha256": "2f73fec07491ef5e355145744f07edb5ab1f32b21fe82d5c987394bda29308c6",
+      "sha256_prefix16": "2f73fec07491ef5e",
+      "pages": 6,
+      "unresolved_qmarks": []
     },
     "cover_letter_science_advances.pdf": {
-      "bytes": 217586,
-      "mb": 0.22,
+      "bytes": 236780,
+      "sha256": "2793c8c51dacfd5dc1f8322367571057232aa202818f0a6c1e0c7ee160bcb0c2",
+      "sha256_prefix16": "2793c8c51dacfd5d",
       "pages": 2,
-      "sha256_16": "eb6c617f39a85872",
-      "qmarks": []
+      "unresolved_qmarks": []
     },
     "response_to_editorial_review.pdf": {
-      "bytes": 430643,
-      "mb": 0.43,
-      "pages": 4,
-      "sha256_16": "1c5e242e7977dc7e",
-      "qmarks": []
+      "bytes": 433413,
+      "sha256": "d994aa652a0172492ef2ed81ba43b3dae80aded5c8f0a509fc7cde80031bcfab",
+      "sha256_prefix16": "d994aa652a017249",
+      "pages": 3,
+      "unresolved_qmarks": []
     },
     "science_advances_latex_source.zip": {
-      "bytes": 1812202,
-      "mb": 1.81,
-      "pages": null,
-      "sha256_16": "9415e128fe310416",
-      "qmarks": []
+      "bytes": 1831212,
+      "sha256": "4fa55fcd1e6e9bb97a2274ccf0d0f1816f5e67ed992253c89e62a0451491ef3d",
+      "sha256_prefix16": "4fa55fcd1e6e9bb9"
     },
     "observer_bounded_dna_evolution.tex": {
-      "bytes": 139278,
-      "mb": 0.14,
-      "pages": null,
-      "sha256_16": "2cc4fde881801dee",
-      "qmarks": []
+      "bytes": 145100,
+      "sha256": "62eb757bafffa94e5f77a5b4875f6e6ea08b4ba3e0e25dd3b7ed0b5b1d8db568",
+      "sha256_prefix16": "62eb757bafffa94e"
     },
     "observer_bounded_dna_supplementary_materials.tex": {
-      "bytes": 28412,
-      "mb": 0.03,
-      "pages": null,
-      "sha256_16": "792ccdda186f9d17",
-      "qmarks": []
+      "bytes": 30263,
+      "sha256": "7c2fce7a24f958a76475e662954ef5c054601b6a7f1beaa36379fdeb23feaf69",
+      "sha256_prefix16": "7c2fce7a24f958a7"
     },
     "cover_letter_science_advances.tex": {
-      "bytes": 8073,
-      "mb": 0.01,
-      "pages": null,
-      "sha256_16": "d00923131e9c5541",
-      "qmarks": []
+      "bytes": 8478,
+      "sha256": "86abb36983f188ed6586494f5e56822e7a9bafa69fba106bca803c218c8b3fb8",
+      "sha256_prefix16": "86abb36983f188ed"
     },
     "response_to_editorial_review.tex": {
-      "bytes": 19065,
-      "mb": 0.02,
-      "pages": null,
-      "sha256_16": "a6af762f872b30bc",
-      "qmarks": []
+      "bytes": 15191,
+      "sha256": "daf1752b6924548bcb4e44f4deb55382a3ba4babe4355523616972f672dd95b0",
+      "sha256_prefix16": "daf1752b6924548b"
     },
     "RESPONSE_TO_EDITORIAL_REVIEW.md": {
-      "bytes": 5876,
-      "mb": 0.01,
-      "pages": null,
-      "sha256_16": "89e9e9533425fa70",
-      "qmarks": []
+      "bytes": 5949,
+      "sha256": "b0930af827dd9bfff78deb32f8118b9bb51006d0d8a431fa5b6331a18ef2efa4",
+      "sha256_prefix16": "b0930af827dd9bff"
+    },
+    "requirements.txt": {
+      "bytes": 385,
+      "sha256": "4e928b736389d1225483da2370202db808a37135652fd6b6489d07d55e0587c8",
+      "sha256_prefix16": "4e928b736389d122"
+    },
+    "README.md": {
+      "bytes": 9444,
+      "sha256": "ad477ec21987857f2a1b8ef6e4e006d939ed5e457d5f90100aa95f690cca519b",
+      "sha256_prefix16": "ad477ec21987857f"
     },
     "references.bib": {
       "bytes": 21542,
-      "mb": 0.02,
-      "pages": null,
-      "sha256_16": "dc5d9755b01f8221",
-      "qmarks": []
+      "sha256": "dc5d9755b01f8221184b46291f899f69e89d07f9d85e83586d25cc8b7cc9e528",
+      "sha256_prefix16": "dc5d9755b01f8221"
     }
   }
 }

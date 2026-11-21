@@ -1,0 +1,465 @@
+\begin{thebibliography}{49}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Slocombe et~al.(2021)Slocombe, Al-Khalili, and
+  Sacchi]{slocombe2021pccp}
+Louie Slocombe, Jim Al-Khalili, and Marco Sacchi.
+\newblock Quantum and classical effects in {DNA} point mutations:
+  {Watson--Crick} tautomerism in {AT} and {GC} base pairs.
+\newblock \emph{Physical Chemistry Chemical Physics}, 2021.
+\newblock \doi{10.1039/d0cp05781a}.
+
+\bibitem[Slocombe et~al.(2022)Slocombe, Winokan, Al-Khalili, and
+  Sacchi]{slocombe2022commchem}
+Louie Slocombe, Max Winokan, Jim Al-Khalili, and Marco Sacchi.
+\newblock Proton transfer during {DNA} strand separation as a source of
+  mutagenic guanine-cytosine tautomers.
+\newblock \emph{Communications Chemistry}, 2022.
+\newblock \doi{10.1038/s42004-022-00760-x}.
+
+\bibitem[Kimsey et~al.(2018)Kimsey, Szymanski, Zahurancik, Shakya, Xue, Chu,
+  Sathyamoorthy, Suo, and Al-Hashimi]{kimsey2018nature}
+Isaac~J. Kimsey, Eric~S. Szymanski, Walter~J. Zahurancik, Anisha Shakya,
+  Yi~Xue, Chia-Chieh Chu, Bharathwaj Sathyamoorthy, Zucai Suo, and Hashim~M.
+  Al-Hashimi.
+\newblock Dynamic basis for {dG$\cdot$dT} misincorporation via tautomerization
+  and ionization.
+\newblock \emph{Nature}, 554\penalty0 (7691):\penalty0 195--201, 2018.
+\newblock \doi{10.1038/nature25487}.
+
+\bibitem[Garcia(2026{\natexlab{a}})]{garcia2026dna}
+Nahuel~Aquiles Garcia.
+\newblock {DNA} as a quantum system in evolution.
+\newblock \emph{PLOS ONE}, 21\penalty0 (3):\penalty0 e0344520,
+  2026{\natexlab{a}}.
+\newblock \doi{10.1371/journal.pone.0344520}.
+
+\bibitem[Globus and Blandford(2020)]{globus2020apjl}
+No{\'e}mie Globus and Roger~D. Blandford.
+\newblock The chiral puzzle of life.
+\newblock \emph{The Astrophysical Journal Letters}, 895\penalty0 (1):\penalty0
+  L11, 2020.
+\newblock \doi{10.3847/2041-8213/ab8dc6}.
+
+\bibitem[de~Abrantes et~al.(2025)de~Abrantes, Motala, Riddlestone, Slocombe,
+  and Sacchi]{abrantes2025pccp}
+Juliana~G. de~Abrantes, Adam~Pestana Motala, Ian~M. Riddlestone, Louie
+  Slocombe, and Marco Sacchi.
+\newblock Proton transfer in methylated {G--C}: nuclear quantum effects and
+  water-assisted hopping.
+\newblock \emph{Physical Chemistry Chemical Physics}, 27\penalty0
+  (23):\penalty0 12550--12559, 2025.
+\newblock \doi{10.1039/d5cp00854a}.
+
+\bibitem[Rokhlenko et~al.(2014)Rokhlenko, Cadet, Geacintov, and
+  Shafirovich]{rokhlenko2014jacs}
+Yekaterina Rokhlenko, Jean Cadet, Nicholas~E. Geacintov, and Vladimir
+  Shafirovich.
+\newblock Mechanistic aspects of hydration of guanine radical cations in {DNA}.
+\newblock \emph{Journal of the American Chemical Society}, 136\penalty0
+  (16):\penalty0 5956--5962, 2014.
+\newblock \doi{10.1021/ja412471u}.
+
+\bibitem[Rooman and Wintjens(2014)]{rooman2014ioniz}
+Marianne Rooman and Ren{\'e} Wintjens.
+\newblock Sequence and conformation effects on ionization potential and charge
+  distribution of homo-nucleobase stacks using {M06-2X} hybrid density
+  functional theory calculations, 2014.
+
+\bibitem[Fang and Zou(2019)]{fang2019biochem}
+Yuxin Fang and Peng Zou.
+\newblock Genome-wide mapping of oxidative {DNA} damage via engineering of
+  8-oxoguanine {DNA} glycosylase.
+\newblock \emph{Biochemistry}, 59\penalty0 (1):\penalty0 85--89, 2019.
+\newblock \doi{10.1021/acs.biochem.9b00782}.
+
+\bibitem[Winokan et~al.(2023)Winokan, Slocombe, Al-Khalili, and
+  Sacchi]{winokan2023scirep}
+Max Winokan, Louie Slocombe, Jim Al-Khalili, and Marco Sacchi.
+\newblock Multiscale simulations reveal the role of {PcrA} helicase in
+  protecting against spontaneous point mutations in {DNA}.
+\newblock \emph{Scientific Reports}, 13\penalty0 (1):\penalty0 21749, 2023.
+\newblock \doi{10.1038/s41598-023-48119-z}.
+
+\bibitem[Foster et~al.(2018)Foster, Niccum, Popodi, Townes, Lee, Ismail, and
+  Tang]{foster2018genetics}
+Patricia~L. Foster, Brittany~A. Niccum, Ellen~M. Popodi, Jesse~P. Townes,
+  Heewook Lee, Wazim~Mohammed Ismail, and Haixu Tang.
+\newblock Determinants of base-pair substitution patterns revealed by
+  whole-genome sequencing of {DNA} mismatch repair defective {Escherichia
+  coli}.
+\newblock \emph{Genetics}, 209\penalty0 (4):\penalty0 1029--1042, 2018.
+\newblock \doi{10.1534/genetics.118.301237}.
+
+\bibitem[Cordero et~al.(2024)Cordero, Mehta, Weaver, Ling, Freudenthal, Cortez,
+  and Roberts]{cordero2024natcommun}
+Cameron Cordero, Kavi P.~M. Mehta, Tyler Weaver, Justin~A. Ling, Bret
+  Freudenthal, David Cortez, and Steven~A. Roberts.
+\newblock Contributing factors to the oxidation-induced mutational landscape in
+  human cells.
+\newblock \emph{Nature Communications}, 2024.
+\newblock \doi{10.1038/s41467-024-55497-z}.
+
+\bibitem[Ren et~al.(2024)Ren, Gut, Fan, Ma, Shan, Yikilmazsoy, Likhodeeva,
+  Hopfner, and Zhou]{ren2024natcommun}
+Mengtian Ren, Fabian Gut, Yilan Fan, Junfei Ma, Xiajing Shan, Aysenur
+  Yikilmazsoy, Mariia Likhodeeva, Karl-Peter Hopfner, and Chuanzheng Zhou.
+\newblock Structural basis for human {OGG1} processing 8-oxodguo within
+  nucleosome core particles.
+\newblock \emph{Nature Communications}, 2024.
+\newblock \doi{10.1038/s41467-024-53811-3}.
+
+\bibitem[Li et~al.(2025)Li, Li, Tan, Yin, Li, Yin, An, Zhuang, Qian, and
+  Hu]{li2025nar}
+Jie Li, Lin Li, Yuanqing Tan, Mengdie Yin, Yuxuan Li, Dongrui Yin, Jiao An,
+  Guanglei Zhuang, Maoxiang Qian, and Jinchuan Hu.
+\newblock Dynamic genome-wide mapping reveals how chromatin context shapes
+  {OGG1}-mediated repair and related mutagenesis in human cells.
+\newblock \emph{Nucleic Acids Research}, 2025.
+\newblock \doi{10.1093/nar/gkaf1330}.
+
+\bibitem[Takhaveev et~al.(2025)Takhaveev, P{\"u}llen, Singh, Lefevre, Aghajani,
+  Huber, Schauer, Gahlon, Poetsch, and Sturla]{takhaveev2025natchembio}
+Vakil Takhaveev, Nikolai P{\"u}llen, Navnit~K. Singh, Lucie Lefevre, Emilie~A.
+  Aghajani, Sabrina~M. Huber, Stefan Schauer, Hailey~L. Gahlon, Anna~R.
+  Poetsch, and Shana~J. Sturla.
+\newblock Click-code-seq reveals strand biases of {DNA} oxidation and
+  depurination in human genome.
+\newblock \emph{Nature Chemical Biology}, 2025.
+\newblock \doi{10.1038/s41589-025-02052-6}.
+
+\bibitem[Obermann et~al.(2024)Obermann, Sakshaug, Kanagaraj, Abentung,
+  de~Sousa, Hagen, Sarno, Bj{\o}r{\aa}s, and Scheffler]{obermann2024redox}
+Tobias Obermann, Teri Sakshaug, Vishnu~Vignesh Kanagaraj, Andreas Abentung,
+  Mirta Mittelstedt~Leal de~Sousa, Lars Hagen, Antonio Sarno, Magnar
+  Bj{\o}r{\aa}s, and Katja Scheffler.
+\newblock Genomic 8-oxoguanine modulates gene transcription independent of its
+  repair by {DNA} glycosylases {OGG1} and {MUTYH}.
+\newblock \emph{Redox Biology}, 2024.
+\newblock \doi{10.1016/j.redox.2024.103461}.
+
+\bibitem[Tenaillon et~al.(2016)Tenaillon, Barrick, Ribeck, Deatherage,
+  Blanchard, Dasgupta, Wu, Wielgoss, Cruveiller, M{\'e}digue, Schneider, and
+  Lenski]{tenaillon2016nature}
+Olivier Tenaillon, Jeffrey~E. Barrick, Noah Ribeck, Daniel~E. Deatherage,
+  Jeffrey~L. Blanchard, Aurko Dasgupta, Gabriel~C. Wu, S{\'e}bastien Wielgoss,
+  St{\'e}phane Cruveiller, Claudine M{\'e}digue, Dominique Schneider, and
+  Richard~E. Lenski.
+\newblock Tempo and mode of genome evolution in a 50,000-generation experiment.
+\newblock \emph{Nature}, 536\penalty0 (7615):\penalty0 165--170, 2016.
+\newblock \doi{10.1038/nature18959}.
+
+\bibitem[Appel et~al.(2022)Appel, Bagdasarian, Basilico, Bellini, Benziger,
+  Biondi, Caccianiga, Calaprice, Caminata, Chepurnov, D'Angelo, Derbin,
+  Di~Giacinto, Di~Marcello, Ding, Di~Ludovico, Di~Noto, Drachnev, Franco,
+  Galbiati, Ghiano, Giammarchi, Goretti, Goettel, Gromov, Guffanti, Ianni,
+  Ianni, Jany, Kobychev, Korga, Kumaran, Laubenstein, Litvinovich, Lombardi,
+  Lomskaya, Ludhova, Lukyanchenko, Machulin, Martyn, Meroni, Miramonti,
+  Misiaszek, Muratova, Nugmanov, Oberauer, Orekhov, Ortica, Pallavicini,
+  Pelicci, Penek, Pietrofaccia, Pilipenko, Pocar, Raikov, Ranalli, Ranucci,
+  Razeto, Re, Redchuk, Rossi, Schoenert, Semenov, Settanta, Skorokhvatov,
+  Singhal, Smirnov, Sotnikov, Tartaglia, Testera, Unzhakov, Vishneva, Vogelaar,
+  von Feilitzsch, Wojcik, Wurm, Zavatarelli, Zuber, and
+  Zuzel]{appel2022borexino}
+S.~Appel, Z.~Bagdasarian, D.~Basilico, G.~Bellini, J.~Benziger, R.~Biondi,
+  B.~Caccianiga, F.~Calaprice, A.~Caminata, A.~Chepurnov, D.~D'Angelo,
+  A.~Derbin, A.~Di~Giacinto, V.~Di~Marcello, X.~F. Ding, A.~Di~Ludovico,
+  L.~Di~Noto, I.~Drachnev, D.~Franco, C.~Galbiati, C.~Ghiano, M.~Giammarchi,
+  A.~Goretti, A.~S. Goettel, M.~Gromov, D.~Guffanti, Aldo Ianni, Andrea Ianni,
+  A.~Jany, V.~Kobychev, G.~Korga, S.~Kumaran, M.~Laubenstein, E.~Litvinovich,
+  P.~Lombardi, I.~Lomskaya, L.~Ludhova, G.~Lukyanchenko, I.~Machulin,
+  J.~Martyn, E.~Meroni, L.~Miramonti, M.~Misiaszek, V.~Muratova, R.~Nugmanov,
+  L.~Oberauer, V.~Orekhov, F.~Ortica, M.~Pallavicini, L.~Pelicci, O.~Penek,
+  L.~Pietrofaccia, N.~Pilipenko, A.~Pocar, G.~Raikov, M.~T. Ranalli,
+  G.~Ranucci, A.~Razeto, A.~Re, M.~Redchuk, N.~Rossi, S.~Schoenert, D.~Semenov,
+  G.~Settanta, M.~Skorokhvatov, A.~Singhal, O.~Smirnov, A.~Sotnikov,
+  R.~Tartaglia, G.~Testera, E.~Unzhakov, A.~Vishneva, R.~B. Vogelaar, F.~von
+  Feilitzsch, M.~Wojcik, M.~Wurm, S.~Zavatarelli, K.~Zuber, and G.~Zuzel.
+\newblock Independent determination of the {Earth}'s orbital parameters with
+  solar neutrinos in {Borexino}.
+\newblock \emph{Astroparticle Physics}, 145:\penalty0 102778, 2022.
+\newblock \doi{10.48550/arxiv.2204.07029}.
+
+\bibitem[Abbasi et~al.(2010)Abbasi, Abdou, Abu-Zayyad, Adams, Aguilar, Ahlers,
+  Andeen, Auffenberg, Bai, Baker, Barwick, Bay, Bazo~Alba, Beattie, Beatty,
+  Bechet, Becker~Tjus, Becker, Benabderrahmane, BenZvi, Berdermann, Berghaus,
+  Berley, Bernardini, Bertrand, Besson, Bissok, Blaufuss, Boersma, B{\"o}hm,
+  B{\"o}ser, Botner, Bradley, Braun, Buitink, Carson, Chirkin, Christy, Clem,
+  Clevermann, Cohen, Colnard, Cowen, D'Agostino, Danninger, Davis, De~Clercq,
+  Demir{\"o}rs, Depaepe, Descamps, Desiati, de~Vries-Uiterweerd, DeYoung,
+  Diaz-Velez, Dierckxsens, Dreyer, Dumm, Duvoort, Ehrlich, Eisch, Ellsworth,
+  Engdeg{\aa}rd, Euler, Evenson, Fadiran, Fazely, Feusels, Filimonov, Finley,
+  Foerster, Fox, Franckowiak, Franke, Gaisser, Gallagher, Geisler, Gerhardt,
+  Gladstone, Gl{\"u}senkamp, Goldschmidt, Goodman, Grant, Griesel, Gro{\ss},
+  Grullon, Gurtner, Ha, Hallgren, Halzen, Han, Hanson, Helbing, Herquet,
+  Hickford, Hill, Hoffman, Homeier, Hoshina, Hubert, and
+  Huelsnitz]{abbasi2010icecube}
+R.~Abbasi, Y.~Abdou, T.~Abu-Zayyad, Jenni Adams, J.~A. Aguilar, M.~Ahlers,
+  K.~Andeen, J.~Auffenberg, X.~Bai, M.~Baker, S.~W. Barwick, R.~Bay, J.~L.
+  Bazo~Alba, Keith Beattie, J.~J. Beatty, S.~Bechet, Julia Becker~Tjus, K.-H.
+  Becker, M.~L. Benabderrahmane, S.~BenZvi, Jens Berdermann, Patrick Berghaus,
+  David Berley, E.~Bernardini, D.~Bertrand, Dominique Besson, M.~Bissok,
+  E.~Blaufuss, D.~J. Boersma, C.~B{\"o}hm, S.~B{\"o}ser, O.~Botner, Larry
+  Bradley, J.~Braun, S.~Buitink, M.~Carson, D.~Chirkin, B.~Christy, J.~M. Clem,
+  F.~Clevermann, S.~Cohen, C.~Colnard, D.~F. Cowen, M.~V. D'Agostino,
+  M.~Danninger, J.~C. Davis, Catherine De~Clercq, L.~Demir{\"o}rs, O.~Depaepe,
+  F.~Descamps, P.~Desiati, G.~de~Vries-Uiterweerd, T.~DeYoung, Juan~Carlos
+  Diaz-Velez, M.~Dierckxsens, J.~Dreyer, J.~Dumm, M.~R. Duvoort, R.~Ehrlich,
+  J.~Eisch, R.~W. Ellsworth, O.~Engdeg{\aa}rd, S.~Euler, Paul~A. Evenson,
+  O.~Fadiran, Ali~R. Fazely, T.~Feusels, K.~Filimonov, Chad Finley, M.~M.
+  Foerster, B.~D. Fox, A.~Franckowiak, Robert Franke, T.~K. Gaisser, J.~S.
+  Gallagher, M.~Geisler, L.~Gerhardt, Laura Gladstone, T.~Gl{\"u}senkamp,
+  A.~Goldschmidt, Jordan~A. Goodman, D.~Grant, T.~Griesel, A.~Gro{\ss},
+  S.~Grullon, M.~Gurtner, Chang~Hyon Ha, A.~Hallgren, Francis~L. Halzen,
+  K.~Han, K.~Hanson, K.~Helbing, Ph. Herquet, S.~Hickford, Gary~C. Hill, K.~D.
+  Hoffman, A.~Homeier, K.~Hoshina, Daan Hubert, and W.~Huelsnitz.
+\newblock Measurement of the anisotropy of cosmic-ray arrival directions with
+  {IceCube}.
+\newblock \emph{The Astrophysical Journal Letters}, 718\penalty0 (2):\penalty0
+  L194--L198, 2010.
+\newblock \doi{10.1088/2041-8205/718/2/l194}.
+
+\bibitem[Wang et~al.(2025{\natexlab{a}})Wang, Zhang, Yu, Hui, Yao, Wu, Zhang,
+  Liang, Huang, Wang, Bai, Huang, Yang, Zhang, Liu, Ma, Yu, Ji, Yu, and
+  Shao]{wang2025aps}
+Dexin Wang, Rui Zhang, Dekang Yu, N.~M. Hui, ZhangHao Yao, Linghe Wu, Suyalatu
+  Zhang, Tairan Liang, Mei-Rong Huang, Zhilong Wang, Yu~Bai, Yongshun Huang,
+  Xue Yang, Jiawen Zhang, Mengdi Liu, Qiang Ma, Jing Yu, Xiuyan Ji, Yiliqi Yu,
+  and Xuepeng Shao.
+\newblock Observation and research on cosmic ray muons and solar modulation
+  effect based on plastic scintillator detector.
+\newblock \emph{Acta Physica Sinica}, 74\penalty0 (5):\penalty0 059201,
+  2025{\natexlab{a}}.
+\newblock \doi{10.7498/aps.74.20241704}.
+
+\bibitem[Gaisser et~al.(2019)Gaisser, Tilav, Soldin, and
+  Desiati]{gaisser2019icrc}
+T.~K. Gaisser, Serap Tilav, Dennis Soldin, and P.~Desiati.
+\newblock Seasonal variation of atmospheric muons in {IceCube}.
+\newblock \emph{International Cosmic Ray Conference}, page 894, 2019.
+\newblock \doi{10.22323/1.358.0894}.
+
+\bibitem[Malgin(2015)]{malgin2015jetp}
+A.~S. Malgin.
+\newblock Seasonal modulations of the underground cosmic-ray muon energy.
+\newblock \emph{Journal of Experimental and Theoretical Physics}, 121\penalty0
+  (2):\penalty0 212--216, 2015.
+\newblock \doi{10.1134/s1063776115080191}.
+
+\bibitem[Globus et~al.(2021{\natexlab{a}})Globus, Fedynitch, and
+  Blandford]{globus2021apj}
+No{\'e}mie Globus, Anatoli Fedynitch, and Roger~D. Blandford.
+\newblock Polarized radiation and the emergence of biological homochirality on
+  {Earth} and beyond.
+\newblock \emph{The Astrophysical Journal}, 910\penalty0 (2):\penalty0 85,
+  2021{\natexlab{a}}.
+\newblock \doi{10.3847/1538-4357/abe461}.
+
+\bibitem[Globus et~al.(2021{\natexlab{b}})Globus, Blandford, and
+  Fedynitch]{globus2021muons}
+No{\'e}mie Globus, Roger~D. Blandford, and Anatoli Fedynitch.
+\newblock Polarized muons and the origin of biological homochirality.
+\newblock \emph{arXiv preprint arXiv:2110.01975}, 2021{\natexlab{b}}.
+
+\bibitem[Ozturk and Sasselov(2022)]{ozturk2022pnas}
+S.~Furkan Ozturk and Dimitar~D. Sasselov.
+\newblock On the origins of life's homochirality: {Inducing} enantiomeric
+  excess with spin-polarized electrons.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 119\penalty0
+  (28):\penalty0 e2204765119, 2022.
+\newblock \doi{10.1073/pnas.2204765119}.
+
+\bibitem[Ozturk et~al.(2023)Ozturk, Liu, Sutherland, and
+  Sasselov]{ozturk2023sciadv}
+S.~Furkan Ozturk, Ziwei Liu, John~D. Sutherland, and Dimitar~D. Sasselov.
+\newblock Origin of biological homochirality by crystallization of an {RNA}
+  precursor on a magnetic surface.
+\newblock \emph{Science Advances}, 9\penalty0 (23):\penalty0 eadg8274, 2023.
+\newblock \doi{10.1126/sciadv.adg8274}.
+
+\bibitem[Valkovi{\'c} and Obho{\dj}a{\v{s}}(2022)]{valkovic2022aj}
+Vlado Valkovi{\'c} and Jasmina Obho{\dj}a{\v{s}}.
+\newblock Origins of chiral life in interstellar molecular clouds.
+\newblock \emph{The Astronomical Journal}, 163\penalty0 (6):\penalty0 270,
+  2022.
+\newblock \doi{10.3847/1538-3881/ac63d0}.
+
+\bibitem[Jannat et~al.(2026)Jannat, Shakeri, and Shahbazi]{jannat2026neutrinos}
+Amirmasoud Jannat, Soroush Shakeri, and Farhad Shahbazi.
+\newblock Supernova neutrinos and the origin of biomolecular homochirality.
+\newblock \emph{arXiv preprint arXiv:2607.12813}, 2026.
+
+\bibitem[Lee et~al.(2012)Lee, Popodi, Tang, and Foster]{lee2012pnas}
+Heewook Lee, Ellen~M. Popodi, Haixu Tang, and Patricia~L. Foster.
+\newblock Rate and molecular spectrum of spontaneous mutations in the bacterium
+  {Escherichia coli} as determined by whole-genome sequencing.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 109\penalty0
+  (41):\penalty0 E2774--E2783, 2012.
+\newblock \doi{10.1073/pnas.1210309109}.
+
+\bibitem[Maddamsetti and Grant(2020)]{maddamsetti2020gbe}
+Rohan Maddamsetti and Nkrumah~A. Grant.
+\newblock Divergent evolution of mutation rates and biases in the long-term
+  evolution experiment with {Escherichia coli}.
+\newblock \emph{Genome Biology and Evolution}, 12\penalty0 (9):\penalty0
+  1591--1603, 2020.
+\newblock \doi{10.1093/gbe/evaa178}.
+
+\bibitem[Xiao et~al.(2023)Xiao, Fleming, and Burrows]{xiao2023chemcomm}
+Songjun Xiao, Aaron~M. Fleming, and Cynthia~J. Burrows.
+\newblock Sequencing for oxidative {DNA} damage at single-nucleotide resolution
+  with click-code-seq v2.0.
+\newblock \emph{Chemical Communications}, 2023.
+\newblock \doi{10.1039/d3cc02699j}.
+
+\bibitem[Otlu et~al.(2023)Otlu, D{\'i}az-Gay, Vermes, Bergstrom, Zhivagui,
+  Barnes, and Alexandrov]{otlu2023celrep}
+Bur{\c{c}}ak Otlu, Marcos D{\'i}az-Gay, Ian Vermes, Erik~N. Bergstrom, Maria
+  Zhivagui, Mark Barnes, and Ludmil~B. Alexandrov.
+\newblock Topography of mutational signatures in human cancer.
+\newblock \emph{Cell Reports}, 2023.
+\newblock \doi{10.1016/j.celrep.2023.112930}.
+
+\bibitem[Garcia(2026{\natexlab{b}})]{garcia2026observer}
+Nahuel~Aquiles Garcia.
+\newblock Observer-bounded effective theories: observational quotients,
+  deficiency ordering, and finite-horizon dynamical non-identifiability.
+\newblock Working manuscript (GECORP and Aalborg University Hospital),
+  2026{\natexlab{b}}.
+
+\bibitem[Garcia(2026{\natexlab{c}})]{garcia2026memory}
+Nahuel~Aquiles Garcia.
+\newblock Memory-limited reconstruction in quantum sensors with delayed
+  classical readout.
+\newblock Working manuscript (GECORP and Aalborg University Hospital),
+  2026{\natexlab{c}}.
+
+\bibitem[Berta et~al.(2009)Berta, Christandl, Colbeck, Renes, and
+  Renner]{berta2009uncertainty}
+Mario Berta, Matthias Christandl, Roger Colbeck, Joseph~M. Renes, and Renato
+  Renner.
+\newblock The uncertainty principle in the presence of quantum memory.
+\newblock \emph{arXiv preprint arXiv:0909.0950}, 2009.
+
+\bibitem[Garcia(2026{\natexlab{d}})]{garcia2026quantumlike}
+Nahuel~Aquiles Garcia.
+\newblock Quantum-like effective structure from bounded persistent
+  representations.
+\newblock Working manuscript (GECORP and Aalborg University Hospital),
+  2026{\natexlab{d}}.
+
+\bibitem[Pollock et~al.(2018)Pollock, Rodr{\'i}guez-Rosario, Frauenheim,
+  Paternostro, and Modi]{pollock2018pra}
+Felix~A. Pollock, C{\'e}sar~A. Rodr{\'i}guez-Rosario, Thomas Frauenheim, Mauro
+  Paternostro, and Kavan Modi.
+\newblock Non-{Markovian} quantum processes: {Complete} framework and efficient
+  characterization.
+\newblock \emph{Physical Review A}, 97\penalty0 (1):\penalty0 012127, 2018.
+\newblock \doi{10.1103/physreva.97.012127}.
+
+\bibitem[Milz et~al.(2018)Milz, Pollock, and Modi]{milz2018pra}
+Simon Milz, Felix~A. Pollock, and Kavan Modi.
+\newblock Reconstructing non-{Markovian} quantum dynamics with limited control.
+\newblock \emph{Physical Review A}, 98:\penalty0 012108, 2018.
+\newblock \doi{10.1103/physreva.98.012108}.
+
+\bibitem[Wang et~al.(2025{\natexlab{b}})Wang, Li, Han, Xue, Zheng, Wang,
+  Rad{\'a}k, Nakabeppu, Boldogh, and Ba]{wang2025jbiomedsci}
+Jing Wang, Chunshuang Li, Jinling Han, Yaoyao Xue, Xu~Zheng, Ruoxi Wang, Zsolt
+  Rad{\'a}k, Yusaku Nakabeppu, Istv{\'a}n Boldogh, and Xueqing Ba.
+\newblock Reassessing the roles of oxidative {DNA} base lesion {8-oxoGua} and
+  repair enzyme {OGG1} in tumorigenesis.
+\newblock \emph{Journal of Biomedical Science}, 2025{\natexlab{b}}.
+\newblock \doi{10.1186/s12929-024-01093-8}.
+
+\bibitem[Chu et~al.(2018)Chu, Zhang, Zhang, Zhu, Lin, and
+  Zhang]{chu2018bmcevol}
+Xiao-Lin Chu, Bowen Zhang, Quan-Guo Zhang, Bi-Ru Zhu, Kui Lin, and Da-Yong
+  Zhang.
+\newblock Temperature responses of mutation rate and mutational spectrum in an
+  {Escherichia coli} strain and the correlation with metabolic rate.
+\newblock \emph{BMC Evolutionary Biology}, 18\penalty0 (1):\penalty0 126, 2018.
+\newblock \doi{10.1186/s12862-018-1252-8}.
+
+\bibitem[Foster et~al.(2015)Foster, Lee, Popodi, Townes, and
+  Tang]{foster2015pnas}
+Patricia~L. Foster, Heewook Lee, Ellen~M. Popodi, Jesse~P. Townes, and Haixu
+  Tang.
+\newblock Determinants of spontaneous mutation in the bacterium {Escherichia
+  coli} as revealed by whole-genome sequencing.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 112\penalty0
+  (44):\penalty0 E5990--E5999, 2015.
+\newblock \doi{10.1073/pnas.1512136112}.
+
+\bibitem[Garushyants et~al.(2024)Garushyants, Sane, Selifanova, Agashe,
+  Bazykin, and Gelfand]{garushyants2024gbe}
+Sofya~K. Garushyants, Mrudula Sane, Maria Selifanova, Deepa Agashe, Georgii~A.
+  Bazykin, and Mikhail~S. Gelfand.
+\newblock Mutational signatures in wild type {Escherichia coli} strains reveal
+  predominance of {DNA} polymerase errors.
+\newblock \emph{Genome Biology and Evolution}, 16\penalty0 (4):\penalty0
+  evae035, 2024.
+\newblock \doi{10.1093/gbe/evae035}.
+
+\bibitem[Thomaidou et~al.(2023)Thomaidou, Mu{\~n}oz~Garc{\'i}a, de~Lange, Gan,
+  van~der Slik, Hoeben, Roep, Carlotti, and
+  Zaldumbide]{thomaidou2023diabetologia}
+Sofia Thomaidou, Amadeo Mu{\~n}oz~Garc{\'i}a, Sabine de~Lange, Jin Gan, Arno~R.
+  van~der Slik, Rob~C. Hoeben, Bart~O. Roep, Fran{\c{c}}oise Carlotti, and
+  Arnaud Zaldumbide.
+\newblock {IFN$\gamma$} but not {IFN$\alpha$} increases recognition of insulin
+  defective ribosomal product-derived antigen to amplify islet autoimmunity.
+\newblock \emph{Diabetologia}, 66\penalty0 (11):\penalty0 2075--2086, 2023.
+\newblock \doi{10.1007/s00125-023-05991-8}.
+
+\bibitem[Kircher et~al.(2019)Kircher, Xiong, Martin, Schubach, Inoue, Bell,
+  Costello, Shendure, and Ahituv]{kircher2019natcommun}
+Martin Kircher, Chenling Xiong, Beth Martin, Max Schubach, Fumitaka Inoue,
+  Robert J.~A. Bell, Joseph~F. Costello, Jay Shendure, and Nadav Ahituv.
+\newblock Saturation mutagenesis of twenty disease-associated regulatory
+  elements at single base-pair resolution.
+\newblock \emph{Nature Communications}, 10\penalty0 (1):\penalty0 3583, 2019.
+\newblock \doi{10.1038/s41467-019-11526-w}.
+
+\bibitem[Barron(1999)]{barron1999bayes}
+Andrew~R. Barron.
+\newblock Information-theoretic characterization of {Bayes} performance and the
+  choice of priors in parametric and nonparametric problems.
+\newblock In \emph{Bayesian Statistics 6}. Oxford University Press, 1999.
+\newblock \doi{10.1093/oso/9780198504856.003.0002}.
+
+\bibitem[Clarke(1999)]{clarke1999tit}
+Bertrand Clarke.
+\newblock Asymptotic normality of the posterior in relative entropy.
+\newblock \emph{IEEE Transactions on Information Theory}, 1999.
+\newblock \doi{10.1109/18.746784}.
+
+\bibitem[Xu and Raginsky(2016)]{xu2016tit}
+Aolin Xu and Maxim Raginsky.
+\newblock Information-theoretic lower bounds on {Bayes} risk in decentralized
+  estimation.
+\newblock \emph{IEEE Transactions on Information Theory}, 63\penalty0
+  (3):\penalty0 1580--1600, 2016.
+\newblock \doi{10.1109/tit.2016.2646342}.
+
+\bibitem[Hahm et~al.(2022)Hahm, Park, Jang, and Kim]{hahm2022emm}
+Ja~Young Hahm, Jongyeun Park, Eun-Sook Jang, and Sung~Wook Kim.
+\newblock 8-oxoguanine: from oxidative damage to epigenetic and
+  epitranscriptional modification.
+\newblock \emph{Experimental \& Molecular Medicine}, 2022.
+\newblock \doi{10.1038/s12276-022-00822-z}.
+
+\bibitem[Barbeau et~al.(2014)Barbeau, Collar, Efremenko, and
+  Scholberg]{barbeau2014prl}
+P.~S. Barbeau, J.~I. Collar, Y.~V. Efremenko, and K.~Scholberg.
+\newblock Comment on ``{Fitting} the annual modulation in {DAMA} with neutrons
+  from muons and neutrinos''.
+\newblock \emph{Physical Review Letters}, 113\penalty0 (22):\penalty0 229001,
+  2014.
+\newblock \doi{10.1103/physrevlett.113.229001}.
+
+\end{thebibliography}

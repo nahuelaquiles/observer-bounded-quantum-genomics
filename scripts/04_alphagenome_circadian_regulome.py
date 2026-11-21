@@ -124,10 +124,13 @@ def select_verified_promoter_variants():
 
 
 def main():
+    import importlib.metadata
+
     api_key = os.environ.get("ALPHAGENOME_API_KEY")
     if not api_key:
         raise RuntimeError("ALPHAGENOME_API_KEY not found in environment")
 
+    ag_sdk_version = importlib.metadata.version("alphagenome")
     from alphagenome.data import genome
     from alphagenome.interpretation import ism
     from alphagenome.models.v1 import dna_client, variant_scorers
@@ -138,7 +141,7 @@ def main():
     )
 
     cand_df = select_verified_promoter_variants()
-    print(f"Selected {len(cand_df)} GRCh38-verified circadian promoter 8-oxoG->T variants:")
+    print(f"Selected {len(cand_df)} GRCh38-verified circadian promoter 8-oxoG->T variants (alphagenome SDK {ag_sdk_version}):")
     print(cand_df[["gene", "chrom", "pos_1based", "ref", "alt", "rel_tss_bp", "category", "motif_class", "local_context_11bp"]].to_string(index=False))
 
     scorer_names = ["DNASE", "ATAC", "CAGE", "RNA_SEQ", "CHIP_TF", "CHIP_HISTONE"]
@@ -166,8 +169,11 @@ def main():
         rec = dict(vrow)
         rec["variant_id"] = v_id
         rec["atlas_url"] = atlas_url
+        rec["alphagenome_sdk_version"] = ag_sdk_version
+        rec["liver_ontology_curie"] = LIVER_ONTOLOGY
 
-        # Summarize liver (UBERON:0002107) and pan-track peak quantile/raw scores per modality
+        # Summarize liver (UBERON:0002107) and pan-track peak quantile/raw scores per modality,
+        # explicitly recording the selected liver track identifier and candidate track count.
         for mod in scorer_names:
             sub_mod = tidy[tidy["variant_scorer"].astype(str).str.upper().str.contains(mod, na=False)]
             if mod == "RNA_SEQ" and "gene_name" in sub_mod.columns:
@@ -177,19 +183,29 @@ def main():
             if sub_mod.empty:
                 rec[f"{mod}_liver_raw"] = np.nan
                 rec[f"{mod}_liver_quantile"] = np.nan
+                rec[f"{mod}_liver_track_name"] = ""
+                rec[f"{mod}_liver_n_tracks"] = 0
                 rec[f"{mod}_max_abs_quantile"] = np.nan
                 continue
 
             sub_liv = sub_mod[sub_mod["ontology_curie"].eq(LIVER_ONTOLOGY)].dropna(
                 subset=["quantile_score", "raw_score"]
             )
+            rec[f"{mod}_liver_n_tracks"] = int(len(sub_liv))
             if not sub_liv.empty:
                 idx_top = sub_liv["quantile_score"].abs().idxmax()
-                rec[f"{mod}_liver_raw"] = float(sub_liv.loc[idx_top, "raw_score"])
-                rec[f"{mod}_liver_quantile"] = float(sub_liv.loc[idx_top, "quantile_score"])
+                top_row = sub_liv.loc[idx_top]
+                rec[f"{mod}_liver_raw"] = float(top_row["raw_score"])
+                rec[f"{mod}_liver_quantile"] = float(top_row["quantile_score"])
+                t_parts = []
+                for col_k in ("track_name", "transcription_factor", "histone_mark", "biosample_name", "track_strand", "gene_id"):
+                    if col_k in top_row.index and pd.notna(top_row[col_k]) and str(top_row[col_k]).strip():
+                        t_parts.append(f"{col_k}={top_row[col_k]}")
+                rec[f"{mod}_liver_track_name"] = "; ".join(t_parts) if t_parts else str(top_row.get("variant_scorer", mod))
             else:
                 rec[f"{mod}_liver_raw"] = np.nan
                 rec[f"{mod}_liver_quantile"] = np.nan
+                rec[f"{mod}_liver_track_name"] = ""
 
             quantiles = sub_mod["quantile_score"].dropna()
             rec[f"{mod}_max_abs_quantile"] = (
@@ -207,6 +223,7 @@ def main():
     ism_interval = cry1_var.reference_interval.resize(32)
     seq_interval_16kb = ism_interval.resize(dna_client.SEQUENCE_LENGTH_16KB)
 
+    ism_track_meta = {}
     for mod_name in ["DNASE", "CAGE"]:
         sc = variant_scorers.RECOMMENDED_VARIANT_SCORERS[mod_name]
         ism_res = dna_model.score_ism_variants(
@@ -220,6 +237,11 @@ def main():
             col_mask = adata.var["ontology_curie"].eq(LIVER_ONTOLOGY)
             if not col_mask.any():
                 raise ValueError(f"AlphaGenome returned no adult-liver {mod_name} tracks for CRY1 ISM")
+            if mod_name not in ism_track_meta:
+                sub_var = adata.var.loc[col_mask]
+                ism_track_meta[mod_name] = [
+                    str(x) for x in (sub_var["name"].tolist() if "name" in sub_var.columns else sub_var.index.tolist())
+                ]
             val = float(np.nanmean(adata.X[:, col_mask]))
             scores_flat.append(val)
             vars_flat.append(v_obj)
@@ -234,7 +256,7 @@ def main():
         interval=pred_int,
         variant=cry1_var,
         requested_outputs=[dna_client.OutputType.DNASE, dna_client.OutputType.CAGE],
-        ontology_terms=["UBERON:0002107"],
+        ontology_terms=[LIVER_ONTOLOGY],
     )
     win = genome.Interval("chr12", 107093249, 107093849)
     ref_dnase = v_out.reference.dnase.slice_by_interval(win)
@@ -270,7 +292,12 @@ def main():
         if len(x1) > 0 and len(x2) > 0:
             _, p_raw = stats.mannwhitneyu(x1, x2, alternative="two-sided")
             comp_summary[mod] = {
+                "alphagenome_sdk_version": ag_sdk_version,
                 "liver_ontology_curie": LIVER_ONTOLOGY,
+                "selection_rule": "max_abs_quantile_within_UBERON_0002107_gene_matched_for_RNA_SEQ",
+                "liver_candidate_track_counts": [int(v) for v in res_df[f"{mod}_liver_n_tracks"].tolist()],
+                "selected_liver_tracks": dict(zip(res_df["variant_id"], res_df[f"{mod}_liver_track_name"])),
+                "cry1_ism_liver_tracks": ism_track_meta.get(mod, []),
                 "n_sink_variants": int(len(x1)),
                 "n_isolated_variants": int(len(x2)),
                 "sink_mean_abs_raw": float(np.mean(x1)),
@@ -295,7 +322,7 @@ def main():
         json.dump(comp_summary, f, indent=2)
 
     print("\n=== MODULE 4 ALPHAGENOME SUMMARY (HOLE-SINK MOTIFS vs ISOLATED FLANKING GUANINES, UBERON:0002107) ===")
-    print(json.dumps(comp_summary, indent=2))
+    print(json.dumps({m: {k: v for k, v in d.items() if k != "selected_liver_tracks"} for m, d in comp_summary.items()}, indent=2))
 
 
 if __name__ == "__main__":

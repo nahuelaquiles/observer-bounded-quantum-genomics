@@ -1,9 +1,10 @@
 {
-  "total_module6_wall_clock_s": 244.6132,
+  "total_module6_wall_clock_s": 251.192,
   "row1_thermal_vs_ac": {
-    "runtime_s": 0.1219,
+    "runtime_s": 0.0834,
     "n_ma_lines_per_temperature": 20,
     "n_total_ma_lines": 60,
+    "test_sidedness": "Published one-sided Welch two-sample tests (Chu et al. 2018)",
     "welch_dfs": {
       "25_vs_28C": 29,
       "25_vs_37C": 32,
@@ -20,23 +21,28 @@
       0.62523,
       1.0
     ],
+    "emp_ratio_28C_vs_25C": 0.9841,
+    "mod1_predicted_ratio_28C_vs_25C": 1.1769,
     "emp_ratio_37C_vs_28C": 1.6129,
     "mod1_predicted_ratio_37C_vs_28C": 1.5994,
     "arrhenius_ratio_agreement_pct": 99.16,
     "emp_apparent_Ea_eV": 0.3337,
     "mod1_a_priori_Ea_eV": 0.42,
     "chu2018_25_vs_28C_t": 0.08,
+    "chu2018_25_vs_28C_padj_onesided": 0.469,
     "chu2018_25_vs_28C_padj": 0.469,
     "chu2018_28_vs_37C_t": -7.12,
+    "chu2018_28_vs_37C_padj_onesided": 6e-08,
     "chu2018_28_vs_37C_padj": 6e-08,
     "chu2018_25_vs_37C_t": -5.26,
+    "chu2018_25_vs_37C_padj_onesided": 7e-06,
     "chu2018_25_vs_37C_padj": 7e-06,
     "ac_bounds": {
       "E0_1e-06_Vm": {
         "E_field_V_per_m": 1e-06,
         "lambda_eV": 1e-16,
         "drazin_floquet_rel_shift": 1.262875796977446e-26,
-        "adiabatic_kms_rel_shift": 3.4840818906954904e-30,
+        "adiabatic_kms_rel_shift": 3.4841100801529844e-30,
         "heuristic_lorentzian_rel_shift": 1.1291367602966074e-28,
         "thermal_50mK_rel_shift": 0.0025333945666646,
         "thermal_10mK_rel_shift": 0.0005067909524469894
@@ -45,7 +51,7 @@
         "E_field_V_per_m": 1.0,
         "lambda_eV": 1e-10,
         "drazin_floquet_rel_shift": 1.2628757969774463e-14,
-        "adiabatic_kms_rel_shift": 3.484081890695491e-18,
+        "adiabatic_kms_rel_shift": 3.4841100801529845e-18,
         "heuristic_lorentzian_rel_shift": 1.1291367602966072e-16,
         "thermal_50mK_rel_shift": 0.0025333945666646,
         "thermal_10mK_rel_shift": 0.0005067909524469894
@@ -54,7 +60,7 @@
         "E_field_V_per_m": 10.0,
         "lambda_eV": 1e-09,
         "drazin_floquet_rel_shift": 1.2628757969774465e-12,
-        "adiabatic_kms_rel_shift": 3.4840818906954907e-16,
+        "adiabatic_kms_rel_shift": 3.4841100801529843e-16,
         "heuristic_lorentzian_rel_shift": 1.1291367602966074e-14,
         "thermal_50mK_rel_shift": 0.0025333945666646,
         "thermal_10mK_rel_shift": 0.0005067909524469894
@@ -62,7 +68,7 @@
     }
   },
   "row2_nucleosome_rotational_gate": {
-    "runtime_s": 14.1166,
+    "runtime_s": 13.7772,
     "cryo_em_native_structures": {
       "8VWT": {
         "ogg1_heavy_atoms": 2433,
@@ -124,7 +130,7 @@
     "outward_vs_inward_accessibility_ratio": 8.29
   },
   "row3_single_cell_erasure_and_scaling": {
-    "runtime_s": 67.9152,
+    "runtime_s": 71.4997,
     "analysis_timepoint": "24h",
     "gse218316_untreated_or_H2O2_cells_all_timepoints": 4298,
     "gse218316_n_untreated_cells": 1187,
@@ -173,6 +179,65 @@
       "DBP",
       "NPAS2"
     ],
+    "redox_ber_genes": [
+      "OGG1",
+      "MUTYH",
+      "APEX1",
+      "PARP1",
+      "NFE2L2",
+      "HMOX1",
+      "NQO1",
+      "TXNRD1",
+      "GCLC",
+      "GCLM",
+      "SOD1",
+      "PRDX1"
+    ],
+    "combined22_genes": [
+      "ARNTL",
+      "CLOCK",
+      "CRY1",
+      "CRY2",
+      "PER1",
+      "PER2",
+      "NR1D1",
+      "NR1D2",
+      "DBP",
+      "NPAS2",
+      "OGG1",
+      "MUTYH",
+      "APEX1",
+      "PARP1",
+      "NFE2L2",
+      "HMOX1",
+      "NQO1",
+      "TXNRD1",
+      "GCLC",
+      "GCLM",
+      "SOD1",
+      "PRDX1"
+    ],
+    "combined19_genes": [
+      "ARNTL",
+      "CLOCK",
+      "CRY1",
+      "CRY2",
+      "PER1",
+      "PER2",
+      "NR1D1",
+      "NR1D2",
+      "DBP",
+      "NPAS2",
+      "OGG1",
+      "MUTYH",
+      "APEX1",
+      "HMOX1",
+      "NQO1",
+      "TXNRD1",
+      "GCLC",
+      "GCLM",
+      "PRDX1"
+    ],
     "donor_pseudobulk_consistency": [
       {
         "donor": "D1",
@@ -199,14 +264,20 @@
     "mean_detected_clock_gene_zero_erasure": 0.857081,
     "nu1_zero_all_clock_genes_cell_fraction": 0.30344827586206896,
     "nu1_clock10_auc": 0.5189246020448388,
-    "nu1_combined_auc": 0.5828560432922238,
+    "nu1_redox12_auc": 0.5889922300128168,
+    "nu1_combined_auc": 0.5846212844547722,
+    "nu1_combined19_auc": 0.5828560432922238,
     "largest_complete_ensemble": {
       "ensemble_cells_nu": 100,
       "all_10_clock_genes_zero_frac": 1.2075256154771719e-54,
       "clock10_roc_auc": 0.65,
       "clock10_lodo_roc_auc": 0.3466666666666667,
+      "redox12_roc_auc": 1.0,
+      "redox12_lodo_roc_auc": 0.96,
       "combined_clock_redox_roc_auc": 1.0,
       "combined_lodo_roc_auc": 0.96,
+      "combined19_roc_auc": 1.0,
+      "combined19_lodo_roc_auc": 0.96,
       "cv_folds_evaluable": 5,
       "cv_test_ensembles_untreated": 10,
       "cv_test_ensembles_H2O2": 10,
@@ -216,7 +287,7 @@
     }
   },
   "row4_hepg2_mpra_hole_sinks": {
-    "runtime_s": 141.2419,
+    "runtime_s": 144.6661,
     "library_qc": {
       "LDLR": {
         "n_high_conf_barcodes": 53151,
@@ -309,7 +380,7 @@
     }
   },
   "row5_ecoli_go_and_beamline": {
-    "runtime_s": 21.0594,
+    "runtime_s": 20.9579,
     "wt_GC_to_TA_fraction": 0.1627,
     "mmr_GC_to_TA_fraction": 0.0118,
     "mutY_GC_to_TA_fraction": 0.9141,

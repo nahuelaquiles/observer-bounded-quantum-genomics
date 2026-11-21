@@ -71,10 +71,10 @@ def run_row1_thermal_vs_ac_validation():
     # Empirical WGS MA rates in E. coli B REL606 mutS from Chu et al. (2018),
     # BMC Evolutionary Biology 18:126 (DOI: 10.1186/s12862-018-1252-8):
     # 20 independent MA lines per temperature (60 sequenced MA lines total; Welch two-sample df = 29, 32, 33).
-    # Published one-sided tests for spontaneous base-pair substitutions plus small indels.
-    #   25 C vs 37 C: 37% lower at 25 C (ratio 0.63), t = -5.26, df = 32, Padj = 7e-6
-    #   28 C vs 37 C: 38% lower at 28 C (ratio 0.62), t = -7.12, df = 33, Padj = 6e-8
-    #   25 C vs 28 C: ratio 0.63/0.62 = 1.016, t = 0.08, df = 29, Padj = 0.469 (null over 3 K)
+    #Published one-sided tests for spontaneous base-pair substitutions plus small indels:
+    #   25 C vs 37 C: 37% lower at 25 C (ratio 0.63), t = -5.26, df = 32, one-sided Padj = 7e-6
+    #   28 C vs 37 C: 38% lower at 28 C (ratio 0.62), t = -7.12, df = 33, one-sided Padj = 6e-8
+    #   25 C -> 28 C: ratio 0.62/0.63 = 0.9841 (1.6% lower at 28 C), t = 0.08, df = 29, one-sided Padj = 0.469
     temps_c = np.array([25.0, 28.0, 37.0])
     temps_k = temps_c + 273.15
     rel_rates_emp = np.array([0.63, 0.62, 1.00])  # normalized to 37 C = 1.00
@@ -90,9 +90,11 @@ def run_row1_thermal_vs_ac_validation():
         x_inv_kbt - x_inv_kbt[-1], np.log(rel_rates_emp)
     )
 
-    # Compare 28 C -> 37 C ratio:
-    emp_ratio_37_over_28 = 1.00 / 0.62  # 1.6129x
-    mod1_ratio_37_over_28 = float(rel_rates_mod1[2] / rel_rates_mod1[1])  # 1.6010x
+    # Compare both temperature intervals (25 -> 28 C and 28 -> 37 C):
+    emp_ratio_28_over_25 = float(rel_rates_emp[1] / rel_rates_emp[0])     # 0.62 / 0.63 = 0.9841x
+    mod1_ratio_28_over_25 = float(rel_rates_mod1[1] / rel_rates_mod1[0])   # 1.1769x
+    emp_ratio_37_over_28 = float(rel_rates_emp[2] / rel_rates_emp[1])     # 1.00 / 0.62 = 1.6129x
+    mod1_ratio_37_over_28 = float(rel_rates_mod1[2] / rel_rates_mod1[1])   # 1.5994x
     pct_agreement_37_28 = 100.0 * (1.0 - abs(mod1_ratio_37_over_28 - emp_ratio_37_over_28) / emp_ratio_37_over_28)
 
     # Theorem 2 sub-thermal AC predictions across exact Floquet-Lindblad Drazin Eq. (S2) & Adiabatic KMS
@@ -116,20 +118,26 @@ def run_row1_thermal_vs_ac_validation():
         "runtime_s": round(time.time() - t0, 4),
         "n_ma_lines_per_temperature": 20,
         "n_total_ma_lines": 60,
+        "test_sidedness": "Published one-sided Welch two-sample tests (Chu et al. 2018)",
         "welch_dfs": {"25_vs_28C": 29, "25_vs_37C": 32, "28_vs_37C": 33},
         "endpoint_definition": "Spontaneous base-pair substitutions (87%-96% transitions in mutS) + small indels (~1/5 of BPS rate)",
         "emp_rel_rates_25_28_37C": rel_rates_emp.tolist(),
         "mod1_predicted_rel_rates_25_28_37C": [round(float(x), 5) for x in rel_rates_mod1],
+        "emp_ratio_28C_vs_25C": round(emp_ratio_28_over_25, 4),
+        "mod1_predicted_ratio_28C_vs_25C": round(mod1_ratio_28_over_25, 4),
         "emp_ratio_37C_vs_28C": round(emp_ratio_37_over_28, 4),
         "mod1_predicted_ratio_37C_vs_28C": round(mod1_ratio_37_over_28, 4),
         "arrhenius_ratio_agreement_pct": round(pct_agreement_37_28, 2),
         "emp_apparent_Ea_eV": round(float(slope_ea), 4),
         "mod1_a_priori_Ea_eV": e_act_mod1_ev,
         "chu2018_25_vs_28C_t": 0.08,
+        "chu2018_25_vs_28C_padj_onesided": 0.469,
         "chu2018_25_vs_28C_padj": 0.469,
         "chu2018_28_vs_37C_t": -7.12,
+        "chu2018_28_vs_37C_padj_onesided": 6.0e-8,
         "chu2018_28_vs_37C_padj": 6.0e-8,
         "chu2018_25_vs_37C_t": -5.26,
+        "chu2018_25_vs_37C_padj_onesided": 7.0e-6,
         "chu2018_25_vs_37C_padj": 7.0e-6,
         "ac_bounds": ac_points,
     }
@@ -527,8 +535,10 @@ def run_row3_single_cell_erasure_validation():
     erasure_df = pd.DataFrame(per_gene_erasure)
 
     clock_indices = list(range(len(clock_genes)))
-    ber_panel = {"OGG1", "MUTYH", "APEX1", "HMOX1", "NQO1", "TXNRD1", "GCLC", "GCLM", "PRDX1"}
-    combined_indices = clock_indices + [i for i, gene in enumerate(target_genes) if gene in ber_panel]
+    redox12_indices = list(range(len(clock_genes), len(target_genes)))
+    combined22_indices = list(range(len(target_genes)))
+    ber9_panel = {"OGG1", "MUTYH", "APEX1", "HMOX1", "NQO1", "TXNRD1", "GCLC", "GCLM", "PRDX1"}
+    combined19_indices = clock_indices + [i for i, gene in enumerate(target_genes) if gene in ber9_panel]
 
     # Descriptive treatment differences within each donor.
     donor_stats = []
@@ -551,7 +561,7 @@ def run_row3_single_cell_erasure_validation():
     strat_key = sub_meta["Donor"].astype(str) + "_" + sub_meta["Condition"].astype(str)
     cell_folds = list(StratifiedKFold(n_splits=5, shuffle=True, random_state=2026).split(cells, strat_key))
     donor_folds = [(np.flatnonzero(donors != d), np.flatnonzero(donors == d)) for d in np.unique(donors)]
-    feature_indices = [clock_indices, combined_indices]
+    feature_indices = [clock_indices, redox12_indices, combined22_indices, combined19_indices]
     n_detected_clock_cells = int(np.count_nonzero(np.any(expr_counts[clock_indices] > 0, axis=0)))
 
     scaling_rows = []
@@ -567,8 +577,12 @@ def run_row3_single_cell_erasure_validation():
             "all_10_clock_genes_zero_frac": float(stats.hypergeom.pmf(0, n_cells_sub, n_detected_clock_cells, size)),
             "clock10_roc_auc": cv_auc[0],
             "clock10_lodo_roc_auc": lodo_auc[0],
-            "combined_clock_redox_roc_auc": cv_auc[1],
-            "combined_lodo_roc_auc": lodo_auc[1],
+            "redox12_roc_auc": cv_auc[1],
+            "redox12_lodo_roc_auc": lodo_auc[1],
+            "combined_clock_redox_roc_auc": cv_auc[2],
+            "combined_lodo_roc_auc": lodo_auc[2],
+            "combined19_roc_auc": cv_auc[3],
+            "combined19_lodo_roc_auc": lodo_auc[3],
             "cv_folds_evaluable": n_cv,
             "cv_test_ensembles_untreated": cv_counts[0],
             "cv_test_ensembles_H2O2": cv_counts[1],
@@ -596,11 +610,16 @@ def run_row3_single_cell_erasure_validation():
         "sample_accessions": ISLET_24H_SAMPLES,
         "gene_expression_targets": target_genes,
         "clock_genes": clock_genes,
+        "redox_ber_genes": redox_ber_genes,
+        "combined22_genes": target_genes,
+        "combined19_genes": [target_genes[i] for i in combined19_indices],
         "donor_pseudobulk_consistency": donor_stats,
         "mean_detected_clock_gene_zero_erasure": float(det_clock_df["zero_umi_fraction_all"].mean()),
         "nu1_zero_all_clock_genes_cell_fraction": (n_cells_sub - n_detected_clock_cells) / n_cells_sub,
         "nu1_clock10_auc": scaling_rows[0]["clock10_roc_auc"],
+        "nu1_redox12_auc": scaling_rows[0]["redox12_roc_auc"],
         "nu1_combined_auc": scaling_rows[0]["combined_clock_redox_roc_auc"],
+        "nu1_combined19_auc": scaling_rows[0]["combined19_roc_auc"],
         "largest_complete_ensemble": largest_complete,
     }
 
@@ -1282,19 +1301,18 @@ def main():
     r1, r2, r3, r4, r5 = results
     sc_complete = r3["largest_complete_ensemble"]
 
-    ratio_25_28 = r1["emp_rel_rates_25_28_37C"][0] / r1["emp_rel_rates_25_28_37C"][1]
     summary_table = pd.DataFrame([
         {
             "table6_row": "Row 1",
             "channel_stage_tested": "Thermal B->X Arrhenius gate vs. theoretical Floquet/KMS AC ceiling (Thm. 2)",
             "wetlab_cohort_accession": "Chu et al. 2018 (E. coli REL606 mutS WGS MA at 25, 28, 37 C; BPS + small indels)",
-            "sample_size_units": "n=20 MA lines/temperature (60 lines total; published one-sided tests)",
+            "sample_size_units": "n=20 MA lines/temperature (60 lines total; published one-sided Welch tests)",
             "key_empirical_metric": (
-                f"25 vs 28 C null (ratio {ratio_25_28:.3f}, Padj={r1['chu2018_25_vs_28C_padj']}); 37 vs 28 C = {r1['emp_ratio_37C_vs_28C']:.3f}x "
-                f"(Padj={r1['chu2018_28_vs_37C_padj']:.0e}) vs Mod. 1 a priori {r1['mod1_predicted_ratio_37C_vs_28C']:.3f}x ({r1['arrhenius_ratio_agreement_pct']:.1f}% match); "
+                f"25->28 C: {r1['emp_ratio_28C_vs_25C']:.3f}x obs vs {r1['mod1_predicted_ratio_28C_vs_25C']:.3f}x pred (one-sided Padj={r1['chu2018_25_vs_28C_padj']}); "
+                f"28->37 C: {r1['emp_ratio_37C_vs_28C']:.3f}x obs (one-sided Padj={r1['chu2018_28_vs_37C_padj']:.0e}) vs Mod. 1 {r1['mod1_predicted_ratio_37C_vs_28C']:.3f}x ({r1['arrhenius_ratio_agreement_pct']:.1f}% match); "
                 f"Floquet/KMS <=10 V/m theoretical shift <1.3e-12"
             ),
-            "resolution_status": "STAGE-CONSISTENT (Thermal B->X Gate; RF Direct MA Unmeasured)",
+            "resolution_status": "STAGE-CONSISTENT (28->37 C Thermal Gate; 3 K Step Unresolved; RF MA Unmeasured)",
         },
         {
             "table6_row": "Row 2",
@@ -1310,16 +1328,17 @@ def main():
         },
         {
             "table6_row": "Row 3",
-            "channel_stage_tested": "Transcript detection and H2O2 classification in pooled transcriptomes",
+            "channel_stage_tested": "Transcript detection and H2O2 classification in pooled 24-h human islet transcriptomes",
             "wetlab_cohort_accession": "NCBI GEO GSE218316 (human islet scRNA-seq, 24 h)",
             "sample_size_units": f"{r3['gse218316_total_cells_analyzed']:,} primary human cells ({r3['gse218316_n_donors']} donors)",
             "key_empirical_metric": (
-                f"nu=1 zero-UMI fraction for retained clock genes = {100*r3['mean_detected_clock_gene_zero_erasure']:.2f}%; "
-                f"clock AUC={r3['nu1_clock10_auc']:.3f}. At nu={sc_complete['ensemble_cells_nu']}, "
-                f"clock AUC={sc_complete['clock10_roc_auc']:.3f} (LODO={sc_complete['clock10_lodo_roc_auc']:.3f}), "
-                f"combined AUC={sc_complete['combined_clock_redox_roc_auc']:.3f} (LODO={sc_complete['combined_lodo_roc_auc']:.3f})."
+                f"nu=1 zero-UMI fraction for clock-10 = {100*r3['mean_detected_clock_gene_zero_erasure']:.2f}%; "
+                f"clock-10 AUC={r3['nu1_clock10_auc']:.3f}, BER/NRF2-12 AUC={r3['nu1_redox12_auc']:.3f}, combined-22 AUC={r3['nu1_combined_auc']:.3f}. "
+                f"At nu={sc_complete['ensemble_cells_nu']}, clock-10 AUC={sc_complete['clock10_roc_auc']:.3f} (LODO={sc_complete['clock10_lodo_roc_auc']:.3f}), "
+                f"BER/NRF2-12 AUC={sc_complete['redox12_roc_auc']:.3f} (LODO={sc_complete['redox12_lodo_roc_auc']:.3f}), "
+                f"combined-22 AUC={sc_complete['combined_clock_redox_roc_auc']:.3f} (LODO={sc_complete['combined_lodo_roc_auc']:.3f})."
             ),
-            "resolution_status": "Exploratory analysis across three donors at one timepoint",
+            "resolution_status": "Exploratory 3-donor 24-h analysis (cross-donor recovery driven by BER/NRF2-12)",
         },
         {
             "table6_row": "Row 4",

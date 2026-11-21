@@ -1,0 +1,11 @@
+# Core reproducible scientific stack (verified on Python 3.11+)
+numpy==2.3.5
+scipy==1.17.0
+pandas==2.2.3
+matplotlib==3.10.8
+scikit-learn==1.8.0
+biopython==1.88
+
+# Optional live API client for regenerating Module 4 (scripts/04_alphagenome_circadian_regulome.py);
+# precomputed adult-liver UBERON:0002107 variant, ISM, and local track outputs are archived in data/.
+# alphagenome==2.0.0
