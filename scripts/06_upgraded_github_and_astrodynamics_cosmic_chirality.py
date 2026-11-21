@@ -918,7 +918,8 @@ def compute_chiral_channels_and_homochiralization(
     g4_row = [r for r in mod1["guanine_hole_trapping"] if r["g_run_length"] == 4][0]
     g4_fold = float(g4_row["fold_enrichment_per_G_vs_G1"])
     g4_capture = float(g4_row["tract_capture_fraction"])
-    ac_1uvm_shift = float(mod1["ambient_subgap_1uVm_reference"]["ac_subgap_rectified_dmu_over_mu"])
+    ac_1uvm_shift = float(mod1["ambient_subgap_1uVm_reference"]["drazin_floquet_subgap_dmu_over_mu"])
+    kms_1uvm_shift = float(mod1["ambient_subgap_1uVm_reference"]["adiabatic_kms_ac_dmu_over_mu"])
     met_50mk_floor = float(mod1["metabolic_50mK_noise_floor"])
     tau_mem_fs = float(mod1["tau_mem_fs"])
 
@@ -972,8 +973,8 @@ def compute_chiral_channels_and_homochiralization(
             "regime": "Sub-thermal non-ionizing wave (hv << kBT)",
             "fractional_hazard_or_chiral_shift": ac_1uvm_shift,
             "dna_events_per_diploid_cell_yr": 0.0,
-            "dominant_mechanism": f"Universal Floquet-Lindblad bound (omega << g_PP, tau_mem={tau_mem_fs:.1f} fs)",
-            "biological_detectability": "Impossible (~10^25x below 50 mK thermal floor)",
+            "dominant_mechanism": f"Exact Floquet-Lindblad Drazin / adiabatic KMS bound (omega << g_PP, tau_mem={tau_mem_fs:.1f} fs)",
+            "biological_detectability": "Impossible (~2x10^23x [Floquet] to ~7x10^26x [KMS] below 50 mK floor)",
         },
         {
             "channel": "Solar_Neutrinos_7Be_pp_Doppler",
@@ -1014,11 +1015,11 @@ def compute_chiral_channels_and_homochiralization(
         {
             "channel": "YoungSun_SEP_100eV_Mineral_Oriented",
             "quantum_energy_eV": 100.0,
-            "regime": "Young-Sun SEP cascade + mineral-aligned zenith sweep",
+            "regime": "Young-Sun SEP cascade + flat horizontal mineral-adsorbed duplex",
             "fractional_hazard_or_chiral_shift": float(bias_100ev_ep_oriented),
             "dna_events_per_diploid_cell_yr": float(young_sun_sep_8oxog_per_cell_yr),
-            "dominant_mechanism": f"{orient_gain:.2f}x mineral-terrace zenith gain + {100.0*g4_capture:.1f}% G4 hole capture + 10^3x Archean SEP flux",
-            "biological_detectability": "Rapid prebiotic homochiralization & diurnal solar phase locking",
+            "dominant_mechanism": f"{orient_gain:.2f}x flat-terrace cos^2(theta_z) zenith gain + {100.0*g4_capture:.1f}% G4 hole capture + 10^3x Archean SEP flux",
+            "biological_detectability": "Prebiotic homochiralization & diurnal solar phase locking",
         },
         {
             "channel": "Lab_Polarized_500eV_Beam_DeltaRepair",
@@ -1026,8 +1027,8 @@ def compute_chiral_channels_and_homochiralization(
             "regime": "Controlled |L|=0.80 e+/- beam + Delta mutM/mutY/mutS",
             "fractional_hazard_or_chiral_shift": float(bias_lab_500ev),
             "dna_events_per_diploid_cell_yr": 1.0e6,
-            "dominant_mechanism": f"{go_uncollapse_gain:.1f}x GO/MMR repair-quotient uncollapsing at D- vs L-DNA G4 sinks",
-            "biological_detectability": "Directly falsifiable in laboratory duplex sequencing",
+            "dominant_mechanism": f"Pure point-Coulomb SO={bias_lab_500ev:.2e} (needs >1.9e14 events) vs CISS/DEA 10^-3 (9.0e6 events); {go_uncollapse_gain:.1f}x GO gain",
+            "biological_detectability": "Distinguishes CISS/DEA exchange (10^-3) from pure point-Coulomb SO (2.2e-7)",
         },
     ]
 
@@ -1063,6 +1064,8 @@ def compute_chiral_channels_and_homochiralization(
         "pion_muon_kinematics": pion_kin,
         "g4_hole_sink_enrichment_fold": g4_fold,
         "g4_hole_sink_capture_fraction": g4_capture,
+        "ambient_1uVm_floquet_drazin_shift": ac_1uvm_shift,
+        "ambient_1uVm_adiabatic_kms_shift": kms_1uvm_shift,
         "chiral_bias_1keV_isotropic_positron": float(bias_1kev_ep),
         "chiral_bias_100eV_isotropic_positron": float(bias_100ev_ep),
         "chiral_bias_100eV_zenith_oriented_positron": float(bias_100ev_ep_oriented),
@@ -1078,6 +1081,7 @@ def compute_chiral_channels_and_homochiralization(
         "tau_99pct_no_conflict_dM_1e6": float(np.arctanh(0.99) * 2.0 / 1.0e-6),
         "repair_uncollapsing_gain_mutM_mutY_mutS": go_uncollapse_gain,
         "min_GtoT_counts_3sigma_at_1e3_asym": float((3.0 / 1.0e-3) ** 2),
+        "min_GtoT_counts_3sigma_point_coulomb_500eV": float((3.0 / max(bias_lab_500ev, 1e-30)) ** 2),
     }
     return pd.DataFrame(channel_rows), pd.DataFrame(ee_rows), cr_summary, elapsed_s
 

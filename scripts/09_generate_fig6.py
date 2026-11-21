@@ -75,19 +75,19 @@ def make_figure6():
     axA1.plot(
         emp_t, emp_y, "o", color=COL_CRIMSON,
         markersize=6.5, markeredgecolor="white", markeredgewidth=0.7,
-        label="REL606 mutS ratios (Chu 2018)", zorder=5,
+        label="REL606 mutS MA (Chu 2018, n=20/T)", zorder=5,
     )
     axA1.axhline(1.0, color=COL_SLATE, ls=":", lw=0.8, alpha=0.6)
     axA1.text(
         24.0, 0.96,
         f"28→37 °C: {r1['emp_ratio_37C_vs_28C']:.2f}× obs\nvs {r1['mod1_predicted_ratio_37C_vs_28C']:.2f}× pred\n({r1['arrhenius_ratio_agreement_pct']:.1f}% match, P = {r1['chu2018_28_vs_37C_padj']:.0e})",
-        fontsize=6.8, color=COL_NAVY, fontweight="bold", va="top",
+        fontsize=6.7, color=COL_NAVY, fontweight="bold", va="top",
         bbox=dict(boxstyle="round,pad=0.24", fc="#F4F6F7", ec="#BDC3C7", lw=0.7),
     )
     axA1.text(
-        29.2, 0.44,
-        "2.4/5 GHz Wi-Fi:\nnull (<10⁻¹⁴ pred)",
-        fontsize=6.7, color=COL_TEAL, fontweight="bold",
+        28.4, 0.43,
+        "Floquet/KMS ≤10 V/m:\n<1.3×10⁻¹² vs 2.5×10⁻³\n(50 mK floor)",
+        fontsize=6.4, color=COL_TEAL, fontweight="bold",
         bbox=dict(boxstyle="round,pad=0.22", fc="#E8F8F5", ec=COL_TEAL, lw=0.6),
     )
     axA1.set_xlim(23.5, 38.5)
@@ -95,8 +95,8 @@ def make_figure6():
     axA1.set_xticks([25, 28, 32, 37])
     axA1.set_xlabel("Growth temperature (°C)")
     axA1.set_ylabel("Relative mutation rate (37 °C = 1)")
-    axA1.set_title("A1. Row 1: Thermal KMS Gate", loc="left", pad=6)
-    axA1.legend(loc="upper left", bbox_to_anchor=(-0.06, -0.18), ncol=1, frameon=False, fontsize=6.8)
+    axA1.set_title("A1. Row 1: Thermal Arrhenius Gate", loc="left", pad=6)
+    axA1.legend(loc="upper left", bbox_to_anchor=(-0.06, -0.18), ncol=1, frameon=False, fontsize=6.7)
 
     # --- A2: Row 2 Nucleosomal Minor-Groove Rotational Clash Gate ---
     axA2 = fig.add_subplot(gs_A[0, 1])
@@ -158,7 +158,7 @@ def make_figure6():
     )
     l3 = axB_r.plot(
         nu, 100.0 * sc_df["all_10_clock_genes_zero_frac"], color=COL_CRIMSON, lw=1.9, ls="-.", marker="^", markersize=4.8,
-        label="Zero-UMI clock erasure (%)", zorder=3,
+        label="Zero-UMI clock dropout (%)", zorder=3,
     )
 
     axB.set_xscale("log")
@@ -167,33 +167,33 @@ def make_figure6():
     axB_r.set_ylim(-4, 108)
     axB.set_xlabel("Pooled primary human pancreatic islet ensemble size ν (cells, log scale)")
     axB.set_ylabel("Cell-disjoint 5-fold CV H₂O₂ ROC-AUC", color=COL_NAVY)
-    axB_r.set_ylabel("All-clock zero-UMI erasure (%)", color=COL_CRIMSON)
+    axB_r.set_ylabel("Zero-UMI clock capture dropout (%)", color=COL_CRIMSON)
     axB_r.tick_params(axis="y", colors=COL_CRIMSON)
 
     axB.annotate(
-        f"ν = 1 single cell:\n{100*r3['mean_all10_clock_gene_zero_erasure']:.2f}% per-gene clock 0-UMI\n(OGG1/MUTYH below filter)\nClock AUC = {r3['nu1_clock10_auc']:.3f}",
+        f"ν = 1 droplet capture:\n{100*r3['mean_detected_clock_gene_zero_erasure']:.2f}% NR1D1/DBP 0-UMI\n(8 clock + OGG1/MUTYH < filter)\nClock AUC = {r3['nu1_clock10_auc']:.3f}",
         xy=(1.0, r3["nu1_clock10_auc"]), xytext=(1.55, 0.59),
         arrowprops=dict(arrowstyle="->", color=COL_CRIMSON, lw=1.0),
-        fontsize=7.0, color=COL_CRIMSON, fontweight="bold",
+        fontsize=6.9, color=COL_CRIMSON, fontweight="bold",
         bbox=dict(boxstyle="round,pad=0.24", fc="#FDEDEC", ec=COL_CRIMSON, lw=0.7),
     )
     axB.annotate(
         f"ν = 1,000 human cells:\nClock AUC = {r3['nu1000_clock10_auc']:.3f} (LODO {r3['nu1000_clock10_lodo_auc']:.3f})\nCombined AUC = {r3['nu1000_combined_auc']:.3f}\nCapacity = {r3['nu1000_combined_bits']:.3f} bits",
-        xy=(1000.0, r3["nu1000_clock10_auc"]), xytext=(11.0, 0.855),
+        xy=(1000.0, r3["nu1000_clock10_auc"]), xytext=(42.0, 0.875),
         arrowprops=dict(arrowstyle="->", color=COL_NAVY, lw=1.0),
-        fontsize=7.0, color=COL_NAVY, fontweight="bold",
+        fontsize=6.9, color=COL_NAVY, fontweight="bold",
         bbox=dict(boxstyle="round,pad=0.24", fc="#EBF5FB", ec=COL_NAVY, lw=0.7),
     )
-    axB.set_title(f"B. Row 3: Single-Cell Erasure vs. Ensemble Scaling (GSE218316, n = {r3['gse218316_total_cells_analyzed']:,})", loc="left", pad=6)
+    axB.set_title(f"B. Row 3: Transcriptomic Capture Sparsity vs. Ensemble Scaling (GSE218316, n = {r3['gse218316_total_cells_analyzed']:,})", loc="left", pad=6)
 
     lines_B = l1 + l2 + l3
     labels_B = [ln.get_label() for ln in lines_B]
     axB.legend(lines_B, labels_B, loc="upper left", bbox_to_anchor=(0.0, -0.18), ncol=2, frameon=False, fontsize=6.9)
 
     # =========================================================================
-    # PANEL C (gs_outer[1, 0]): Row 4 Living Human HepG2 MPRA (GSE126550)
+    # PANEL C (gs_outer[1, 0]): Row 4 Stratified HepG2 & K562 MPRA (GSE126550)
     # =========================================================================
-    gs_C = GridSpecFromSubplotSpec(1, 2, subplot_spec=gs_outer[1, 0], width_ratios=[1.05, 1.25], wspace=0.31)
+    gs_C = GridSpecFromSubplotSpec(1, 2, subplot_spec=gs_outer[1, 0], width_ratios=[1.10, 1.20], wspace=0.31)
 
     dedup = mpra_df.copy()
     dedup["promoter"] = dedup["library"].replace({"LDLR.2": "LDLR"})
@@ -204,46 +204,51 @@ def make_figure6():
     )
     prom_ox["abs_effect_log2"] = prom_ox["effect_log2_RNA_DNA"].abs()
 
-    # --- C1: Stratified |Delta log2(RNA/DNA)| across G-run length & SP1/SRE sinks ---
+    # --- C1: Stratified HepG2 (LDLR, F9) vs K562 (PKLR) |Delta log2(RNA/DNA)| ---
     axC1 = fig.add_subplot(gs_C[0, 0])
     r4 = m6["row4_hepg2_mpra_hole_sinks"]
 
-    g_f9 = prom_ox[(prom_ox["promoter"] == "F9") & (prom_ox["duplex_G_run_length"] >= 3)]["abs_effect_log2"]
-    g_g1 = prom_ox[(prom_ox["duplex_G_run_length"] == 1) & (~prom_ox["in_SP1_or_Ebox_motif"])]["abs_effect_log2"]
-    g_g3 = prom_ox[prom_ox["duplex_G_run_length"] == 3]["abs_effect_log2"]
-    g_g4p = prom_ox[prom_ox["duplex_G_run_length"] >= 4]["abs_effect_log2"]
-    g_sp1 = prom_ox[(prom_ox["duplex_G_run_length"] >= 3) & (prom_ox["in_SP1_or_Ebox_motif"])]["abs_effect_log2"]
+    hepg2_ox = prom_ox[prom_ox["promoter"].isin(["LDLR", "F9"])]
+    k562_ox = prom_ox[prom_ox["promoter"] == "PKLR_48h"]
 
-    groups = [g_f9, g_g1, g_g3, g_g4p, g_sp1]
+    g_hg1 = hepg2_ox[(hepg2_ox["duplex_G_run_length"] == 1) & (~hepg2_ox["in_SP1_or_Ebox_motif"])]["abs_effect_log2"]
+    g_h_non = hepg2_ox[(hepg2_ox["duplex_G_run_length"] >= 3) & (~hepg2_ox["in_SP1_or_Ebox_motif"])]["abs_effect_log2"]
+    g_h_sp1 = hepg2_ox[(hepg2_ox["duplex_G_run_length"] >= 3) & (hepg2_ox["in_SP1_or_Ebox_motif"])]["abs_effect_log2"]
+    g_kg1 = k562_ox[(k562_ox["duplex_G_run_length"] == 1) & (~k562_ox["in_SP1_or_Ebox_motif"])]["abs_effect_log2"]
+    g_k_mot = k562_ox[(k562_ox["duplex_G_run_length"] >= 3) & (k562_ox["in_SP1_or_Ebox_motif"])]["abs_effect_log2"]
+
+    groups = [g_hg1, g_h_non, g_h_sp1, g_kg1, g_k_mot]
     g_labels = [
-        f"F9 ctrl\nG3+\n(n={len(g_f9)})",
-        f"Isol.\nG1\n(n={len(g_g1)})",
-        f"Duplex\nG3\n(n={len(g_g3)})",
-        f"HOMO\nG4+\n(n={len(g_g4p)})",
-        f"SP1/SRE\nG3+\n(n={len(g_sp1)})",
+        f"HepG2\nG1\n(n={len(g_hg1)})",
+        f"HepG2\nNon-mot\nG3+ ({len(g_h_non)})",
+        f"HepG2\nSP1/SRE\nG3+ ({len(g_h_sp1)})",
+        f"K562\nPKLR G1\n(n={len(g_kg1)})",
+        f"K562\nKLF/SP1\nG3+ ({len(g_k_mot)})",
     ]
     g_means = [float(g.mean()) for g in groups]
     g_sems = [float(g.std(ddof=1) / math.sqrt(max(len(g), 1))) for g in groups]
-    g_cols = [COL_SLATE, "#5DADE2", COL_TEAL, COL_AMBER, COL_CRIMSON]
+    g_cols = ["#5DADE2", COL_SLATE, COL_CRIMSON, "#76D7C4", COL_AMBER]
 
     x_pos = np.arange(len(groups))
-    axC1.bar(x_pos, g_means, yerr=g_sems, capsize=3.2, color=g_cols, edgecolor="#2C3E50", lw=0.7, width=0.60)
+    axC1.bar(x_pos, g_means, yerr=g_sems, capsize=3.0, color=g_cols, edgecolor="#2C3E50", lw=0.7, width=0.58)
     for xi, (mv, sv) in enumerate(zip(g_means, g_sems)):
-        axC1.text(xi, mv + sv + 0.04, f"{mv:.2f}", ha="center", va="bottom", fontsize=7.0, fontweight="bold", color="#1C2833")
+        axC1.text(xi, mv + sv + 0.04, f"{mv:.2f}", ha="center", va="bottom", fontsize=6.8, fontweight="bold", color="#1C2833")
 
     axC1.text(
-        -0.35, 1.62,
-        f"SP1/SRE G3+ vs G1:\n{r4['pooled_SP1_sink_vs_G1_fold_ratio']:.2f}× pooled (p={r4['mwu_p_SP1_G3plus_vs_G1']:.1e})\n{r4['ldlr_SP1_sink_vs_G1_fold_ratio']:.2f}× in LDLR (p={r4['ldlr_mwu_p_SP1_sink_vs_G1']:.1e})",
-        fontsize=6.7, color=COL_CRIMSON, fontweight="bold", va="top",
+        -0.38, 2.52,
+        f"HepG2 SP1/SRE G3+: {r4['hepg2_SP1_sink_vs_G1_fold_ratio']:.2f}× vs G1\n"
+        f"  (p={r4['hepg2_mwu_p_SP1_sink_vs_G1']:.1e}; non-motif {r4['hepg2_nonmotif_G3plus_vs_G1_fold_ratio']:.2f}×, p={r4['hepg2_mwu_p_nonmotif_G3plus_vs_G1']:.2f})\n"
+        f"K562 PKLR motif G3+: {r4['k562_motif_G3plus_vs_G1_fold_ratio']:.2f}× (p={r4['k562_mwu_p_motif_G3plus_vs_G1']:.1e})",
+        fontsize=6.15, color=COL_CRIMSON, fontweight="bold", va="top",
         bbox=dict(boxstyle="round,pad=0.22", fc="#FDEDEC", ec=COL_CRIMSON, lw=0.65),
     )
     axC1.set_xticks(x_pos)
-    axC1.set_xticklabels(g_labels, fontsize=6.6)
-    axC1.set_ylim(0, 1.72)
-    axC1.set_ylabel("HepG2 |Δlog₂(RNA/DNA)| per 8-oxoG→T")
-    axC1.set_title("C1. Row 4: HepG2 Hole-Sink Penalty", loc="left", pad=6)
+    axC1.set_xticklabels(g_labels, fontsize=6.3)
+    axC1.set_ylim(0, 2.65)
+    axC1.set_ylabel("|Δlog₂(RNA/DNA)| per 8-oxoG→T")
+    axC1.set_title("C1. Row 4: HepG2 & K562 MPRA", loc="left", pad=6)
 
-    # --- C2: Base-resolution LDLR promoter 8-oxoG -> T profile ---
+    # --- C2: Base-resolution LDLR promoter 8-oxoG -> T profile (HepG2) ---
     axC2 = fig.add_subplot(gs_C[0, 1])
     ldlr_sub = prom_ox[prom_ox["promoter"] == "LDLR"].sort_values("pos_1based")
     is_sink = (ldlr_sub["duplex_G_run_length"] >= 3) & (ldlr_sub["in_SP1_or_Ebox_motif"])
@@ -260,7 +265,7 @@ def make_figure6():
     )
     axC2.scatter(
         ldlr_sub.loc[is_g3_other, "pos_1based"], ldlr_sub.loc[is_g3_other, "effect_log2_RNA_DNA"],
-        s=25, color=COL_TEAL, alpha=0.85, label="Other G3+", zorder=3,
+        s=25, color=COL_TEAL, alpha=0.85, label="Non-motif G3+", zorder=3,
     )
     axC2.scatter(
         ldlr_sub.loc[is_sink, "pos_1based"], ldlr_sub.loc[is_sink, "effect_log2_RNA_DNA"],
@@ -286,21 +291,21 @@ def make_figure6():
         fontsize=6.7, color=COL_CRIMSON, fontweight="bold",
     )
     axC2.text(
-        215, 0.56, f"LDLR vs LDLR.2\nr = {r4['ldlr_vs_ldlr2_snv_pearson_r']:.3f}",
-        fontsize=6.7, color=COL_NAVY,
+        215, 0.56, f"HepG2 LDLR vs LDLR.2\nr = {r4['ldlr_vs_ldlr2_snv_pearson_r']:.3f}",
+        fontsize=6.5, color=COL_NAVY,
         bbox=dict(boxstyle="round,pad=0.2", fc="#EBF5FB", ec="#AEB6BF", lw=0.6),
     )
     axC2.set_xlim(45, 345)
     axC2.set_ylim(-3.85, 1.05)
-    axC2.set_xlabel("LDLR promoter position (bp)")
+    axC2.set_xlabel("HepG2 LDLR promoter position (bp)")
     axC2.set_ylabel("Δlog₂(RNA/DNA) for 8-oxoG→T")
-    axC2.set_title("C2. LDLR Base-Resolution Track", loc="left", pad=6)
-    axC2.legend(loc="upper left", bbox_to_anchor=(-0.06, -0.18), ncol=3, frameon=False, fontsize=6.6)
+    axC2.set_title("C2. HepG2 LDLR Base Track", loc="left", pad=6)
+    axC2.legend(loc="upper left", bbox_to_anchor=(-0.06, -0.18), ncol=3, frameon=False, fontsize=6.5)
 
     # =========================================================================
-    # PANEL D (gs_outer[1, 1]): Row 5a GO Uncollapsing + Row 5b Beamline Spec
+    # PANEL D (gs_outer[1, 1]): Row 5a GO Uncollapsing + Row 5b Two-Tier Beamline
     # =========================================================================
-    gs_D = GridSpecFromSubplotSpec(1, 2, subplot_spec=gs_outer[1, 1], width_ratios=[1.15, 1.05], wspace=0.33)
+    gs_D = GridSpecFromSubplotSpec(1, 2, subplot_spec=gs_outer[1, 1], width_ratios=[1.12, 1.08], wspace=0.33)
 
     # --- D1: Row 5a E. coli WGS MA G:C -> T:A Uncollapsing ---
     axD1 = fig.add_subplot(gs_D[0, 0])
@@ -333,7 +338,7 @@ def make_figure6():
     axD1.text(
         37.0, 2.35,
         f"GO⁻ G-run per-bp rate:\nG1: {gr['G1']['per_bp_relative_to_G1']:.2f}× → G3: {gr['G3']['per_bp_relative_to_G1']:.2f}×\nG4: {gr['G4']['per_bp_relative_to_G1']:.2f}× → G5+: {gr['G5+']['per_bp_relative_to_G1']:.2f}×\n({r5['mutMmutY_vs_MMR_fraction_ratio']:.1f}× vs MMR⁻)",
-        fontsize=6.6, color=COL_CRIMSON, fontweight="bold",
+        fontsize=6.5, color=COL_CRIMSON, fontweight="bold",
         bbox=dict(boxstyle="round,pad=0.22", fc="#FDEDEC", ec=COL_CRIMSON, lw=0.65),
     )
     axD1.set_yticks(y_idx)
@@ -342,34 +347,45 @@ def make_figure6():
     axD1.set_xlabel("Whole-genome G:C→T:A fraction (%)")
     axD1.set_title("D1. Row 5a: GO Quotient Uncollapsing", loc="left", pad=6)
 
-    # --- D2: Row 5b Sole Unexecuted Polarized Lepton Beamline Budget ---
+    # --- D2: Row 5b Two-Tier Polarized Lepton Beamline Budget ---
     axD2 = fig.add_subplot(gs_D[0, 1])
-    asym_grid = np.logspace(-4, -2, 200)
+    asym_grid = np.logspace(-7.2, -2.0, 300)
     n_3sig = 9.0 / (asym_grid ** 2)
     n_5sig = 25.0 / (asym_grid ** 2)
 
     bm = r5["row5b_beamline_protocol"]
-    a_tgt = float(bm["target_asymmetry_threshold"])
-    n_min_bm = float(bm["min_lesion_events_per_helicity_arm_3sigma"])
-    t_arm_s = float(bm["estimated_irradiation_seconds_per_arm"])
+    a_ciss = float(bm["target_asymmetry_threshold"])
+    n_ciss = float(bm["min_lesion_events_per_helicity_arm_3sigma"])
+    t_ciss_s = float(bm["estimated_irradiation_seconds_per_arm"])
+    a_so = float(bm["pure_point_coulomb_dirac_so_asymmetry"])
+    n_so = float(bm["min_lesion_events_point_coulomb_3sigma"])
 
-    axD2.loglog(asym_grid, n_3sig, color=COL_NAVY, lw=2.1, label="3σ helicity-flip threshold")
-    axD2.loglog(asym_grid, n_5sig, color=COL_PURPLE, lw=1.8, ls="--", label="5σ discovery threshold")
-    axD2.axvspan(1.0e-3, 1.88e-3, color="#FCF3CF", alpha=0.85, label="Mod. 5 B-DNA window")
-    axD2.scatter([a_tgt], [n_min_bm], color=COL_CRIMSON, s=46, zorder=6)
+    axD2.loglog(asym_grid, n_3sig, color=COL_NAVY, lw=2.0, label="3σ helicity-flip bound")
+    axD2.loglog(asym_grid, n_5sig, color=COL_PURPLE, lw=1.6, ls="--", label="5σ discovery bound")
+    axD2.axvspan(5.0e-4, 2.5e-3, color="#FCF3CF", alpha=0.85, label="CISS/DEA window")
+    axD2.scatter([a_ciss], [n_ciss], color=COL_CRIMSON, s=46, zorder=6)
+    axD2.scatter([a_so], [n_so], color=COL_PURPLE, marker="D", s=44, zorder=6)
+
     axD2.annotate(
-        f"Row 5b target:\n{n_min_bm/1e6:.1f}×10⁶ lesions/arm\n(~{t_arm_s:.1f} s at {bm['standard_GaAs_e_gun_current_nA']:.0f} nA e⁻,\nψ = {bm['recommended_tilt_pair_deg'][0]:.0f}° vs {bm['recommended_tilt_pair_deg'][1]:.0f}°)",
-        xy=(a_tgt, n_min_bm), xytext=(1.15e-4, 1.5e5),
-        arrowprops=dict(arrowstyle="->", color=COL_CRIMSON, lw=1.0),
-        fontsize=6.7, color=COL_CRIMSON, fontweight="bold",
-        bbox=dict(boxstyle="round,pad=0.22", fc="white", ec=COL_CRIMSON, lw=0.65),
+        f"Pure Dirac SO ({a_so:.1e}):\n{n_so:.1e} lesions/arm\n(unobservable alone)",
+        xy=(a_so, n_so), xytext=(4.5e-7, 2.5e10),
+        arrowprops=dict(arrowstyle="->", color=COL_PURPLE, lw=0.95),
+        fontsize=6.2, color=COL_PURPLE, fontweight="bold",
+        bbox=dict(boxstyle="round,pad=0.20", fc="#F5EEF8", ec=COL_PURPLE, lw=0.6),
     )
-    axD2.set_xlim(8e-5, 1.2e-2)
-    axD2.set_ylim(5e4, 4e9)
+    axD2.annotate(
+        f"CISS/DEA ({a_ciss:.0e}):\n{n_ciss/1e6:.1f}×10⁶ (~{t_ciss_s:.1f} s\nat {bm['standard_GaAs_e_gun_current_nA']:.0f} nA e⁻)",
+        xy=(a_ciss, n_ciss), xytext=(3.0e-6, 1.8e5),
+        arrowprops=dict(arrowstyle="->", color=COL_CRIMSON, lw=0.95),
+        fontsize=6.2, color=COL_CRIMSON, fontweight="bold",
+        bbox=dict(boxstyle="round,pad=0.20", fc="white", ec=COL_CRIMSON, lw=0.6),
+    )
+    axD2.set_xlim(6e-8, 2.0e-2)
+    axD2.set_ylim(3e4, 2e16)
     axD2.set_xlabel("Chiral yield asymmetry |A_eff|")
     axD2.set_ylabel("Required lesions per arm N_min")
-    axD2.set_title("D2. Row 5b: Polarized Beam Spec", loc="left", pad=6)
-    axD2.legend(loc="upper left", bbox_to_anchor=(-0.06, -0.18), ncol=2, frameon=False, fontsize=6.5)
+    axD2.set_title("D2. Row 5b: Two-Tier Beam Spec", loc="left", pad=6)
+    axD2.legend(loc="upper left", bbox_to_anchor=(-0.06, -0.18), ncol=2, frameon=False, fontsize=6.4)
 
     png_path = f"{ASSET_DIR}/fig6_table6_empirical_wetlab_validation.png"
     svg_path = f"{ASSET_DIR}/fig6_table6_empirical_wetlab_validation.svg"

@@ -116,29 +116,36 @@ def make_figure1():
     # Panel C: Universal Sub-Thermal Coherent Wave No-Go Bound
     axC = fig.add_subplot(gs[1, 0])
     E_grid = wf_df["E0_V_per_m"].values
-    axC.loglog(E_grid, np.maximum(wf_df["thermo_ceiling_dmu_over_mu"].values, 1e-35), color=COL_NAVY, lw=2.0, label=r"Static ceiling $2\lambda / (k_B T)$")
-    axC.loglog(E_grid, np.maximum(wf_df["dc_gibbs_dmu_over_mu"].values, 1e-35), color=COL_TEAL, ls="--", lw=1.7, label="Exact DC Gibbs hazard shift")
-    axC.loglog(E_grid, np.maximum(wf_df["ac_subgap_rectified_dmu_over_mu"].values, 1e-35), color=COL_PURPLE, lw=2.1,
-               label=r"Sub-gap AC wave ($\omega \ll g$: Hz--GHz)")
-    axC.loglog(E_grid, np.maximum(wf_df["ac_thz_rectified_dmu_over_mu"].values, 1e-35), color=COL_AMBER, ls=":", lw=1.8,
-               label=r"Near-gap THz wave ($\omega = 10^{13}\,\mathrm{rad/s}$)")
+    axC.loglog(E_grid, np.maximum(wf_df["thermo_ceiling_dmu_over_mu"].values, 1e-36), color=COL_NAVY, lw=2.0, label=r"Static Kubo ceiling $2\lambda / (k_B T)$")
+    axC.loglog(E_grid, np.maximum(wf_df["dc_gibbs_dmu_over_mu"].values, 1e-36), color=COL_TEAL, ls="--", lw=1.7, label="Exact DC Gibbs shift")
+    axC.loglog(E_grid, np.maximum(wf_df["drazin_floquet_subgap_dmu_over_mu"].values, 1e-36), color=COL_PURPLE, lw=2.1,
+               label=r"Fixed-bath Floquet Drazin ($\omega \ll g$: Hz--GHz)")
+    axC.loglog(E_grid, np.maximum(wf_df["drazin_floquet_thz_dmu_over_mu"].values, 1e-36), color=COL_AMBER, ls=":", lw=1.8,
+               label=r"Near-gap THz Floquet ($\omega = 10^{13}\,\mathrm{rad/s}$)")
+    axC.loglog(E_grid, np.maximum(wf_df["adiabatic_kms_ac_dmu_over_mu"].values, 1e-36), color="#2874A6", ls="-.", lw=1.7,
+               label=r"Adiabatic KMS bath curvature")
     m50 = float(m1["metabolic_50mK_noise_floor"])
     m50_exp = int(np.floor(np.log10(m50)))
     m50_man = m50 / (10.0 ** m50_exp)
-    axC.axhline(m50, color=COL_CRIMSON, ls="-.", lw=1.6,
-                label=rf"50 mK metabolic thermal floor (${m50_man:.2f}\times 10^{{{m50_exp}}}$)")
+    axC.axhline(m50, color=COL_CRIMSON, ls=(0, (5, 2)), lw=1.6,
+                label=rf"50 mK thermal floor (${m50_man:.2f}\times 10^{{{m50_exp}}}$)")
     base_pt = m1["ambient_subgap_1uVm_reference"]
-    ac1 = float(base_pt["ac_subgap_rectified_dmu_over_mu"])
-    ac1_exp = int(np.floor(np.log10(ac1)))
-    ac1_man = ac1 / (10.0 ** ac1_exp)
-    axC.scatter([1e-6], [ac1], color=COL_PURPLE, s=58, zorder=6, edgecolor="black", lw=0.8,
-                label=rf"Ambient $1\ \mu\mathrm{{V/m}}$ AC (${ac1_man:.2f}\times 10^{{{ac1_exp}}}$)")
+    fl1 = float(base_pt["drazin_floquet_subgap_dmu_over_mu"])
+    fl1_exp = int(np.floor(np.log10(fl1)))
+    fl1_man = fl1 / (10.0 ** fl1_exp)
+    kms1 = float(base_pt["adiabatic_kms_ac_dmu_over_mu"])
+    kms1_exp = int(np.floor(np.log10(kms1)))
+    kms1_man = kms1 / (10.0 ** kms1_exp)
+    axC.scatter([1e-6], [fl1], color=COL_PURPLE, s=54, zorder=6, edgecolor="black", lw=0.8,
+                label=rf"$1\ \mu\mathrm{{V/m}}$ Floquet (${fl1_man:.2f}\times 10^{{{fl1_exp}}}$)")
+    axC.scatter([1e-6], [kms1], color="#2874A6", marker="D", s=44, zorder=6, edgecolor="black", lw=0.7,
+                label=rf"$1\ \mu\mathrm{{V/m}}$ KMS (${kms1_man:.2f}\times 10^{{{kms1_exp}}}$)")
     axC.set_xlabel(r"Non-ionizing electric field amplitude $E_0$ ($\mathrm{V\,m^{-1}}$)")
     axC.set_ylabel(r"Fractional mutation-hazard shift $|\Delta\mu / \mu|$")
     axC.set_title("C   Universal Sub-Thermal Wave No-Go Bound", loc="left")
-    axC.set_ylim(1e-34, 1e1)
+    axC.set_ylim(1e-35, 1e3)
     axC.grid(True, which="major", alpha=0.22, lw=0.6)
-    axC.legend(loc="upper left", frameon=True, facecolor="white", framealpha=0.92, fontsize=7.4)
+    axC.legend(loc="upper left", frameon=True, facecolor="white", framealpha=0.92, fontsize=6.8)
 
     # Panel D: Duplex Guanine Stack Hole-Sink Enrichment
     axD = fig.add_subplot(gs[1, 1])
@@ -221,7 +228,7 @@ def make_figure2():
         bcrb = sub["bcrb_D_over_sigma2"].values
         axB.loglog(nu, bcrb, color=col, ls="--", lw=1.5, alpha=0.85)
         axB.errorbar(nu, emp, yerr=se, fmt=mk, color=col, ms=5.5, capsize=2.5, lw=1.2, label=lbl)
-    axB.plot([], [], color=COL_SLATE, ls="--", lw=1.5, label=r"Clarke-Barron bound $\frac{1}{K}\mathrm{Tr}(I+\nu\sigma^2 F_1)^{-1}$")
+    axB.plot([], [], color=COL_SLATE, ls="--", lw=1.5, label=r"Exact van Trees bound $\frac{1}{K}\mathrm{Tr}(I+\nu\sigma^2 \mathbb{E}_\Theta[F_1])^{-1}$")
     axB.set_xlabel(r"Synchronized hepatocyte ensemble size $\nu$")
     axB.set_ylabel(r"Normalized waveform MSE $D / \sigma^2$")
     axB.set_ylim(7e-4, 2.2)

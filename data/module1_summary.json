@@ -1,8 +1,10 @@
 {
-  "runtime_seconds": 0.27388974699988466,
+  "runtime_seconds": 0.32311703899904387,
   "temperature_K": 310.15,
   "kBT_eV": 0.02672665911254327,
   "spectral_gap_s_inv": 10109877135313.5,
+  "numerical_coercivity_s_inv": 10091931470886.332,
+  "eigenvector_cond_kappa2_V": 1.0000933527211047,
   "tau_mem_fs": 98.91317041895887,
   "trace_conservation_err": 0.001033782958984375,
   "gibbs_stationary_fro_err": 1.6056053676340845e-11,
@@ -40,9 +42,13 @@
     "adiabatic_kms_ac_dmu_over_mu": 3.484086422762612e-30,
     "metabolic_thermal_floor_50mK": 0.0025333945666646636,
     "cohort_poisson_snr_ac_subgap": 3.57064395236086e-26,
+    "cohort_poisson_snr_drazin_floquet": 3.993563920349116e-24,
+    "cohort_poisson_snr_adiabatic_kms": 1.1017648660798171e-27,
     "cohort_poisson_snr_dc": 1.1465323689581574e-12
   },
-  "approx_crossover_E0_V_per_m": 100000.0,
+  "approx_crossover_E0_drazin_V_per_m": 447889.7228464287,
+  "approx_crossover_E0_adiabatic_kms_V_per_m": 26965405.644153457,
+  "approx_crossover_E0_V_per_m": 447889.7228464287,
   "metabolic_50mK_noise_floor": 0.0025333945666646636,
   "guanine_hole_trapping": [
     {

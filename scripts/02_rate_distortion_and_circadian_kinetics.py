@@ -62,78 +62,95 @@ def run_single_cell_sparsity_and_ensemble_scaling():
     }
 
     nu_grid = [1, 10, 100, 1000, 10000, 100000, 300000, 1000000]
-    N_MC = 300
+    N_MC = 2500
+    N_PRIOR = 5000
+    rng_prior = np.random.default_rng(20261121)
+    prior_thetas = rng_prior.normal(0.0, SIG_THETA, size=(N_PRIOR, K_DIM))
+
     ensemble_rows = []
+    fisher_audit = {}
     f_ref_per_cell = 0.0
 
     for sched_name, k_rep_vec in schedules.items():
         eff_acc = K_OPEN if sched_name == "inward_occluded_SHL" else mean_acc
 
-        def forward_and_jac(theta):
-            x_traj = Phi @ theta
-            exp_x = np.exp(np.clip(x_traj, -2.5, 2.5))
+        def forward_and_jac_batch(thetas_b):
+            thetas_2d = np.atleast_2d(thetas_b)
+            B = thetas_2d.shape[0]
+            x_traj = thetas_2d @ Phi.T
+            exp_x = np.exp(np.clip(x_traj, -3.0, 3.0))
             k_in = k_ox_base * eff_acc * exp_x
-            dk_dtheta = (k_in[:, None]) * Phi  # M_STEPS x K_DIM
+            dk_dtheta = k_in[:, :, None] * Phi[None, :, :]  # (B, M_STEPS, K_DIM)
 
-            p = float(k_in[0] / k_rep_vec[0])
-            dp = dk_dtheta[0] / k_rep_vec[0]
+            p = k_in[:, 0] / k_rep_vec[0]
+            dp = dk_dtheta[:, 0, :] / k_rep_vec[0]
             for s in range(8):
                 idx = s % 8
                 dec = np.exp(-k_rep_vec[idx] * dt_h)
                 fac = (1.0 - dec) / k_rep_vec[idx]
-                p = p * dec + k_in[idx] * fac
-                dp = dp * dec + dk_dtheta[idx] * fac
+                p = p * dec + k_in[:, idx] * fac
+                dp = dp * dec + dk_dtheta[:, idx, :] * fac
 
-            p_out = np.zeros(M_STEPS)
-            J_out = np.zeros((M_STEPS, K_DIM))
+            p_out = np.zeros((B, M_STEPS), dtype=float)
+            J_out = np.zeros((B, M_STEPS, K_DIM), dtype=float)
             for m in range(M_STEPS):
                 dec = np.exp(-k_rep_vec[m] * dt_h)
                 fac = (1.0 - dec) / k_rep_vec[m]
-                p = p * dec + k_in[m] * fac
-                dp = dp * dec + dk_dtheta[m] * fac
-                p_out[m] = p
-                J_out[m] = dp
+                p = p * dec + k_in[:, m] * fac
+                dp = dp * dec + dk_dtheta[:, m, :] * fac
+                p_out[:, m] = p
+                J_out[:, m, :] = dp
             return p_out, J_out
 
-        p_bar, G_jac0 = forward_and_jac(np.zeros(K_DIM))
-        W_diag0 = K_EFF / p_bar
-        F_1cell_mat = (G_jac0.T * W_diag0) @ G_jac0
+        p_bar_2d, G_jac0_3d = forward_and_jac_batch(np.zeros((1, K_DIM)))
+        p_bar = p_bar_2d[0]
+        G_jac0 = G_jac0_3d[0]
+        F_1cell_origin = (G_jac0.T * (K_EFF / p_bar)) @ G_jac0
+
+        # Exact van Trees prior-averaged single-cell Fisher information matrix E_Theta[F_1(Theta)]
+        p_prior, J_prior = forward_and_jac_batch(prior_thetas)
+        F_1cell_prior_avg = np.einsum("bmk,bm,bml->kl", J_prior, K_EFF / p_prior, J_prior) / float(N_PRIOR)
+
+        fisher_audit[sched_name] = {
+            "trace_F1_origin": float(np.trace(F_1cell_origin)),
+            "trace_F1_prior_avg": float(np.trace(F_1cell_prior_avg)),
+            "prior_over_origin_trace_ratio": float(np.trace(F_1cell_prior_avg) / np.trace(F_1cell_origin)),
+        }
         if sched_name == "rhythmic_OGG1":
-            f_ref_per_cell = float(np.trace(F_1cell_mat))
+            f_ref_per_cell = float(np.trace(F_1cell_prior_avg))
 
         prior_prec = np.eye(K_DIM) / SIG2_THETA
 
         for nu in nu_grid:
-            post_prec = prior_prec + nu * F_1cell_mat
+            # Exact van Trees Bayesian Cramer-Rao Lower Bound using E_Theta[F_1(Theta)]
+            post_prec = prior_prec + nu * F_1cell_prior_avg
             post_cov = np.linalg.inv(post_prec)
             bcrb_mse = float(np.trace(post_cov) / K_DIM)
-            _, logdet = np.linalg.slogdet(np.eye(K_DIM) + SIG2_THETA * nu * F_1cell_mat)
+
+            # Origin-linearized F_1(0) reference bound
+            post_cov_f0 = np.linalg.inv(prior_prec + nu * F_1cell_origin)
+            f0_bcrb_mse = float(np.trace(post_cov_f0) / K_DIM)
+
+            _, logdet = np.linalg.slogdet(np.eye(K_DIM) + SIG2_THETA * nu * F_1cell_prior_avg)
             mi_bits = float(0.5 * logdet / np.log(2.0))
 
             thetas = rng.normal(0.0, SIG_THETA, size=(N_MC, K_DIM))
-            sq_errs = []
-            zero_frac_sum = 0.0
-            for i in range(N_MC):
-                p_true, _ = forward_and_jac(thetas[i])
-                y_counts = rng.poisson(nu * K_EFF * p_true)
-                if nu == 1:
-                    zero_frac_sum += float(np.mean(y_counts == 0))
+            p_true, _ = forward_and_jac_batch(thetas)
+            y_counts = rng.poisson(nu * K_EFF * p_true)
+            zero_frac_nu1 = float(np.mean(y_counts == 0)) if nu == 1 else np.nan
 
-                # Exact 4-step Gauss-Newton / IRLS Poisson MAP optimization:
-                # max_theta sum_m [ y_m log(nu K p_m(theta)) - nu K p_m(theta) ] - 0.5 ||theta||^2 / sigma^2
-                th = np.zeros(K_DIM)
-                for _ in range(4):
-                    pm, Jm = forward_and_jac(th)
-                    # Score gradient: sum_m (y_m / pm - nu * K_EFF) * Jm - th / SIG2_THETA
-                    grad = Jm.T @ (y_counts / pm - nu * K_EFF) - th / SIG2_THETA
-                    # Expected Fisher Hessian: nu * K_EFF * Jm^T diag(1/pm) Jm + I / SIG2_THETA
-                    H_gn = prior_prec + (Jm.T * (nu * K_EFF / pm)) @ Jm
-                    step = np.linalg.solve(H_gn, grad)
-                    th = np.clip(th + step, -1.5, 1.5)
-                    if np.linalg.norm(step) < 1e-5:
-                        break
-                sq_errs.append(float(np.mean((th - thetas[i]) ** 2)))
+            # Converged 8-step batched Gauss-Newton / Fisher-scoring Poisson MAP optimization
+            th = np.zeros((N_MC, K_DIM), dtype=float)
+            for _ in range(8):
+                pm, Jm = forward_and_jac_batch(th)
+                grad = np.einsum("bmk,bm->bk", Jm, y_counts / pm - nu * K_EFF) - th / SIG2_THETA
+                H_gn = prior_prec[None, :, :] + np.einsum("bmk,bm,bml->bkl", Jm, nu * K_EFF / pm, Jm)
+                step = np.linalg.solve(H_gn, grad[:, :, None])[:, :, 0]
+                th = np.clip(th + step, -2.5, 2.5)
+                if float(np.max(np.linalg.norm(step, axis=1))) < 1e-6:
+                    break
 
+            sq_errs = np.mean((th - thetas) ** 2, axis=1)
             emp_mse = float(np.mean(sq_errs))
             emp_se = float(np.std(sq_errs, ddof=1) / np.sqrt(N_MC))
 
@@ -146,8 +163,9 @@ def run_single_cell_sparsity_and_ensemble_scaling():
                 "clarke_barron_bcrb_mse": bcrb_mse,
                 "normalized_distortion_D_over_sigma2": emp_mse / SIG2_THETA,
                 "bcrb_D_over_sigma2": bcrb_mse / SIG2_THETA,
+                "origin_f0_bcrb_D_over_sigma2": f0_bcrb_mse / SIG2_THETA,
                 "mutual_info_bits": mi_bits,
-                "empty_timebin_fraction_nu1": zero_frac_sum / N_MC if nu == 1 else np.nan,
+                "empty_timebin_fraction_nu1": zero_frac_nu1,
             })
 
     mem_rows = []
@@ -165,11 +183,12 @@ def run_single_cell_sparsity_and_ensemble_scaling():
                 "regime": "memory_limited" if d_mem > d_sens else "sensing_limited",
             })
 
-    return sparsity_rows, ensemble_rows, mem_rows
+    return sparsity_rows, ensemble_rows, mem_rows, fisher_audit
 
 
 def main():
-    sparsity_rows, ensemble_rows, mem_rows = run_single_cell_sparsity_and_ensemble_scaling()
+    import json
+    sparsity_rows, ensemble_rows, mem_rows, fisher_audit = run_single_cell_sparsity_and_ensemble_scaling()
     df_sp = pd.DataFrame(sparsity_rows)
     df_ens = pd.DataFrame(ensemble_rows)
     df_mem = pd.DataFrame(mem_rows)
@@ -177,9 +196,22 @@ def main():
     df_sp.to_csv(f"{OUT_DATA}/module2_single_cell_sparsity.csv", index=False)
     df_ens.to_csv(f"{OUT_DATA}/module2_ensemble_rate_distortion.csv", index=False)
     df_mem.to_csv(f"{OUT_DATA}/module2_memory_sensing_crossover.csv", index=False)
+    with open(f"{OUT_DATA}/module2_summary.json", "w", encoding="utf-8") as fh:
+        json.dump(
+            {
+                "n_mc_trials": 2500,
+                "n_prior_draws": 5000,
+                "fisher_prior_vs_origin": fisher_audit,
+                "all_empirical_above_van_trees_bound": bool(
+                    np.all(df_ens["normalized_distortion_D_over_sigma2"] >= df_ens["bcrb_D_over_sigma2"] - 2.0 * df_ens["empirical_mse_se"] / (0.18 ** 2))
+                ),
+            },
+            fh,
+            indent=2,
+        )
 
-    print("=== MODULE 2 REFINED SUMMARY (NONLINEAR POISSON MAP) ===")
-    print(df_ens[["schedule", "nu_cells", "normalized_distortion_D_over_sigma2", "bcrb_D_over_sigma2", "mutual_info_bits"]].to_string(index=False))
+    print("=== MODULE 2 REFINED SUMMARY (EXACT VAN TREES PRIOR-AVERAGED FISHER & NONLINEAR POISSON MAP) ===")
+    print(df_ens[["schedule", "nu_cells", "normalized_distortion_D_over_sigma2", "bcrb_D_over_sigma2", "origin_f0_bcrb_D_over_sigma2", "mutual_info_bits"]].to_string(index=False))
 
 
 if __name__ == "__main__":

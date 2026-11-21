@@ -78,8 +78,9 @@ def run_row1_thermal_vs_ac_validation():
     t0 = time.time()
     # Empirical WGS MA rates in E. coli B REL606 mutS from Chu et al. (2018),
     # BMC Evolutionary Biology 18:126 (DOI: 10.1186/s12862-018-1252-8):
-    # Reported base-pair substitution rates per nucleotide per generation (x 10^-8)
-    # and exact published t-tests:
+    # 20 independent MA lines per temperature (60 sequenced MA lines total; Welch two-sample df = 29, 32, 33).
+    # Published overall spontaneous mutation-rate comparisons include base-pair substitutions (87%-96% transitions)
+    # plus small indels (~1/5 of BPS rate):
     #   25 C vs 37 C: 37% lower at 25 C (ratio 0.63), t = -5.26, df = 32, Padj = 7e-6
     #   28 C vs 37 C: 38% lower at 28 C (ratio 0.62), t = -7.12, df = 33, Padj = 6e-8
     #   25 C vs 28 C: ratio 0.63/0.62 = 1.016, t = 0.08, df = 29, Padj = 0.469 (null over 3 K)
@@ -103,17 +104,17 @@ def run_row1_thermal_vs_ac_validation():
     mod1_ratio_37_over_28 = float(rel_rates_mod1[2] / rel_rates_mod1[1])  # 1.6010x
     pct_agreement_37_28 = 100.0 * (1.0 - abs(mod1_ratio_37_over_28 - emp_ratio_37_over_28) / emp_ratio_37_over_28)
 
-    # Theorem 1 sub-thermal AC predictions at Wi-Fi / lab RF fields:
-    # Load Module 1 sweep to anchor exact Floquet-Lindblad scaling
+    # Theorem 2 sub-thermal AC predictions across exact Floquet-Lindblad Drazin Eq. (S2) & Adiabatic KMS
     mod1_df = pd.read_csv(os.path.join(DATA_DIR, "module1_weak_field_nogo.csv"))
-    # Evaluate at E0 = 1 uV/m, 1 V/m (ambient Wi-Fi), and 10 V/m (Table 6 upper bound)
     ac_points = {}
     for e0 in [1e-6, 1.0, 10.0]:
         sub_row = mod1_df.iloc[(mod1_df["E0_V_per_m"] - e0).abs().argsort()[:1]].iloc[0]
         ac_points[f"E0_{e0:g}_Vm"] = {
             "E_field_V_per_m": float(sub_row["E0_V_per_m"]),
             "lambda_eV": float(sub_row["lambda_eV"]),
-            "ac_rectified_rel_shift": float(sub_row["ac_subgap_rectified_dmu_over_mu"]),
+            "drazin_floquet_rel_shift": float(sub_row["drazin_floquet_subgap_dmu_over_mu"]),
+            "adiabatic_kms_rel_shift": float(sub_row["adiabatic_kms_ac_dmu_over_mu"]),
+            "heuristic_lorentzian_rel_shift": float(sub_row["ac_subgap_rectified_dmu_over_mu"]),
             "thermal_50mK_rel_shift": float(sub_row["metabolic_thermal_floor_50mK"]),
             "thermal_10mK_rel_shift": float(
                 math.exp(e_act_mod1_ev * 0.010 / (KB_EV_PER_K * 310.15 * 310.16)) - 1.0
@@ -122,6 +123,10 @@ def run_row1_thermal_vs_ac_validation():
 
     return {
         "runtime_s": round(time.time() - t0, 4),
+        "n_ma_lines_per_temperature": 20,
+        "n_total_ma_lines": 60,
+        "welch_dfs": {"25_vs_28C": 29, "25_vs_37C": 32, "28_vs_37C": 33},
+        "endpoint_definition": "Spontaneous base-pair substitutions (87%-96% transitions in mutS) + small indels (~1/5 of BPS rate)",
         "emp_rel_rates_25_28_37C": rel_rates_emp.tolist(),
         "mod1_predicted_rel_rates_25_28_37C": [round(float(x), 5) for x in rel_rates_mod1],
         "emp_ratio_37C_vs_28C": round(emp_ratio_37_over_28, 4),
@@ -951,13 +956,15 @@ def run_row4_hepg2_mpra_validation():
 
     dedup_df = mpra_df.copy()
     dedup_df["promoter"] = dedup_df["library"].replace({"LDLR.2": "LDLR"})
+    dedup_df["cell_line"] = dedup_df["promoter"].map({"LDLR": "HepG2", "F9": "HepG2", "PKLR_48h": "K562"})
     prom_df = (
         dedup_df[dedup_df["is_8oxoG_to_T_transversion"]]
-        .groupby(["promoter", "pos_1based", "ref", "alt", "duplex_G_run_length", "in_SP1_or_Ebox_motif"], as_index=False)
+        .groupby(["cell_line", "promoter", "pos_1based", "ref", "alt", "duplex_G_run_length", "in_SP1_or_Ebox_motif"], as_index=False)
         .agg({"effect_log2_RNA_DNA": "mean", "abs_effect_log2": "mean"})
     )
     prom_df["abs_effect_log2"] = prom_df["effect_log2_RNA_DNA"].abs()
 
+    # Cross-cell-type pooled splits (kept for reference alongside primary stratified HepG2 / K562 splits)
     g1_ctrl = prom_df[(prom_df["duplex_G_run_length"] == 1) & (~prom_df["in_SP1_or_Ebox_motif"])]
     g2_ctrl = prom_df[prom_df["duplex_G_run_length"] == 2]
     g3_only = prom_df[prom_df["duplex_G_run_length"] == 3]
@@ -971,18 +978,49 @@ def run_row4_hepg2_mpra_validation():
     mwu_g4p = stats.mannwhitneyu(g4plus_all["abs_effect_log2"], g1_ctrl["abs_effect_log2"], alternative="two-sided")
     mwu_all_g3 = stats.mannwhitneyu(g3plus_all["abs_effect_log2"], g1_ctrl["abs_effect_log2"], alternative="two-sided")
     mwu_sp1_sinks = stats.mannwhitneyu(sp1_g3plus_sinks["abs_effect_log2"], g1_ctrl["abs_effect_log2"], alternative="two-sided")
-    mwu_f9_g3 = stats.mannwhitneyu(f9_g3plus["abs_effect_log2"], g1_ctrl["abs_effect_log2"], alternative="two-sided")
+
+    # Primary stratified Cohort A: HepG2 hepatocellular carcinoma (LDLR deduplicated + F9)
+    hepg2_df = prom_df[prom_df["cell_line"] == "HepG2"]
+    hepg2_g1 = hepg2_df[(hepg2_df["duplex_G_run_length"] == 1) & (~hepg2_df["in_SP1_or_Ebox_motif"])]
+    hepg2_g2 = hepg2_df[hepg2_df["duplex_G_run_length"] == 2]
+    hepg2_g3 = hepg2_df[hepg2_df["duplex_G_run_length"] == 3]
+    hepg2_g4p = hepg2_df[hepg2_df["duplex_G_run_length"] >= 4]
+    hepg2_nonmotif_g3p = hepg2_df[(hepg2_df["duplex_G_run_length"] >= 3) & (~hepg2_df["in_SP1_or_Ebox_motif"])]
+    hepg2_sp1_g3p = hepg2_df[(hepg2_df["duplex_G_run_length"] >= 3) & (hepg2_df["in_SP1_or_Ebox_motif"])]
+
+    mwu_hepg2_sp1 = stats.mannwhitneyu(hepg2_sp1_g3p["abs_effect_log2"], hepg2_g1["abs_effect_log2"], alternative="two-sided")
+    mwu_hepg2_nonmotif = stats.mannwhitneyu(hepg2_nonmotif_g3p["abs_effect_log2"], hepg2_g1["abs_effect_log2"], alternative="two-sided")
+    mwu_hepg2_sp1_vs_nonmotif = stats.mannwhitneyu(hepg2_sp1_g3p["abs_effect_log2"], hepg2_nonmotif_g3p["abs_effect_log2"], alternative="two-sided")
+    mwu_hepg2_g4p = stats.mannwhitneyu(hepg2_g4p["abs_effect_log2"], hepg2_g1["abs_effect_log2"], alternative="two-sided")
+    mwu_f9_vs_hepg2_g1 = stats.mannwhitneyu(f9_g3plus["abs_effect_log2"], hepg2_g1["abs_effect_log2"], alternative="two-sided")
+
+    # Primary stratified Cohort B: K562 erythroleukemia (PKLR_48h)
+    k562_df = prom_df[prom_df["cell_line"] == "K562"]
+    k562_g1 = k562_df[(k562_df["duplex_G_run_length"] == 1) & (~k562_df["in_SP1_or_Ebox_motif"])]
+    k562_nonmotif_g3p = k562_df[(k562_df["duplex_G_run_length"] >= 3) & (~k562_df["in_SP1_or_Ebox_motif"])]
+    k562_all_g3p = k562_df[k562_df["duplex_G_run_length"] >= 3]
+    k562_motif_g3p = k562_df[(k562_df["duplex_G_run_length"] >= 3) & (k562_df["in_SP1_or_Ebox_motif"])]
+
+    mwu_k562_motif = stats.mannwhitneyu(k562_motif_g3p["abs_effect_log2"], k562_g1["abs_effect_log2"], alternative="two-sided")
+    mwu_k562_all_g3p = stats.mannwhitneyu(k562_all_g3p["abs_effect_log2"], k562_g1["abs_effect_log2"], alternative="two-sided")
+    mwu_k562_nonmotif = stats.mannwhitneyu(k562_nonmotif_g3p["abs_effect_log2"], k562_g1["abs_effect_log2"], alternative="two-sided")
 
     ldlr_only = prom_df[prom_df["promoter"] == "LDLR"]
     ldlr_sinks = ldlr_only[(ldlr_only["duplex_G_run_length"] >= 3) & (ldlr_only["in_SP1_or_Ebox_motif"])]
     ldlr_g1 = ldlr_only[(ldlr_only["duplex_G_run_length"] == 1) & (~ldlr_only["in_SP1_or_Ebox_motif"])]
+    ldlr_nonmotif_g3p = ldlr_only[(ldlr_only["duplex_G_run_length"] >= 3) & (~ldlr_only["in_SP1_or_Ebox_motif"])]
     mwu_ldlr = stats.mannwhitneyu(ldlr_sinks["abs_effect_log2"], ldlr_g1["abs_effect_log2"], alternative="two-sided")
+    mwu_ldlr_nonmotif = stats.mannwhitneyu(ldlr_nonmotif_g3p["abs_effect_log2"], ldlr_g1["abs_effect_log2"], alternative="two-sided")
 
+    ratio_hepg2_sp1_vs_g1 = float(hepg2_sp1_g3p["abs_effect_log2"].mean() / max(hepg2_g1["abs_effect_log2"].mean(), 1e-9))
+    ratio_hepg2_nonmotif_vs_g1 = float(hepg2_nonmotif_g3p["abs_effect_log2"].mean() / max(hepg2_g1["abs_effect_log2"].mean(), 1e-9))
+    ratio_k562_motif_vs_g1 = float(k562_motif_g3p["abs_effect_log2"].mean() / max(k562_g1["abs_effect_log2"].mean(), 1e-9))
+    ratio_k562_all_g3p_vs_g1 = float(k562_all_g3p["abs_effect_log2"].mean() / max(k562_g1["abs_effect_log2"].mean(), 1e-9))
     ratio_sp1_vs_g1_pooled = float(sp1_g3plus_sinks["abs_effect_log2"].mean() / max(g1_ctrl["abs_effect_log2"].mean(), 1e-9))
     ratio_ldlr_sp1_vs_g1 = float(ldlr_sinks["abs_effect_log2"].mean() / max(ldlr_g1["abs_effect_log2"].mean(), 1e-9))
 
-    frac_gt30pct_drop_sinks = float((sp1_g3plus_sinks["effect_log2_RNA_DNA"] <= -0.5145).mean())
-    frac_gt30pct_drop_g1 = float((g1_ctrl["effect_log2_RNA_DNA"] <= -0.5145).mean())
+    frac_gt30pct_drop_hepg2_sinks = float((hepg2_sp1_g3p["effect_log2_RNA_DNA"] <= -0.5145).mean())
+    frac_gt30pct_drop_hepg2_g1 = float((hepg2_g1["effect_log2_RNA_DNA"] <= -0.5145).mean())
     ldlr_frac_gt30pct_sinks = float((ldlr_sinks["effect_log2_RNA_DNA"] <= -0.5145).mean())
     ldlr_frac_gt30pct_g1 = float((ldlr_g1["effect_log2_RNA_DNA"] <= -0.5145).mean())
 
@@ -994,37 +1032,57 @@ def run_row4_hepg2_mpra_validation():
     return {
         "runtime_s": round(time.time() - t0, 4),
         "library_qc": lib_qc,
+        "cell_line_map": {"LDLR": "HepG2", "LDLR.2": "HepG2", "F9": "HepG2", "PKLR_48h": "K562"},
         "ldlr_vs_ldlr2_snv_pearson_r": round(repro_r, 4),
         "n_unique_promoter_8oxoG_transversions": int(len(prom_df)),
-        "n_isolated_G1_8oxoG_transversions": int(len(g1_ctrl)),
-        "n_G2_8oxoG_transversions": int(len(g2_ctrl)),
-        "n_G3_8oxoG_transversions": int(len(g3_only)),
-        "n_G4plus_8oxoG_transversions": int(len(g4plus_all)),
-        "n_G3plus_all_8oxoG_transversions": int(len(g3plus_all)),
-        "n_F9_G3plus_8oxoG_transversions": int(len(f9_g3plus)),
-        "n_SP1_Ebox_G3plus_sink_transversions": int(len(sp1_g3plus_sinks)),
-        "mean_abs_log2_G1": round(float(g1_ctrl["abs_effect_log2"].mean()), 4),
-        "mean_abs_log2_G2": round(float(g2_ctrl["abs_effect_log2"].mean()), 4),
-        "mean_abs_log2_G3": round(float(g3_only["abs_effect_log2"].mean()), 4),
-        "mean_abs_log2_G4plus": round(float(g4plus_all["abs_effect_log2"].mean()), 4),
-        "mean_abs_log2_G3plus_all": round(float(g3plus_all["abs_effect_log2"].mean()), 4),
-        "mean_abs_log2_F9_G3plus": round(float(f9_g3plus["abs_effect_log2"].mean()), 4),
-        "mean_abs_log2_SP1_G3plus_sinks": round(float(sp1_g3plus_sinks["abs_effect_log2"].mean()), 4),
-        "pooled_SP1_sink_vs_G1_fold_ratio": round(ratio_sp1_vs_g1_pooled, 3),
-        "mwu_p_G2_vs_G1_two_sided": float(mwu_g2.pvalue),
-        "mwu_p_G3_vs_G1_two_sided": float(mwu_g3.pvalue),
-        "mwu_p_G4plus_vs_G1_two_sided": float(mwu_g4p.pvalue),
-        "mwu_p_G3plus_vs_G1": float(mwu_all_g3.pvalue),
-        "mwu_p_F9_G3plus_vs_G1_two_sided": float(mwu_f9_g3.pvalue),
-        "mwu_p_SP1_G3plus_vs_G1": float(mwu_sp1_sinks.pvalue),
+        "hepg2_n_unique_8oxoG_transversions": int(len(hepg2_df)),
+        "hepg2_n_G1_nonmotif": int(len(hepg2_g1)),
+        "hepg2_n_G2": int(len(hepg2_g2)),
+        "hepg2_n_G3": int(len(hepg2_g3)),
+        "hepg2_n_G4plus": int(len(hepg2_g4p)),
+        "hepg2_n_nonmotif_G3plus": int(len(hepg2_nonmotif_g3p)),
+        "hepg2_n_SP1_SRE1_G3plus": int(len(hepg2_sp1_g3p)),
+        "hepg2_n_F9_G3plus": int(len(f9_g3plus)),
+        "hepg2_mean_abs_log2_G1": round(float(hepg2_g1["abs_effect_log2"].mean()), 4),
+        "hepg2_mean_abs_log2_G2": round(float(hepg2_g2["abs_effect_log2"].mean()), 4),
+        "hepg2_mean_abs_log2_G3": round(float(hepg2_g3["abs_effect_log2"].mean()), 4),
+        "hepg2_mean_abs_log2_G4plus": round(float(hepg2_g4p["abs_effect_log2"].mean()), 4),
+        "hepg2_mean_abs_log2_nonmotif_G3plus": round(float(hepg2_nonmotif_g3p["abs_effect_log2"].mean()), 4),
+        "hepg2_mean_abs_log2_SP1_SRE1_G3plus": round(float(hepg2_sp1_g3p["abs_effect_log2"].mean()), 4),
+        "hepg2_mean_abs_log2_F9_G3plus": round(float(f9_g3plus["abs_effect_log2"].mean()), 4),
+        "hepg2_SP1_sink_vs_G1_fold_ratio": round(ratio_hepg2_sp1_vs_g1, 3),
+        "hepg2_nonmotif_G3plus_vs_G1_fold_ratio": round(ratio_hepg2_nonmotif_vs_g1, 3),
+        "hepg2_mwu_p_SP1_sink_vs_G1": float(mwu_hepg2_sp1.pvalue),
+        "hepg2_mwu_p_nonmotif_G3plus_vs_G1": float(mwu_hepg2_nonmotif.pvalue),
+        "hepg2_mwu_p_SP1_vs_nonmotif_G3plus": float(mwu_hepg2_sp1_vs_nonmotif.pvalue),
+        "hepg2_mwu_p_G4plus_vs_G1": float(mwu_hepg2_g4p.pvalue),
+        "hepg2_mwu_p_F9_G3plus_vs_G1": float(mwu_f9_vs_hepg2_g1.pvalue),
+        "hepg2_frac_gt30pct_reporter_loss_SP1_sinks": round(frac_gt30pct_drop_hepg2_sinks, 4),
+        "hepg2_frac_gt30pct_reporter_loss_G1": round(frac_gt30pct_drop_hepg2_g1, 4),
+        "k562_n_unique_8oxoG_transversions": int(len(k562_df)),
+        "k562_n_G1_nonmotif": int(len(k562_g1)),
+        "k562_n_nonmotif_G3plus": int(len(k562_nonmotif_g3p)),
+        "k562_n_all_G3plus": int(len(k562_all_g3p)),
+        "k562_n_motif_G3plus": int(len(k562_motif_g3p)),
+        "k562_mean_abs_log2_G1": round(float(k562_g1["abs_effect_log2"].mean()), 4),
+        "k562_mean_abs_log2_nonmotif_G3plus": round(float(k562_nonmotif_g3p["abs_effect_log2"].mean()), 4),
+        "k562_mean_abs_log2_all_G3plus": round(float(k562_all_g3p["abs_effect_log2"].mean()), 4),
+        "k562_mean_abs_log2_motif_G3plus": round(float(k562_motif_g3p["abs_effect_log2"].mean()), 4),
+        "k562_motif_G3plus_vs_G1_fold_ratio": round(ratio_k562_motif_vs_g1, 3),
+        "k562_all_G3plus_vs_G1_fold_ratio": round(ratio_k562_all_g3p_vs_g1, 3),
+        "k562_mwu_p_motif_G3plus_vs_G1": float(mwu_k562_motif.pvalue),
+        "k562_mwu_p_all_G3plus_vs_G1": float(mwu_k562_all_g3p.pvalue),
+        "k562_mwu_p_nonmotif_G3plus_vs_G1": float(mwu_k562_nonmotif.pvalue),
         "ldlr_SP1_sink_mean_abs_log2": round(float(ldlr_sinks["abs_effect_log2"].mean()), 4),
         "ldlr_G1_mean_abs_log2": round(float(ldlr_g1["abs_effect_log2"].mean()), 4),
+        "ldlr_nonmotif_G3plus_mean_abs_log2": round(float(ldlr_nonmotif_g3p["abs_effect_log2"].mean()), 4),
         "ldlr_SP1_sink_vs_G1_fold_ratio": round(ratio_ldlr_sp1_vs_g1, 3),
         "ldlr_mwu_p_SP1_sink_vs_G1": float(mwu_ldlr.pvalue),
+        "ldlr_mwu_p_nonmotif_G3plus_vs_G1": float(mwu_ldlr_nonmotif.pvalue),
         "ldlr_frac_gt30pct_reporter_loss_SP1_sinks": round(ldlr_frac_gt30pct_sinks, 4),
         "ldlr_frac_gt30pct_reporter_loss_G1": round(ldlr_frac_gt30pct_g1, 4),
-        "frac_gt30pct_reporter_loss_SP1_sinks": round(frac_gt30pct_drop_sinks, 4),
-        "frac_gt30pct_reporter_loss_G1": round(frac_gt30pct_drop_g1, 4),
+        "cross_cell_pooled_SP1_sink_vs_G1_fold_ratio": round(ratio_sp1_vs_g1_pooled, 3),
+        "cross_cell_mwu_p_SP1_G3plus_vs_G1": float(mwu_sp1_sinks.pvalue),
         "ldlr_sre1_peak": {"pos": int(sre1_peak_row["pos_1based"]), "log2": round(float(sre1_peak_row["effect_log2_RNA_DNA"]), 4)},
         "ldlr_sp1_peak": {"pos": int(sp1_peak_row["pos_1based"]), "log2": round(float(sp1_peak_row["effect_log2_RNA_DNA"]), 4)},
     }
@@ -1250,8 +1308,17 @@ def run_row5_ecoli_go_and_beamline_validation():
         / cohort_df[cohort_df["repair_class"] == "GO_double_deficient"]["total_snvs"].sum()
     )
 
+    mod5_summary_p = os.path.join(DATA_DIR, "module5_summary.json")
+    if os.path.exists(mod5_summary_p):
+        with open(mod5_summary_p) as fh5:
+            mod5_s = json.load(fh5)
+        a_so_point = float(mod5_s["cosmic_ray_chiral_mutagenesis"]["chiral_bias_500eV_lab_polarized_e_G4"])
+    else:
+        a_so_point = 2.1603e-7
+
     a_eff_target = 1.0e-3
-    n_events_3sigma = int(math.ceil(9.0 / (a_eff_target ** 2)))  # 9,000,000 lesions per arm
+    n_events_3sigma = int(math.ceil(9.0 / (a_eff_target ** 2)))       # 9,000,000 lesions per arm (CISS/DEA regime)
+    n_events_so_3sigma = int(math.ceil(9.0 / (a_so_point ** 2)))      # ~1.93e14 lesions per arm (pure point-Coulomb Dirac SO)
     beam_current_A = 10.0e-9
     electrons_per_s = beam_current_A / E_CHARGE
     surface_g_density_cm2 = 1.5e12 / 0.5  # 3.0e12 G sites/cm^2 in G4 SAM monolayer
@@ -1260,11 +1327,12 @@ def run_row5_ecoli_go_and_beamline_validation():
     eta_oxog_per_electron = surface_g_density_cm2 * sigma_damage_cm2 * oxog_per_damage  # 3.0e-5
     lesion_rate_per_s = electrons_per_s * eta_oxog_per_electron
     exposure_time_s = n_events_3sigma / lesion_rate_per_s
+    exposure_time_so_s = n_events_so_3sigma / lesion_rate_per_s
 
     beamline_spec = {
         "status": "UNEXECUTED_PHYSICAL_EXPERIMENT",
         "reason_not_in_public_archives": (
-            "No published dataset combines helicity-reversed (L <-> -L) 100-500 eV polarized electrons or "
+            "No published dataset combines helicity-reversed (L <-> -L) 10-500 eV polarized electrons or "
             "surface mu+ across tilt angles spanning psi_crit = 26.9 deg on SAM-oriented D/L-GGGG DNA or "
             "Delta_mutM_Delta_mutY_Delta_mutS Duplex-Seq."
         ),
@@ -1272,10 +1340,13 @@ def run_row5_ecoli_go_and_beamline_validation():
         "recommended_tilt_pair_deg": [15.0, 45.0],
         "beam_polarization_abs_L": 0.80,
         "target_asymmetry_threshold": a_eff_target,
+        "pure_point_coulomb_dirac_so_asymmetry": round(a_so_point, 11),
         "eta_oxog_per_electron": round(eta_oxog_per_electron, 8),
         "min_lesion_events_per_helicity_arm_3sigma": n_events_3sigma,
+        "min_lesion_events_point_coulomb_3sigma": n_events_so_3sigma,
         "standard_GaAs_e_gun_current_nA": 10.0,
         "estimated_irradiation_seconds_per_arm": round(exposure_time_s, 2),
+        "estimated_irradiation_seconds_point_coulomb": round(exposure_time_so_s, 1),
     }
 
     return {
@@ -1296,7 +1367,7 @@ def run_row5_ecoli_go_and_beamline_validation():
 
 def main():
     t_start = time.time()
-    print("Running Module 6 empirical wet-lab validations across Table 6...")
+    print("Running Module 6 stage-specific empirical consistency checks across Table 4...")
 
     r1 = run_row1_thermal_vs_ac_validation()
     print("[Row 1 DONE]", json.dumps({k: v for k, v in r1.items() if k != "ac_bounds"}, indent=2))
@@ -1317,18 +1388,19 @@ def main():
     summary_table = pd.DataFrame([
         {
             "table6_row": "Row 1",
-            "prediction": "Sub-thermal AC null vs. thermal Arrhenius scaling (Thm. 1)",
-            "wetlab_cohort_accession": "Chu et al. 2018 (REL606 mutS MA, 25/28/37 C); Said-Salman 2019 (2.4 GHz E. coli)",
-            "sample_size_units": "n=30-34 MA lines/arm; 3 temperatures",
+            "channel_stage_tested": "Thermal B->X Arrhenius gate vs. theoretical Floquet/KMS AC ceiling (Thm. 2)",
+            "wetlab_cohort_accession": "Chu et al. 2018 (E. coli REL606 mutS WGS MA at 25, 28, 37 C; BPS + small indels)",
+            "sample_size_units": "n=20 MA lines/temperature (60 lines total; Welch df=29, 32, 33)",
             "key_empirical_metric": (
                 f"25 vs 28 C null (ratio {ratio_25_28:.3f}, Padj={r1['chu2018_25_vs_28C_padj']}); 37 vs 28 C = {r1['emp_ratio_37C_vs_28C']:.3f}x "
-                f"(Padj={r1['chu2018_28_vs_37C_padj']:.0e}) vs Mod. 1 a priori {r1['mod1_predicted_ratio_37C_vs_28C']:.3f}x ({r1['arrhenius_ratio_agreement_pct']:.1f}% match)"
+                f"(Padj={r1['chu2018_28_vs_37C_padj']:.0e}) vs Mod. 1 a priori {r1['mod1_predicted_ratio_37C_vs_28C']:.3f}x ({r1['arrhenius_ratio_agreement_pct']:.1f}% match); "
+                f"Floquet/KMS <=10 V/m theoretical shift <1.3e-12"
             ),
-            "resolution_status": "RESOLVED (EMPIRICALLY VALIDATED)",
+            "resolution_status": "STAGE-CONSISTENT (Thermal B->X Gate; RF Direct MA Unmeasured)",
         },
         {
             "table6_row": "Row 2",
-            "prediction": "Nucleosomal SHL rotational gate on OGG1 repair (Thm. 2)",
+            "channel_stage_tested": "Nucleosomal SHL minor-groove rotational gate on hOGG1 accessibility (Thm. 3)",
             "wetlab_cohort_accession": "RCSB PDB 8VWT, 8VWV, 9EOZ, 1KX5 + CLAPS-seq (Li et al. 2025; Cordero et al. 2024)",
             "sample_size_units": f"3 cryo-EM hOGG1-NCP structures + {r2['n_nucleosome_positions_scanned']} 1KX5 bp steps",
             "key_empirical_metric": (
@@ -1336,43 +1408,44 @@ def main():
                 f"Inward (>=120 deg): {r2['inward_mean_core_clashes_2p5A']:.1f} core clashes (p={r2['mwu_p_inward_vs_outward_core_clashes']:.2e}; "
                 f"{r2['outward_vs_inward_accessibility_ratio']:.1f}x accessibility gate)"
             ),
-            "resolution_status": "RESOLVED (EMPIRICALLY VALIDATED)",
+            "resolution_status": "STAGE-CONSISTENT (Chromatin Steric Gate K_chrom)",
         },
         {
             "table6_row": "Row 3",
-            "prediction": "Single-cell erasure vs. ensemble scaling (Prop. 1 & Thm. 2)",
+            "channel_stage_tested": "Single-cell transcriptomic observer capture sparsity vs. ensemble pooling (Prop. 1)",
             "wetlab_cohort_accession": "NCBI GEO GSE218316 (human islet scRNA-seq +/- H2O2) + GDS3342 (human monocytes)",
             "sample_size_units": f"{r3['gse218316_total_cells_analyzed']:,} primary human cells ({r3['gse218316_n_donors']} donors) + {r3['gds3342_bulk_monocyte_n']} bulk arrays",
             "key_empirical_metric": (
-                f"nu=1 clock zero-UMI erasure = {100*r3['mean_all10_clock_gene_zero_erasure']:.2f}% "
-                f"(OGG1/MUTYH below filter, AUC={r3['nu1_clock10_auc']:.3f}); "
-                f"nu=1,000 cell-disjoint Clock AUC={r3['nu1000_clock10_auc']:.3f} (LODO={r3['nu1000_clock10_lodo_auc']:.3f}), "
+                f"nu=1 detected clock (NR1D1/DBP) 0-UMI dropout = {100*r3['mean_detected_clock_gene_zero_erasure']:.2f}% "
+                f"(8 clock + OGG1/MUTYH < filter, AUC={r3['nu1_clock10_auc']:.3f}); "
+                f"nu=1,000 Clock AUC={r3['nu1000_clock10_auc']:.3f} (LODO={r3['nu1000_clock10_lodo_auc']:.3f}), "
                 f"Combined AUC={r3['nu1000_combined_auc']:.3f} ({r3['nu1000_combined_bits']:.2f} bits)"
             ),
-            "resolution_status": "RESOLVED (EMPIRICALLY VALIDATED)",
+            "resolution_status": "STAGE-CONSISTENT (Transcriptomic Observer Sparsity Pi_O)",
         },
         {
             "table6_row": "Row 4",
-            "prediction": "Hole-sink cis-regulatory vulnerability in HepG2 (Mod. 4)",
-            "wetlab_cohort_accession": "NCBI GEO GSE126550 (Kircher et al. 2019 HepG2 saturation MPRA: LDLR, LDLR.2, F9, PKLR)",
-            "sample_size_units": f"24 DNA/RNA libraries; {r4['n_unique_promoter_8oxoG_transversions']} unique 8-oxoG->T positions",
+            "channel_stage_tested": "Downstream cis-regulatory penalty of fixed G:C->T:A at GC-box G3+ tracts (Z->TE_O)",
+            "wetlab_cohort_accession": "NCBI GEO GSE126550 (Kircher et al. 2019: HepG2 [LDLR, LDLR.2, F9] & K562 [PKLR])",
+            "sample_size_units": f"HepG2 n={r4['hepg2_n_unique_8oxoG_transversions']} & K562 n={r4['k562_n_unique_8oxoG_transversions']} unique G:C->T:A SNVs",
             "key_empirical_metric": (
-                f"SP1/E-box G3+ hole sinks inflict {r4['ldlr_SP1_sink_vs_G1_fold_ratio']:.2f}x stronger |Delta log2(RNA/DNA)| in LDLR "
-                f"(p={r4['ldlr_mwu_p_SP1_sink_vs_G1']:.2e}) and {r4['pooled_SP1_sink_vs_G1_fold_ratio']:.2f}x pooled across promoters (p={r4['mwu_p_SP1_G3plus_vs_G1']:.2e})"
+                f"HepG2 SP1/SRE-1 G3+: {r4['hepg2_SP1_sink_vs_G1_fold_ratio']:.2f}x vs G1 (p={r4['hepg2_mwu_p_SP1_sink_vs_G1']:.2e}; "
+                f"non-motif G3+ ctrl {r4['hepg2_nonmotif_G3plus_vs_G1_fold_ratio']:.2f}x, p={r4['hepg2_mwu_p_nonmotif_G3plus_vs_G1']:.2f}); "
+                f"K562 PKLR motif G3+: {r4['k562_motif_G3plus_vs_G1_fold_ratio']:.2f}x (p={r4['k562_mwu_p_motif_G3plus_vs_G1']:.2e})"
             ),
-            "resolution_status": "RESOLVED (EMPIRICALLY VALIDATED)",
+            "resolution_status": "STAGE-CONSISTENT (Downstream Cis-Regulatory Vulnerability)",
         },
         {
             "table6_row": "Row 5a / 5b",
-            "prediction": "GO-repair quotient uncollapsing (5a) & pitch-cone chiral beamline (5b)",
+            "channel_stage_tested": "Endogenous GO-repair quotient uncollapsing (5a) & polarized lepton beamline (5b)",
             "wetlab_cohort_accession": "Foster et al. 2015 & Sane/Garushyants 2024 E. coli WGS MA VCFs (14 cohorts)",
-            "sample_size_units": f"{r5['mutMmutY_total_SNVs_parsed']:,} mutM mutY SNVs + 13 comparator cohorts; Row 5b requires >{r5['row5b_beamline_protocol']['min_lesion_events_per_helicity_arm_3sigma']:.1e} beam events",
+            "sample_size_units": f"{r5['mutMmutY_total_SNVs_parsed']:,} mutM mutY SNVs + 13 cohorts; 5b: {r5['row5b_beamline_protocol']['min_lesion_events_per_helicity_arm_3sigma']:.1e} (CISS) vs {r5['row5b_beamline_protocol']['min_lesion_events_point_coulomb_3sigma']:.2e} (Dirac SO) lesions/arm",
             "key_empirical_metric": (
-                f"Row 5a VALIDATED: G:C->T:A jumps from {100*r5['wt_GC_to_TA_fraction']:.1f}% (WT) / {100*r5['mmr_GC_to_TA_fraction']:.2f}% (MMR) "
-                f"to {100*r5['mutMmutY_GC_to_TA_fraction']:.2f}% in mutM mutY ({r5['mutMmutY_vs_MMR_fraction_ratio']:.1f}x vs MMR, p={r5['strain_unit_mwu_p_GO_vs_WT_MMR']:.2e}). "
-                f"Row 5b UNEXECUTED: requires 100-500 eV polarized e+-/mu+ across psi_crit={r5['row5b_beamline_protocol']['critical_pitch_cone_deg']:.1f} deg"
+                f"5a: G:C->T:A jumps from {100*r5['wt_GC_to_TA_fraction']:.1f}% (WT) / {100*r5['mmr_GC_to_TA_fraction']:.2f}% (MMR) "
+                f"to {100*r5['mutMmutY_GC_to_TA_fraction']:.2f}% in mutM mutY ({r5['mutMmutY_vs_MMR_fraction_ratio']:.1f}x vs MMR, p={r5['strain_unit_mwu_p_GO_vs_WT_MMR']:.2e}; G3-G5+ 1.41-1.55x). "
+                f"5b UNEXECUTED: tests |A_eff|>=10^-3 CISS/DEA (~4.8 s) vs pure Dirac SO 2.16e-7 (unobservable alone)"
             ),
-            "resolution_status": "5a VALIDATED / 5b SOLE UNEXECUTED PHYSICAL BEAMLINE TEST",
+            "resolution_status": "5a STAGE-CONSISTENT (Endogenous GO Quotient) / 5b UNEXECUTED BEAMLINE",
         },
     ])
     summary_table.to_csv(os.path.join(DATA_DIR, "module6_table6_empirical_validation.csv"), index=False)

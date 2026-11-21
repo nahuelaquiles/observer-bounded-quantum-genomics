@@ -1,7 +1,15 @@
 {
-  "total_module6_wall_clock_s": 206.899,
+  "total_module6_wall_clock_s": 274.5718,
   "row1_thermal_vs_ac": {
-    "runtime_s": 0.0781,
+    "runtime_s": 0.0802,
+    "n_ma_lines_per_temperature": 20,
+    "n_total_ma_lines": 60,
+    "welch_dfs": {
+      "25_vs_28C": 29,
+      "25_vs_37C": 32,
+      "28_vs_37C": 33
+    },
+    "endpoint_definition": "Spontaneous base-pair substitutions (87%-96% transitions in mutS) + small indels (~1/5 of BPS rate)",
     "emp_rel_rates_25_28_37C": [
       0.63,
       0.62,
@@ -27,28 +35,34 @@
       "E0_1e-06_Vm": {
         "E_field_V_per_m": 1e-06,
         "lambda_eV": 1e-16,
-        "ac_rectified_rel_shift": 1.1291367602966074e-28,
+        "drazin_floquet_rel_shift": 1.262875796977446e-26,
+        "adiabatic_kms_rel_shift": 3.4840864227626124e-30,
+        "heuristic_lorentzian_rel_shift": 1.1291367602966074e-28,
         "thermal_50mK_rel_shift": 0.0025333945666646,
         "thermal_10mK_rel_shift": 0.0005067909524469894
       },
       "E0_1_Vm": {
         "E_field_V_per_m": 1.0,
         "lambda_eV": 1e-10,
-        "ac_rectified_rel_shift": 1.1291367602966072e-16,
+        "drazin_floquet_rel_shift": 1.2628757969774463e-14,
+        "adiabatic_kms_rel_shift": 3.484086422762612e-18,
+        "heuristic_lorentzian_rel_shift": 1.1291367602966072e-16,
         "thermal_50mK_rel_shift": 0.0025333945666646,
         "thermal_10mK_rel_shift": 0.0005067909524469894
       },
       "E0_10_Vm": {
         "E_field_V_per_m": 10.0,
         "lambda_eV": 1e-09,
-        "ac_rectified_rel_shift": 1.1291367602966074e-14,
+        "drazin_floquet_rel_shift": 1.2628757969774465e-12,
+        "adiabatic_kms_rel_shift": 3.4840864227626117e-16,
+        "heuristic_lorentzian_rel_shift": 1.1291367602966074e-14,
         "thermal_50mK_rel_shift": 0.0025333945666646,
         "thermal_10mK_rel_shift": 0.0005067909524469894
       }
     }
   },
   "row2_nucleosome_rotational_gate": {
-    "runtime_s": 18.4814,
+    "runtime_s": 22.7008,
     "pdb_cli_validation": {
       "8VWT": {
         "verdict": "STRONG SUPPORT",
@@ -501,7 +515,7 @@
     "outward_vs_inward_accessibility_ratio": 8.29
   },
   "row3_single_cell_erasure_and_scaling": {
-    "runtime_s": 66.189,
+    "runtime_s": 87.215,
     "gse218316_n_untreated_cells": 2201,
     "gse218316_n_H2O2_cells": 2097,
     "gse218316_total_cells_analyzed": 4298,
@@ -638,7 +652,7 @@
     ]
   },
   "row4_hepg2_mpra_hole_sinks": {
-    "runtime_s": 109.8826,
+    "runtime_s": 143.1549,
     "library_qc": {
       "LDLR": {
         "n_high_conf_barcodes": 53151,
@@ -665,37 +679,62 @@
         "pearson_r_ridge_vs_pure_single_mutant_tags": 0.8727
       }
     },
+    "cell_line_map": {
+      "LDLR": "HepG2",
+      "LDLR.2": "HepG2",
+      "F9": "HepG2",
+      "PKLR_48h": "K562"
+    },
     "ldlr_vs_ldlr2_snv_pearson_r": 0.9794,
     "n_unique_promoter_8oxoG_transversions": 541,
-    "n_isolated_G1_8oxoG_transversions": 264,
-    "n_G2_8oxoG_transversions": 138,
-    "n_G3_8oxoG_transversions": 87,
-    "n_G4plus_8oxoG_transversions": 48,
-    "n_G3plus_all_8oxoG_transversions": 135,
-    "n_F9_G3plus_8oxoG_transversions": 21,
-    "n_SP1_Ebox_G3plus_sink_transversions": 22,
-    "mean_abs_log2_G1": 0.3075,
-    "mean_abs_log2_G2": 0.2913,
-    "mean_abs_log2_G3": 0.4026,
-    "mean_abs_log2_G4plus": 0.8057,
-    "mean_abs_log2_G3plus_all": 0.5459,
-    "mean_abs_log2_F9_G3plus": 0.0946,
-    "mean_abs_log2_SP1_G3plus_sinks": 1.291,
-    "pooled_SP1_sink_vs_G1_fold_ratio": 4.198,
-    "mwu_p_G2_vs_G1_two_sided": 0.27478788892974615,
-    "mwu_p_G3_vs_G1_two_sided": 0.11062805659032375,
-    "mwu_p_G4plus_vs_G1_two_sided": 8.487861765427201e-08,
-    "mwu_p_G3plus_vs_G1": 5.643692939559384e-05,
-    "mwu_p_F9_G3plus_vs_G1_two_sided": 0.017008580305316514,
-    "mwu_p_SP1_G3plus_vs_G1": 2.3546813301099674e-09,
+    "hepg2_n_unique_8oxoG_transversions": 310,
+    "hepg2_n_G1_nonmotif": 168,
+    "hepg2_n_G2": 80,
+    "hepg2_n_G3": 48,
+    "hepg2_n_G4plus": 13,
+    "hepg2_n_nonmotif_G3plus": 53,
+    "hepg2_n_SP1_SRE1_G3plus": 8,
+    "hepg2_n_F9_G3plus": 21,
+    "hepg2_mean_abs_log2_G1": 0.2173,
+    "hepg2_mean_abs_log2_G2": 0.3233,
+    "hepg2_mean_abs_log2_G3": 0.2076,
+    "hepg2_mean_abs_log2_G4plus": 1.4273,
+    "hepg2_mean_abs_log2_nonmotif_G3plus": 0.2236,
+    "hepg2_mean_abs_log2_SP1_SRE1_G3plus": 2.0838,
+    "hepg2_mean_abs_log2_F9_G3plus": 0.0946,
+    "hepg2_SP1_sink_vs_G1_fold_ratio": 9.591,
+    "hepg2_nonmotif_G3plus_vs_G1_fold_ratio": 1.029,
+    "hepg2_mwu_p_SP1_sink_vs_G1": 7.34836627887347e-05,
+    "hepg2_mwu_p_nonmotif_G3plus_vs_G1": 0.7440721049466674,
+    "hepg2_mwu_p_SP1_vs_nonmotif_G3plus": 0.00018247722545498344,
+    "hepg2_mwu_p_G4plus_vs_G1": 5.194401317624154e-05,
+    "hepg2_mwu_p_F9_G3plus_vs_G1": 0.15574695316762346,
+    "hepg2_frac_gt30pct_reporter_loss_SP1_sinks": 0.75,
+    "hepg2_frac_gt30pct_reporter_loss_G1": 0.0893,
+    "k562_n_unique_8oxoG_transversions": 231,
+    "k562_n_G1_nonmotif": 96,
+    "k562_n_nonmotif_G3plus": 60,
+    "k562_n_all_G3plus": 74,
+    "k562_n_motif_G3plus": 14,
+    "k562_mean_abs_log2_G1": 0.4655,
+    "k562_mean_abs_log2_nonmotif_G3plus": 0.5574,
+    "k562_mean_abs_log2_all_G3plus": 0.6105,
+    "k562_mean_abs_log2_motif_G3plus": 0.838,
+    "k562_motif_G3plus_vs_G1_fold_ratio": 1.8,
+    "k562_all_G3plus_vs_G1_fold_ratio": 1.312,
+    "k562_mwu_p_motif_G3plus_vs_G1": 4.576305757353352e-05,
+    "k562_mwu_p_all_G3plus_vs_G1": 0.0008023462372150577,
+    "k562_mwu_p_nonmotif_G3plus_vs_G1": 0.025911032651934278,
     "ldlr_SP1_sink_mean_abs_log2": 2.0838,
     "ldlr_G1_mean_abs_log2": 0.2877,
+    "ldlr_nonmotif_G3plus_mean_abs_log2": 0.3082,
     "ldlr_SP1_sink_vs_G1_fold_ratio": 7.244,
     "ldlr_mwu_p_SP1_sink_vs_G1": 0.0003528767730925628,
+    "ldlr_mwu_p_nonmotif_G3plus_vs_G1": 0.8785819061916862,
     "ldlr_frac_gt30pct_reporter_loss_SP1_sinks": 0.75,
     "ldlr_frac_gt30pct_reporter_loss_G1": 0.1319,
-    "frac_gt30pct_reporter_loss_SP1_sinks": 0.8182,
-    "frac_gt30pct_reporter_loss_G1": 0.125,
+    "cross_cell_pooled_SP1_sink_vs_G1_fold_ratio": 4.198,
+    "cross_cell_mwu_p_SP1_G3plus_vs_G1": 2.3546813301099674e-09,
     "ldlr_sre1_peak": {
       "pos": 190,
       "log2": -2.518
@@ -706,7 +745,7 @@
     }
   },
   "row5_ecoli_go_and_beamline": {
-    "runtime_s": 12.1595,
+    "runtime_s": 21.2742,
     "wt_GC_to_TA_fraction": 0.1627,
     "mmr_GC_to_TA_fraction": 0.0118,
     "mutY_GC_to_TA_fraction": 0.9141,
@@ -766,7 +805,7 @@
     },
     "row5b_beamline_protocol": {
       "status": "UNEXECUTED_PHYSICAL_EXPERIMENT",
-      "reason_not_in_public_archives": "No published dataset combines helicity-reversed (L <-> -L) 100-500 eV polarized electrons or surface mu+ across tilt angles spanning psi_crit = 26.9 deg on SAM-oriented D/L-GGGG DNA or Delta_mutM_Delta_mutY_Delta_mutS Duplex-Seq.",
+      "reason_not_in_public_archives": "No published dataset combines helicity-reversed (L <-> -L) 10-500 eV polarized electrons or surface mu+ across tilt angles spanning psi_crit = 26.9 deg on SAM-oriented D/L-GGGG DNA or Delta_mutM_Delta_mutY_Delta_mutS Duplex-Seq.",
       "critical_pitch_cone_deg": 26.9,
       "recommended_tilt_pair_deg": [
         15.0,
@@ -774,10 +813,13 @@
       ],
       "beam_polarization_abs_L": 0.8,
       "target_asymmetry_threshold": 0.001,
+      "pure_point_coulomb_dirac_so_asymmetry": 2.1597e-07,
       "eta_oxog_per_electron": 3e-05,
       "min_lesion_events_per_helicity_arm_3sigma": 9000000,
+      "min_lesion_events_point_coulomb_3sigma": 192949355231048,
       "standard_GaAs_e_gun_current_nA": 10.0,
-      "estimated_irradiation_seconds_per_arm": 4.81
+      "estimated_irradiation_seconds_per_arm": 4.81,
+      "estimated_irradiation_seconds_point_coulomb": 103046316.2
     }
   }
 }

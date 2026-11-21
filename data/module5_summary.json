@@ -1,10 +1,10 @@
 {
   "wall_clock_timings_s": {
-    "part1_rel606_2000_windows_s": 23.8153,
-    "part2_8766h_ephemeris_and_neutrinos_s": 0.0058,
-    "part3a_240k_3d_monte_carlo_scattering_s": 6.2816,
-    "part3b_chiral_channels_and_odes_s": 0.1611,
-    "total_module5_wall_clock_s": 32.003
+    "part1_rel606_2000_windows_s": 31.22,
+    "part2_8766h_ephemeris_and_neutrinos_s": 0.0048,
+    "part3a_240k_3d_monte_carlo_scattering_s": 7.5303,
+    "part3b_chiral_channels_and_odes_s": 0.2074,
+    "total_module5_wall_clock_s": 40.4825
   },
   "github_audit_and_upgrade": {
     "trace_orig_nc": 0.9199999999999999,
@@ -226,6 +226,8 @@
     },
     "g4_hole_sink_enrichment_fold": 17.950962377857877,
     "g4_hole_sink_capture_fraction": 0.9565751699537648,
+    "ambient_1uVm_floquet_drazin_shift": 1.2628757969774461e-26,
+    "ambient_1uVm_adiabatic_kms_shift": 3.484086422762612e-30,
     "chiral_bias_1keV_isotropic_positron": 6.256118898421263e-10,
     "chiral_bias_100eV_isotropic_positron": 6.2314070098091796e-09,
     "chiral_bias_100eV_zenith_oriented_positron": 7.984063725506588e-09,
@@ -240,6 +242,7 @@
     "young_sun_1000x_SEP_8oxoG_per_cell_yr": 176.8,
     "tau_99pct_no_conflict_dM_1e6": 5293304.824724492,
     "repair_uncollapsing_gain_mutM_mutY_mutS": 83.61,
-    "min_GtoT_counts_3sigma_at_1e3_asym": 9000000.0
+    "min_GtoT_counts_3sigma_at_1e3_asym": 9000000.0,
+    "min_GtoT_counts_3sigma_point_coulomb_500eV": 192949355231047.75
   }
 }

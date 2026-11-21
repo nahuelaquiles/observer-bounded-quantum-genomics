@@ -1,0 +1,22 @@
+{
+  "n_mc_trials": 2500,
+  "n_prior_draws": 5000,
+  "fisher_prior_vs_origin": {
+    "rhythmic_OGG1": {
+      "trace_F1_origin": 0.1739843883264196,
+      "trace_F1_prior_avg": 0.20048452651908988,
+      "prior_over_origin_trace_ratio": 1.1523133106802217
+    },
+    "flat_equal_OGG1": {
+      "trace_F1_origin": 0.17443603318632184,
+      "trace_F1_prior_avg": 0.20017115314161,
+      "prior_over_origin_trace_ratio": 1.147533279020393
+    },
+    "inward_occluded_SHL": {
+      "trace_F1_origin": 0.012649013703796253,
+      "trace_F1_prior_avg": 0.02860087086139678,
+      "prior_over_origin_trace_ratio": 2.2611147027861165
+    }
+  },
+  "all_empirical_above_van_trees_bound": true
+}

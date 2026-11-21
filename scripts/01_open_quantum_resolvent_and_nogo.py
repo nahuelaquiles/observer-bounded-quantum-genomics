@@ -124,8 +124,10 @@ def verify_resolvent_and_moment_annihilation():
     L_PQ = L0[np.ix_(p_idx, q_idx)]
     L_PP = L0[np.ix_(p_idx, p_idx)]
 
-    pp_eigs = eigvals(L_PP)
+    pp_eigs, pp_vecs = np.linalg.eig(L_PP)
     spectral_gap_s_inv = float(-np.max(np.real(pp_eigs)))
+    kappa_2_V = float(np.linalg.cond(pp_vecs, 2))
+    numerical_coercivity_s_inv = float(-np.max(np.linalg.eigvalsh(0.5 * (L_PP + L_PP.conj().T))))
     L_eff_3x3 = L_QQ - L_QP @ inv(L_PP) @ L_PQ
 
     L_eff_9x9 = np.zeros((9, 9), dtype=complex)
@@ -174,6 +176,8 @@ def verify_resolvent_and_moment_annihilation():
 
     return {
         "spectral_gap_s_inv": spectral_gap_s_inv,
+        "numerical_coercivity_s_inv": numerical_coercivity_s_inv,
+        "eigenvector_cond_kappa2_V": kappa_2_V,
         "tau_mem_fs": 1e15 / spectral_gap_s_inv,
         "col_sums_max": col_sums_max,
         "gibbs_stationary_fro_err": gibbs_trace_err,
@@ -245,7 +249,7 @@ def compute_weak_field_nogo_curves(spectral_gap_s_inv):
     delta_T_K = 0.05
     metabolic_fractional_noise = (DELTA_G_TAUT_EV / KBT_EV) * (delta_T_K / TEMP_K)
 
-    e_fields = np.logspace(-9, 5, 57)
+    e_fields = np.logspace(-9, 7, 65)
     rows = []
     for E0 in e_fields:
         # Pure proton transfer dipole coupling lambda = e * a * E0 (in eV, with a = 1.0 Angstrom)
@@ -270,6 +274,8 @@ def compute_weak_field_nogo_curves(spectral_gap_s_inv):
         dc_rel_shift = abs(p1_dc - p1_gibbs_0) / p1_gibbs_0
 
         snr_ac = np.sqrt(N_MUT_BASELINE_COHORT) * ac_subgap_rectified
+        snr_drazin = np.sqrt(N_MUT_BASELINE_COHORT) * drazin_subgap
+        snr_kms = np.sqrt(N_MUT_BASELINE_COHORT) * adiabatic_ac
         snr_dc = np.sqrt(N_MUT_BASELINE_COHORT) * dc_rel_shift
 
         rows.append({
@@ -284,6 +290,8 @@ def compute_weak_field_nogo_curves(spectral_gap_s_inv):
             "adiabatic_kms_ac_dmu_over_mu": float(adiabatic_ac),
             "metabolic_thermal_floor_50mK": float(metabolic_fractional_noise),
             "cohort_poisson_snr_ac_subgap": float(snr_ac),
+            "cohort_poisson_snr_drazin_floquet": float(snr_drazin),
+            "cohort_poisson_snr_adiabatic_kms": float(snr_kms),
             "cohort_poisson_snr_dc": float(snr_dc),
         })
     return rows, k01_base, metabolic_fractional_noise
@@ -375,12 +383,15 @@ def main():
     pd.DataFrame(hole_rows).to_csv(f"{OUT_DATA}/module1_guanine_hole_trapping.csv", index=False)
 
     e_ref_row = min(nogo_rows, key=lambda r: abs(np.log10(r["E0_V_per_m"]) - (-6.0)))
-    e_cross_ac = min(nogo_rows, key=lambda r: abs(np.log10(max(r["ac_subgap_rectified_dmu_over_mu"], 1e-40)) - np.log10(met_floor)))
+    e_cross_drazin = float(1.0e-6 * np.sqrt(met_floor / e_ref_row["drazin_floquet_subgap_dmu_over_mu"]))
+    e_cross_kms = float(1.0e-6 * np.sqrt(met_floor / e_ref_row["adiabatic_kms_ac_dmu_over_mu"]))
     summary = {
         "runtime_seconds": elapsed_s,
         "temperature_K": TEMP_K,
         "kBT_eV": KBT_EV,
         "spectral_gap_s_inv": res_proj["spectral_gap_s_inv"],
+        "numerical_coercivity_s_inv": res_proj["numerical_coercivity_s_inv"],
+        "eigenvector_cond_kappa2_V": res_proj["eigenvector_cond_kappa2_V"],
         "tau_mem_fs": res_proj["tau_mem_fs"],
         "trace_conservation_err": res_proj["col_sums_max"],
         "gibbs_stationary_fro_err": res_proj["gibbs_stationary_fro_err"],
@@ -392,7 +403,9 @@ def main():
         "resolvent_error_at_1ps": next(r["op_norm_error"] for r in res_proj["resolvent_curve"] if r["time_s"] >= 1e-12),
         "resolvent_error_at_1ns": next(r["op_norm_error"] for r in res_proj["resolvent_curve"] if r["time_s"] >= 1e-9),
         "ambient_subgap_1uVm_reference": e_ref_row,
-        "approx_crossover_E0_V_per_m": e_cross_ac["E0_V_per_m"],
+        "approx_crossover_E0_drazin_V_per_m": e_cross_drazin,
+        "approx_crossover_E0_adiabatic_kms_V_per_m": e_cross_kms,
+        "approx_crossover_E0_V_per_m": e_cross_drazin,
         "metabolic_50mK_noise_floor": met_floor,
         "guanine_hole_trapping": hole_rows,
     }
@@ -400,12 +413,11 @@ def main():
         json.dump(summary, f, indent=2)
 
     print(f"=== MODULE 1 SUMMARY (runtime = {elapsed_s:.3f} s) ===")
-    print(f"Spectral gap g(L_PP) = {summary['spectral_gap_s_inv']:.4e} s^-1 (tau_mem = {summary['tau_mem_fs']:.2f} fs)")
+    print(f"Spectral gap g(L_PP) = {summary['spectral_gap_s_inv']:.4e} s^-1, coercivity g_2(L_PP) = {summary['numerical_coercivity_s_inv']:.4e} s^-1, cond kappa_2(V) = {summary['eigenvector_cond_kappa2_V']:.6f}")
     print(f"Gibbs stationary Frobenius error ||rho_ss - rho_Gibbs||_F = {summary['gibbs_stationary_fro_err']:.3e}")
     print(f"Resolvent error at 1 ps = {summary['resolvent_error_at_1ps']:.3e}, at 1 ns = {summary['resolvent_error_at_1ns']:.3e}")
     print("Moment annihilation norms:", summary["moment_annihilation_norms"])
-    print(f"m=3 Schur identity rel err = {summary['m3_identity_rel_err']:.3e}")
-    print(f"Universal sub-gap AC (omega << g_PP) at 1 uV/m: lambda = {e_ref_row['lambda_eV']:.3e} eV, static ceiling = {e_ref_row['thermo_ceiling_dmu_over_mu']:.3e}, AC rectified = {e_ref_row['ac_subgap_rectified_dmu_over_mu']:.3e}, SNR = {e_ref_row['cohort_poisson_snr_ac_subgap']:.3e}")
+    print(f"1 uV/m: lambda = {e_ref_row['lambda_eV']:.3e} eV, Floquet Drazin = {e_ref_row['drazin_floquet_subgap_dmu_over_mu']:.3e}, Adiabatic KMS = {e_ref_row['adiabatic_kms_ac_dmu_over_mu']:.3e}, Static ceiling = {e_ref_row['thermo_ceiling_dmu_over_mu']:.3e}")
     print(pd.DataFrame(hole_rows).to_string(index=False))
 
 

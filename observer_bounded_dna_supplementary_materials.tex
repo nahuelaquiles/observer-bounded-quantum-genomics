@@ -1,0 +1,246 @@
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[top=0.90in,bottom=0.90in,left=0.90in,right=0.90in,headheight=14pt]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+\definecolor{linknavy}{HTML}{1B4F72}
+\definecolor{accentcrimson}{HTML}{8E1B1B}
+\definecolor{mutedgray}{HTML}{566573}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=linknavy,
+    citecolor=linknavy,
+    urlcolor=accentcrimson,
+    pdftitle={Supplementary Materials: Observer-bounded quantum genomics: Sub-thermal no-go limits, repair quotients, and cosmic chiral funneling},
+    pdfauthor={Nahuel Aquiles Garcia}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize\color{mutedgray}\textit{Science Advances} $\mid$ Supplementary Materials}
+\fancyhead[R]{\footnotesize\color{mutedgray}N.\ A.\ Garcia}
+\fancyfoot[C]{\footnotesize S\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{mutedgray}\leaders\hrule height \headrulewidth\hfill}}
+
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\theequation}{S\arabic{equation}}
+\captionsetup{
+    font=small,
+    labelfont={bf},
+    labelsep=period,
+    width=0.96\textwidth
+}
+
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\Qcal}{\mathcal{Q}}
+\newcommand{\Pcal}{\mathcal{P}}
+\newcommand{\Hcal}{\mathcal{H}}
+\newcommand{\Bcal}{\mathcal{B}}
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\oxog}{\text{8-oxoG}}
+
+\begin{document}
+\thispagestyle{plain}
+
+\begin{center}
+{\large\textbf{\color{accentcrimson}SCIENCE ADVANCES $\mid$ SUPPLEMENTARY MATERIALS}}\\[1.0em]
+{\Large\textbf{Supplementary Materials for}}\\[0.8em]
+{\LARGE\textbf{Observer-bounded quantum genomics: Sub-thermal no-go limits, repair quotients, and cosmic chiral funneling}}\\[1.0em]
+{\normalsize\textbf{Nahuel Aquiles Garcia}$^{1,2,*}$}\\[0.5em]
+{\small
+$^{1}$GECORP, Av.\ Juan Manuel de Rosas 899, San Miguel del Monte, Buenos Aires, Argentina.\\
+$^{2}$Department of Clinical Biochemistry, Aalborg University Hospital, Aalborg, Denmark.\\[0.3em]
+$^{*}$Corresponding author. Email: \href{mailto:gecorpinfo@gmail.com}{gecorpinfo@gmail.com}
+}
+\end{center}
+
+\vspace{0.8em}
+\noindent\rule{\textwidth}{0.6pt}\\[0.5em]
+\noindent\textbf{This PDF file includes:}
+\begin{itemize}
+    \item Supplementary Text S1 to S3
+    \item Tables S1 to S4
+\end{itemize}
+\noindent\textit{Note: Per Science Advances guidelines, literature citations in these Supplementary Materials refer directly to the numbered entries in the single main-text References and Notes list.}\\[0.3em]
+\noindent\rule{\textwidth}{0.6pt}
+
+\vspace{0.8em}
+\section*{Supplementary Text S1: Operator-Theoretic Proofs, KMS Detailed-Balance Generator, and 3D Cylindrical B-DNA Helical Multipole Equations}
+
+\subsection*{S1.1 Exact Kubo--Martin--Schwinger (KMS) Stationarity and Lumer--Phillips Coercivity of $\Lcal_0$}
+Let $H_0 = \sum_{\alpha=0}^{2} \varepsilon_\alpha |\varepsilon_\alpha\rangle\langle\varepsilon_\alpha|$ denote the solvated three-state G:C protonic Hamiltonian in its exact orthonormal eigenbasis ($\varepsilon_0 < \varepsilon_1 < \varepsilon_2$) (\textit{1}, \textit{2}, \textit{3}). Constructing jump operators $L_{\alpha\beta} = \sqrt{\gamma_{\alpha\beta}}\,|\varepsilon_\alpha\rangle\langle\varepsilon_\beta|$ ($\alpha \neq \beta$) satisfying $\gamma_{\alpha\beta} / \gamma_{\beta\alpha} = \exp[-\beta(\varepsilon_\alpha - \varepsilon_\beta)]$ together with eigenbasis pure-dephasing operators $D_\alpha = \sqrt{\gamma_{\mathrm{deph}}}\,|\varepsilon_\alpha\rangle\langle\varepsilon_\alpha|$, the GKSL generator $\Lcal_0[\rho] = -\frac{i}{\hbar}[H_0, \rho] + \sum_{\alpha\neq\beta}\bigl(L_{\alpha\beta}\rho L_{\alpha\beta}^\dagger - \frac{1}{2}\{L_{\alpha\beta}^\dagger L_{\alpha\beta}, \rho\}\bigr) + \sum_\alpha\bigl(D_\alpha\rho D_\alpha^\dagger - \frac{1}{2}\{D_\alpha^\dagger D_\alpha, \rho\}\bigr)$ decouples eigenbasis populations $p_\alpha = \langle\varepsilon_\alpha|\rho|\varepsilon_\alpha\rangle$ from off-diagonal eigenbasis coherences $\rho_{\alpha\beta}$. Evaluating $\Lcal_0[\rho_\beta]$ on $\rho_\beta = Z^{-1}\sum_\alpha e^{-\beta\varepsilon_\alpha}|\varepsilon_\alpha\rangle\langle\varepsilon_\alpha|$ yields:
+\begin{equation}
+    \langle\varepsilon_\alpha|\Lcal_0[\rho_\beta]|\varepsilon_\alpha\rangle = Z^{-1}\sum_{\beta\neq\alpha}\Bigl(\gamma_{\alpha\beta}e^{-\beta\varepsilon_\beta} - \gamma_{\beta\alpha}e^{-\beta\varepsilon_\alpha}\Bigr) = 0,
+\end{equation}
+while every fast-subspace coherence decays with spectral gap $g(\Lcal_{PP}) = 1.0110 \times 10^{13}\,\mathrm{s}^{-1}$ ($\tau_{\mathrm{mem}} = 98.91\,\mathrm{fs}$; numerical Frobenius stationarity error $\|\rho_{\mathrm{ss}} - \rho_\beta\|_F = 1.61 \times 10^{-11}$). Moreover, the symmetric part of the fast-subspace block $\Lcal_{PP}$ satisfies strict Lumer--Phillips numerical coercivity $g_2(\Lcal_{PP}) \coloneqq -\lambda_{\max}((\Lcal_{PP}+\Lcal_{PP}^\dagger)/2) = 1.0092 \times 10^{13}\,\mathrm{s}^{-1} > 0$ ($\kappa_2(V) = 1.000093$), guaranteeing $\|e^{t\Lcal_{PP}}\|_2 \le e^{-g_2(\Lcal_{PP})t}$ and $\|(s\mathcal{I}-\Lcal_{PP})^{-1}\|_2 \le (\mathrm{Re}\,s + g_2(\Lcal_{PP}))^{-1}$ with unit prefactor ($C = 1$). By contrast, phenomenological site-basis dephasing does not commute with $H_0$ when $J_{\alpha\beta} \neq 0$, violating detailed balance and inflating apparent excited-state tautomer populations toward the infinite-temperature limit.
+
+\subsection*{S1.2 Fixed-Bath Floquet--Lindblad Drazin vs.\ Adiabatic KMS Rectification Bounds (Theorem 2)}
+For $\Lcal(t) = \Lcal_0 + \cos(\omega t)\Lcal_V$ with $\Lcal_V[\rho] = -\frac{i}{\hbar}[V_{\mathrm{dip}}, \rho]$ and $\|\Lcal_V\| \sim \lambda/\hbar \ll g(\Lcal_0)$, expanding the periodic Floquet steady state $\rho_{\mathrm{per}}(t) = \rho_\beta + \rho^{(1)}(t) + \rho^{(2)}(t) + \cdots$ under a \emph{fixed-bath dissipator} $\Lcal_0$ gives $\rho^{(1)}(t) = \frac{1}{2}\bigl[(i\omega\mathcal{I} - \Lcal_0)^{-1}\Lcal_V[\rho_\beta]e^{i\omega t} + (-i\omega\mathcal{I} - \Lcal_0)^{-1}\Lcal_V[\rho_\beta]e^{-i\omega t}\bigr]$, whose time average over macromolecular replication windows $T_{\mathrm{rep}} \gg 2\pi/\omega$ vanishes identically ($\overline{\rho^{(1)}} = 0$). The time-averaged second-order state satisfies $\Lcal_0[\overline{\rho^{(2)}}] = -\overline{\cos(\omega t)\Lcal_V[\rho^{(1)}(t)]}$, yielding
+\begin{equation}
+    \overline{\rho^{(2)}_{\mathrm{Floquet}}} = -\frac{1}{2}\Lcal_0^+\Lcal_V\,\mathrm{Re}\!\Bigl[(i\omega\mathcal{I} - \Lcal_0)^{-1}\Bigr]\Lcal_V[\rho_\beta],
+\end{equation}
+where $\Lcal_0^+$ is the Drazin pseudoinverse on the trace-zero subspace. Evaluating Eq.~(S2) directly on the $9 \times 9$ Liouvillian yields $|\overline{\Delta\mu_{\mathrm{Floquet}}}/\mu_0| = 1.263 \times 10^{-26}$ at $E_0 = 1\,\mu\mathrm{V\,m^{-1}}$ ($\omega = 10^9\,\mathrm{rad\,s^{-1}}$; $1.264 \times 10^{-26}$ at $\omega = 10^{13}\,\mathrm{rad\,s^{-1}}$; scaling as $\mathcal{O}(\lambda^2 / [\hbar^2\gamma_{\mathrm{pop}}\gamma_{\mathrm{deph}}])$, with $50\,\mathrm{mK}$ crossover $E_0 \approx 4.48 \times 10^5\,\mathrm{V\,m^{-1}}$). Conversely, in the \emph{adiabatic instantaneous-bath KMS limit} ($\omega \ll \gamma_{\mathrm{bath}}$, where jump rates track the instantaneous dressed Hamiltonian $H(t) = H_0 + \epsilon\cos(\omega t)V_{\mathrm{dip}}$), time averaging yields $\overline{\rho^{(2)}_{\mathrm{KMS}}} = \frac{1}{4}\left.\frac{\mathrm{d}^2\rho_\beta(\epsilon)}{\mathrm{d}\epsilon^2}\right|_{\epsilon=0} = \mathcal{O}((\lambda / k_B T)^2)$, giving $|\overline{\Delta\mu_{\mathrm{KMS}}}/\mu_0| = 3.484 \times 10^{-30}$ at $E_0 = 1\,\mu\mathrm{V\,m^{-1}}$ ($50\,\mathrm{mK}$ crossover $E_0 \approx 2.70 \times 10^7\,\mathrm{V\,m^{-1}}$) (\textit{4}).
+
+\subsection*{S1.3 Complete 3D Cylindrical Helical B-DNA Electrostatic Field and Mineral-Terrace Geometry}
+Modeling double-stranded B-DNA (radius $R_{\mathrm{DNA}} = 1.0\,\mathrm{nm}$, helical pitch $P = 3.4\,\mathrm{nm}$, wavenumber $k = 2\pi/P = 1.848\,\mathrm{nm}^{-1}$, double-helix chirality index $m = +2$ for right-handed D-DNA and $m = -2$ for left-handed L-DNA) via screened cylindrical potential $\Phi(r,\phi,z) = R_0(r) + R_1(r)\cos(kz - m\phi)$ (\textit{5}, \textit{23}), all three cylindrical field components $\mathbf{E} = -\nabla\Phi$ (together with the relativistic Thomas precession factor $1/2$ in spin--orbit coupling) are retained simultaneously in the $240{,}000$-trajectory integrator:
+\begin{equation}
+    E_r(r,\phi,z) = -R_0'(r) - R_1'(r)\cos(kz - m\phi), \quad
+    E_\phi(r,\phi,z) = -\frac{m}{r}R_1(r)\sin(kz - m\phi), \quad
+    E_z(r,\phi,z) = k R_1(r)\sin(kz - m\phi).
+\end{equation}
+Along a relativistic lepton trajectory of polar angle $\psi$ to the helix axis ($\dot{z} = v\cos\psi$, $r\dot{\phi} = v\sin\psi\sin\alpha$), the helical phase advances at $\dot{\Theta} = kv\cos\psi - (m/r)v\sin\psi\sin\alpha$, changing sign across the critical pitch-resonance cone $\tan\psi_{\mathrm{crit}} = kr / |m| = 0.508$ ($\psi_{\mathrm{crit}} = 26.9^\circ$). For B-DNA duplexes adsorbed \emph{flat (horizontally)} on mica or clay mineral terraces via divalent-cation phosphate bridging, a zenith-collimated $\cos^2\theta_z$ cosmic-ray shower satisfies $\cos\psi = \sin\theta_z\cos\phi_h$, placing $98.29\%$ of incident rays broadside at $\psi > \psi_{\mathrm{crit}}$ ($1.281\times$ inward deflection gain over isotropic solution). Under parity transformation $(m, \mathcal{L}) \mapsto (-m, -\mathcal{L})$, radial deflection onto the central purine stack is strictly invariant, whereas enantiomer inversion $m \mapsto -m$ at fixed cosmic-ray helicity $\mathcal{L}$ reverses the chiral perturbation identically ($\langle\Delta r\rangle_{m=+2} + \langle\Delta r\rangle_{m=-2} = 0.0\,\mathrm{m}$).
+
+\section*{Supplementary Text S2: Two-Tier Accelerator Protocol for Open Falsification Row 5b}
+
+While Rows~1, 2, 3, 4, and~5a of Table~4 establish stage-specific consistency across public experimental datasets, Row~5b defines the open two-tier laboratory discriminator required to test spin-chiral mutagenesis directly in DNA and separate resonant short-range CISS/DEA exchange from point-Coulomb Dirac spin--orbit electrodynamics:
+\begin{enumerate}
+    \item \textbf{Beamline and Helicity Modulation:} Low-energy strained-GaAs photoemission spin-polarized electron gun ($E_k = 100$ to $500\,\mathrm{eV}$, plus a low-energy $5$--$50\,\mathrm{eV}$ DEA retarding-potential scan; longitudinal polarization $|\mathcal{L}| = 0.80 \pm 0.02$, current $I = 10\,\mathrm{nA}$) with rapid optical quarter-wave Pockels-cell helicity reversal ($\mathcal{L} \leftrightarrow -\mathcal{L}$ at $1\,\mathrm{Hz}$ to cancel beam-current drift), or surface-muon beamline ($p_\mu \approx 28\,\mathrm{MeV}/c$, $|\mathcal{L}_{\mu^+}| \approx 1.0$, PSI $\pi\mathrm{E3}$ / TRIUMF M20) (\textit{24}, \textit{25}).
+    \item \textbf{Enantiomeric and Repair-Uncollapsed Targets:} (a) Ultra-high-vacuum self-assembled monolayers (SAMs, $0.5\,\mathrm{cm^2}$ on template-stripped $\mathrm{Au(111)}$) of $5'$-thiolated synthetic right-handed D-DNA versus mirror-image L-DNA $21$-bp hairpins carrying a central \texttt{5'-GGGG-3'} HOMO hole sink, mounted on a precision rotary goniometer tilted at $\psi_1 = 15^\circ$ ($< \psi_{\mathrm{crit}}$) versus $\psi_2 = 45^\circ$ ($> \psi_{\mathrm{crit}}$); and (b) hydrated thin monolayers of GO/MMR-triple-deficient \emph{E.\ coli} $\Delta\textit{mutM}\Delta\textit{mutY}\Delta\textit{mutS}$ (uncollapsing $\mathrm{G{:}C \to T{:}A}$ to $98.62\%$; Table~S3).
+    \item \textbf{Two-Tier Readout and Exact Poisson Event Budget:} Quantify site-specific $\oxog$ excision yield via Fpg cleavage / LC-MS/MS on D- versus L-hairpins and $\mathrm{G{:}C \to T{:}A}$ transversion asymmetry via UMI Duplex-Seq (error floor $< 10^{-7}\,\mathrm{bp^{-1}}$), using $N_{\min}(|\mathcal{A}|) = z_\alpha^2 / |\mathcal{A}|^2$ per helicity arm:
+    \begin{itemize}
+        \item \emph{Tier 1 --- Resonant CISS / Low-Energy DEA Exchange ($|\mathcal{A}_{\mathrm{eff}}| \ge 10^{-3}$):} $3\sigma$ ($5\sigma$) detection requires $N_{\min} = 9.0 \times 10^6$ ($2.5 \times 10^7$) single-lesion events per helicity arm. At $I = 10\,\mathrm{nA}$ ($6.24 \times 10^{10}\,e^-\,\mathrm{s^{-1}}$) and monolayer lesion quantum efficiency $\eta \approx 3 \times 10^{-5}$, $9.0 \times 10^6$ lesions accumulate in $4.81\,\mathrm{s}$ per helicity arm.
+        \item \emph{Tier 2 --- Pure Point-Coulomb Dirac Spin--Orbit Deflection ($|\mathcal{A}_{\mathrm{SO}}| = 2.16 \times 10^{-7}$ at $500\,\mathrm{eV}$):} $3\sigma$ detection would require $N_{\min} = 1.93 \times 10^{14}$ lesions per arm ($\sim 1.03 \times 10^8\,\mathrm{s}$ at $10\,\mathrm{nA}$), proving that point-Coulomb electrodynamic deflection alone is practically unobservable without resonant short-range CISS or DEA spin-exchange amplification.
+    \end{itemize}
+\end{enumerate}
+
+\section*{Supplementary Text S3: Computational Reproducibility Inventory}
+
+All numerical results in Modules~1 through~6 were generated deterministically in Python~3.11 without post-hoc manual editing (archived at \url{https://github.com/nahuelaquiles/observer-bounded-quantum-genomics}):
+\begin{itemize}
+    \item \texttt{scripts/01\_\allowbreak open\_\allowbreak quantum\_\allowbreak resolvent\_\allowbreak and\_\allowbreak nogo.py} ($0.32\,\mathrm{s}$): KMS G:C Davies--Lindblad diagonalization, Lumer--Phillips coercivity $g_2(\Lcal_{PP})$, Mori--Zwanzig Schur projection, moment annihilation, $16$-decade fixed-bath Floquet Drazin + adiabatic KMS scan, and 21-bp $\mathrm{G}_1$--$\mathrm{G}_5$ hole migration.
+    \item \texttt{scripts/02\_\allowbreak rate\_\allowbreak distortion\_\allowbreak and\_\allowbreak circadian\_\allowbreak kinetics.py} ($15.4\,\mathrm{s}$): $72$-hour multi-harmonic circadian OGG1-BER inhomogeneous Poisson ensembles ($\nu \in [1, 10^6]$, $N_{\mathrm{MC}} = 2{,}500$), $8$-step Gauss--Newton MAP solver, and exact prior-averaged van Trees--Clarke--Barron bounds ($N_{\mathrm{prior}} = 5{,}000$; Table~S1).
+    \item \texttt{scripts/03\_\allowbreak ecoli\_\allowbreak mmr\_\allowbreak quotient\_\allowbreak and\_\allowbreak human\_\allowbreak promoters.py} ($24.6\,\mathrm{s}$): $27$-population \emph{E.\ coli} \texttt{REL606} SBS-96 quotient uncollapsing and $4{,}570$-gene human \texttt{GRCh38} MANE Select promoter Mahalanobis matching ($N_{\mathrm{ctrl}} = 1{,}500$; Table~S2).
+    \item \texttt{scripts/04\_\allowbreak alphagenome\_\allowbreak circadian\_\allowbreak regulome.py} (cloud AlphaGenome API) and \texttt{scripts/05\_\allowbreak generate\_\allowbreak figures.py} ($6.2\,\mathrm{s}$): $1$-Mb-context AlphaGenome human liver (\texttt{UBERON:0002107}) variant scoring, $32$-bp \emph{CRY1} ISM attribution (Table~S2), and publication figure generation (\texttt{Figs.~1}--\texttt{4}).
+    \item \texttt{scripts/06\_\allowbreak upgraded\_\allowbreak github\_\allowbreak and\_\allowbreak astrodynamics\_\allowbreak cosmic\_\allowbreak chirality.py} ($23.7\,\mathrm{s}$) and \texttt{scripts/07\_\allowbreak generate\_\allowbreak fig5.py} ($4.8\,\mathrm{s}$): $300$-kbp \texttt{REL606} quantum-DNA audit, $8{,}766$-hour J2000 Earth--Sun solar-neutrino ephemeris, and $240{,}000$-trajectory 3D helical scattering (\texttt{Fig.~5}).
+    \item \texttt{scripts/08\_\allowbreak table6\_\allowbreak empirical\_\allowbreak wetlab\_\allowbreak validation.py} ($118.4\,\mathrm{s}$) and \texttt{scripts/09\_\allowbreak generate\_\allowbreak fig6.py} ($5.1\,\mathrm{s}$): Stage-specific consistency analyses across \emph{E.\ coli} thermal MA ($n=20$ lines/temp), cryo-EM/X-ray nucleosomes, \texttt{GSE218316} human islets, host-cell-stratified \texttt{GSE126550} HepG2 \& K562 MPRA, and $14$ \emph{E.\ coli} repair-knockout WGS MA cohorts (Tables~S3 and~S4; \texttt{Fig.~6}).
+\end{itemize}
+
+\clearpage
+\section*{Supplementary Tables}
+
+\begin{table}[!h]
+\centering
+\caption{\textbf{Distributed circadian OGG1-BER waveform reconstruction distortion and mutual information across cell ensembles $\nu$ (Module~2).} Converged $8$-step nonlinear Gauss--Newton Poisson MAP MSE ($N_{\mathrm{MC}}=2{,}500$, $K=6$ harmonics over $72\,\mathrm{h}$, $M=24$ bins, $\sigma_\theta^2 = 0.0324$) compared against exact prior-averaged van Trees--Clarke--Barron bounds ($\overline{F}_1 = \mathbb{E}_\Theta[F_1(\Theta)]$, $N_{\mathrm{prior}}=5{,}000$; $\Tr\overline{F}_1/\Tr F_1(0) = 1.1523$).}
+\label{tab:s1}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+& \multicolumn{2}{c}{\textbf{Open SHL (-6), Rhythmic OGG1}} & \multicolumn{2}{c}{\textbf{Open SHL (-6), Flat OGG1}} & \multicolumn{2}{c}{\textbf{Occluded SHL (+4), \texttt{1KX5} ($\theta_{\mathrm{in}} \ge 120^\circ$)}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+\textbf{Ensemble $\nu$} & \textbf{MAP $D/\sigma_X^2$ (van Trees)} & \textbf{$I$ (bits)} & \textbf{MAP $D/\sigma_X^2$ (van Trees)} & \textbf{$I$ (bits)} & \textbf{MAP $D/\sigma_X^2$ (van Trees)} & \textbf{$I$ (bits)} \\
+\midrule
+$\nu = 1$ cell & $1.002 \pm 0.011$ ($0.999$) & $0.0047$ & $0.982 \pm 0.011$ ($0.999$) & $0.0047$ & $0.997 \pm 0.011$ ($1.000$) & $0.0007$ \\
+$\nu = 10^2$ cells & $0.911 \pm 0.010$ ($0.903$) & $0.443$ & $0.929 \pm 0.011$ ($0.903$) & $0.443$ & $1.000 \pm 0.012$ ($0.985$) & $0.066$ \\
+$\nu = 10^3$ cells & $0.515 \pm 0.006$ ($0.491$) & $3.128$ & $0.515 \pm 0.006$ ($0.490$) & $3.130$ & $0.976 \pm 0.012$ ($0.871$) & $0.610$ \\
+$\nu = 10^4$ cells & $0.107 \pm 0.001$ ($0.090$) & $10.547$ & $0.104 \pm 0.001$ ($0.090$) & $10.557$ & $0.727 \pm 0.011$ ($0.429$) & $3.832$ \\
+$\nu = 10^5$ cells & $0.0130 \pm 0.0002$ ($0.0099$) & $20.145$ & $0.0126 \pm 0.0002$ ($0.0098$) & $20.157$ & $0.223 \pm 0.004$ ($0.0737$) & $11.639$ \\
+$\nu = 10^6$ cells & $0.00128 \pm 0.00002$ ($0.00100$) & $30.072$ & $0.00127 \pm 0.00002$ ($0.00099$) & $30.085$ & $0.0296 \pm 0.0005$ ($0.00797$) & $21.307$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\vspace{1.2em}
+
+\begin{table}[!h]
+\centering
+\caption{\textbf{Propensity-matched human circadian promoter summary ($n=10$ vs.\ $N_{\mathrm{ctrl}}=1{,}500$) and AlphaGenome 1-Mb human liver (\texttt{UBERON:0002107}) $\oxog \to \mathrm{T}$ variant effects (Modules~3B and~4).} Representative high-impact hole-sink variants versus isolated flanking controls shown with \texttt{GRCh38} coordinates and signed AlphaGenome raw/quantile scores.}
+\label{tab:s2}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llllrrr@{}}
+\toprule
+\textbf{Gene (Offset)} & \textbf{GRCh38 Variant} & \textbf{Motif Class} & \textbf{11-bp Context} & \textbf{Liver DNase (Quant.)} & \textbf{Liver ATAC (Quant.)} & \textbf{Liver ChIP-TF (Quant.)} \\
+\midrule
+\emph{CRY1} ($-304\,\mathrm{bp}$) & \texttt{chr12:107093853:C>A} & Hole sink (\texttt{SP1}) & \texttt{CCCCGCCCCCA} & $-0.703$ ($-0.9996$) & $-0.420$ ($-0.9992$) & $-0.308$ ($-0.9995$) \\
+\emph{CRY1} ($-34\,\mathrm{bp}$) & \texttt{chr12:107093583:C>A} & Hole sink (\texttt{SP1}) & \texttt{CCCCGCCCCCG} & $-0.307$ ($-0.9909$) & $-0.158$ ($-0.9937$) & $-0.365$ ($-0.9994$) \\
+\emph{CRY1} ($-79\,\mathrm{bp}$) & \texttt{chr12:107093628:C>A} & Isolated $G_1$ & \texttt{ACCGGCACCTC} & $+0.056$ ($+0.8792$) & $+0.013$ ($+0.5197$) & $+0.771$ ($+0.9984$) \\
+\emph{PER1} ($-170\,\mathrm{bp}$) & \texttt{chr17:8152574:C>A} & Hole sink (\texttt{E-box}) & \texttt{GCGCACGTGGA} & $-0.037$ ($-0.8792$) & $+0.197$ ($+0.9881$) & $-0.974$ ($-1.0000$) \\
+\emph{PER1} ($-83\,\mathrm{bp}$) & \texttt{chr17:8152487:C>A} & Hole sink (\texttt{SP1}) & \texttt{CCCCGCCCCCG} & $-0.324$ ($-0.9923$) & $-0.046$ ($-0.9464$) & $-0.230$ ($-0.9965$) \\
+\emph{PER1} ($-66\,\mathrm{bp}$) & \texttt{chr17:8152470:C>A} & Isolated $G_1$ & \texttt{GCCGACGGAGC} & $-0.012$ ($-0.3563$) & $-0.076$ ($-0.9446$) & $-0.105$ ($-0.9872$) \\
+\emph{BMAL1} ($-52\,\mathrm{bp}$) & \texttt{chr11:13277738:G>T} & Hole sink (\texttt{SP1}) & \texttt{GGTGGGCGGGG} & $+0.162$ ($+0.9742$) & $+0.088$ ($+0.9759$) & $+0.265$ ($+0.9972$) \\
+\emph{BMAL1} ($-105\,\mathrm{bp}$) & \texttt{chr11:13277685:G>T} & Isolated $G_1$ & \texttt{GCGCTGCGGCT} & $+0.026$ ($+0.7069$) & $-0.002$ ($-0.1013$) & $-0.034$ ($-0.9065$) \\
+\midrule
+\multicolumn{7}{@{}l}{\textbf{Group Summary ($8$ Hole-Sink vs.\ $5$ Isolated $G_1$):} DNase $|\text{raw}| = 0.202$ vs.\ $0.024$ ($8.54\times$); ATAC $|\text{raw}| = 0.128$ vs.\ $0.030$ ($4.31\times$, $p = 0.0295$).} \\
+\multicolumn{7}{@{}l}{\textbf{Matched Human CGI Control Test ($n=10$ vs.\ $N_{\mathrm{ctrl}}=1{,}500$):} Hole-trap burden $9.24$ vs.\ $9.15$ ($\Delta_{\mathrm{std}} = +0.066$, $p = 0.806$, BH $q = 0.820$).} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\clearpage
+
+\begin{table}[!t]
+\centering
+\caption{\textbf{Complete 14-cohort \emph{Escherichia coli} whole-genome mutation-accumulation (MA) VCF substitution spectrum and endogenous GO-repair uncollapsing (Module~6, Row~5a).} Parsed directly from whole-genome VCF calls verified against strain reference genomes (\texttt{MG1655}, \texttt{ED1a}, \texttt{IAI1}; $99.91\%$ to $100.0\%$ reference match) (\textit{41}, \textit{42}). Opportunity-normalized $\mathrm{G{:}C \to T{:}A}$ per-bp enrichment across GO-deficient ($\Delta\textit{mutY}$ and $\Delta\textit{mutM}\Delta\textit{mutY}$) chromosomes rises monotonically from $1.000\times$ at isolated $\mathrm{G}_1$ ($2{,}782$ SNVs / $1{,}368{,}127\,\mathrm{bp}$) to $1.408\times$ at $\mathrm{G}_3$ ($542$ / $189{,}288\,\mathrm{bp}$), $1.506\times$ at $\mathrm{G}_4$ ($148$ / $48{,}336\,\mathrm{bp}$), and $1.547\times$ at $\mathrm{G}_{5+}$ ($41$ / $13{,}038\,\mathrm{bp}$).}
+\label{tab:s3}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+\textbf{VCF Cohort} & \textbf{Repair Pathway Class} & \textbf{Total SNVs} & \textbf{$\mathrm{G{:}C \to T{:}A}$} & \textbf{Transitions} & \textbf{$\mathrm{A{:}T \to C{:}G}$} \\
+\midrule
+WT\_MG1655\_Foster2015 & wild\_type & 523 & 14.34\% & 57.94\% & 13.96\% \\
+WT\_ED1a\_Foster2015 & wild\_type & 407 & 14.25\% & 62.90\% & 13.27\% \\
+WT\_IAI1\_Foster2015 & wild\_type & 422 & 20.62\% & 51.66\% & 14.46\% \\
+mutY\_Foster2015 & GO\_glycosylase\_deficient & 485 & 91.34\% & 5.16\% & 2.47\% \\
+mutY\_SaneAgashe & GO\_glycosylase\_deficient & 97 & 91.75\% & 6.19\% & 1.03\% \\
+mutM\_mutY\_Foster2015 & GO\_double\_deficient & 4,282 & 98.62\% & 0.56\% & 0.23\% \\
+mutT\_Foster2015 & dGTP\_sanitizer\_deficient & 2,234 & 0.09\% & 0.27\% & 99.55\% \\
+mutS\_SaneAgashe & MMR\_deficient & 768 & 0.91\% & 96.88\% & 0.39\% \\
+mutL\_SaneAgashe & MMR\_deficient & 875 & 1.60\% & 95.77\% & 1.03\% \\
+mutH\_SaneAgashe & MMR\_deficient & 985 & 1.01\% & 97.06\% & 0.51\% \\
+nth\_nei\_Foster2015 & pyrimidine\_BER\_deficient & 209 & 4.78\% & 89.00\% & 0.96\% \\
+xthA\_nfo\_Foster2015 & AP\_endonuclease\_deficient & 339 & 13.86\% & 50.15\% & 16.52\% \\
+uvrA\_Foster2015 & NER\_deficient & 316 & 18.99\% & 52.85\% & 14.87\% \\
+dnaQ\_SaneAgashe & proofreading\_deficient & 2,626 & 14.93\% & 60.47\% & 9.18\% \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\vspace{0.8em}
+
+\begin{table}[!h]
+\centering
+\caption{\textbf{Host-cell-stratified human HepG2 and K562 saturation-mutagenesis MPRA (\texttt{GSE126550}) quality control and cis-regulatory Double Jeopardy analysis (Module~6, Row~4).} Processed across all $24$ biological-triplicate UMI-deduplicated DNA and RNA tag libraries ($\ge 5$ DNA UMIs per barcode) via $\sqrt{N_{\mathrm{DNA}}}$-weighted sparse ridge regression ($\alpha = 10$; cross-experiment HepG2 \emph{LDLR} vs.\ \emph{LDLR.2} single-nucleotide concordance $r = 0.9794$, averaged prior to HepG2 testing to eliminate duplicate locus counting) (\textit{44}).}
+\label{tab:s4}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llrrl@{}}
+\toprule
+\textbf{Promoter Library / Stratum} & \textbf{Host Cell Line} & \textbf{High-Conf.\ Barcodes} & \textbf{SNVs ($n$)} & \textbf{Concordance / Mean $|\Delta\log_2(\mathrm{RNA/DNA})|$} \\
+\midrule
+LDLR & HepG2 hepatoma & 53,151 & 956 & Pure single-mutant $r = 0.9632$ \\
+LDLR.2 (independent library) & HepG2 hepatoma & 118,698 & 955 & Pure single-mutant $r = 0.9901$ ($r = 0.9794$ vs.\ LDLR) \\
+F9 & HepG2 hepatoma & 113,783 & 907 & Pure single-mutant $r = 0.8395$ \\
+PKLR\_48h & K562 erythroleukemia & 55,291 & 1,410 & Pure single-mutant $r = 0.8727$ \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{HepG2 Hepatoma Stratum (\emph{LDLR}/\emph{LDLR.2} Mean + \emph{F9}; $n = 310$ Unique $\mathrm{G{:}C \to T{:}A}$ SNVs):}} \\
+Isolated non-motif $\mathrm{G}_1$ & HepG2 & --- & $168$ & Mean $|\Delta\log_2| = 0.2173$ ($8.9\%$ $>30\%$ loss) \\
+Non-motif $\mathrm{G}_{3+}$ internal control & HepG2 & --- & $53$ & Mean $|\Delta\log_2| = 0.2236$ ($1.03\times$ vs.\ $\mathrm{G}_1$, $p = 0.7441$) \\
+Non-GC-box \emph{F9} $\mathrm{G}_{3+}$ control & HepG2 & --- & $21$ & Mean $|\Delta\log_2| = 0.0946$ ($p = 0.1557$ vs.\ HepG2 $\mathrm{G}_1$) \\
+\texttt{SP1}/\texttt{SRE-1} motif $\mathrm{G}_{3+}$ sinks & HepG2 & --- & $8$ & Mean $|\Delta\log_2| = 2.0838$ ($9.59\times$ vs.\ $\mathrm{G}_1$, $p = 7.35 \times 10^{-5}$; $7.24\times$ in \emph{LDLR}) \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{K562 Erythroleukemia Stratum (\emph{PKLR\_48h}; $n = 231$ Unique $\mathrm{G{:}C \to T{:}A}$ SNVs):}} \\
+Isolated non-motif $\mathrm{G}_1$ & K562 & --- & $96$ & Mean $|\Delta\log_2| = 0.4655$ \\
+All duplex $\mathrm{G}_{3+}$ tracts & K562 & --- & $74$ & Mean $|\Delta\log_2| = 0.6105$ ($1.31\times$ vs.\ K562 $\mathrm{G}_1$, $p = 8.02 \times 10^{-4}$) \\
+\texttt{KLF1}/\texttt{SP1} motif $\mathrm{G}_{3+}$ sinks & K562 & --- & $14$ & Mean $|\Delta\log_2| = 0.8380$ ($1.80\times$ vs.\ K562 $\mathrm{G}_1$, $p = 4.58 \times 10^{-5}$) \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\end{document}
