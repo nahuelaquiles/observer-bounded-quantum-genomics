@@ -1,0 +1,63 @@
+{
+  "wt_independent_lineages": 20,
+  "mmr_independent_lineages": 4,
+  "mmr_populations": [
+    "Ara+3",
+    "Ara-2",
+    "Ara-3",
+    "Ara-4"
+  ],
+  "mutT_populations": [
+    "Ara+6",
+    "Ara-1"
+  ],
+  "wt_total_unique_snps": 471,
+  "mmr_total_unique_snps": 5500,
+  "mutT_total_unique_snps": 4442,
+  "wt_transition_fraction_pooled": 0.5095541401273885,
+  "mmr_transition_fraction_pooled": 0.9689090909090909,
+  "wt_lineage_transition_mean": 0.47357154565719445,
+  "wt_lineage_transition_sd": 0.1506955534059493,
+  "mmr_lineage_transition_mean": 0.965175508312204,
+  "mmr_lineage_transition_sd": 0.017053678012503085,
+  "p_mwu_exact_lineage_transition_WT_vs_MMR": 0.00018821757952192734,
+  "mutT_AT_to_CG_fraction": 0.9664565511031067,
+  "cos_dist_WT_vs_MMR": 0.3567311065270683,
+  "js_div_bits_WT_vs_MMR": 0.2965030186163236,
+  "kl_div_bits_MMR_vs_WT": 1.1439960751605345,
+  "lineage_equal_cos_dist_WT_vs_MMR": 0.39636520008264453,
+  "lineage_equal_js_div_bits_WT_vs_MMR": 0.32871497174580355,
+  "p_emp_lineage_cos_WT_vs_MMR_10k_perm": 0.0010998900109989002,
+  "p_emp_lineage_js_WT_vs_MMR_10k_perm": 0.00019998000199980003,
+  "cos_dist_MMR_vs_mutT": 0.9817746629289551,
+  "js_div_bits_MMR_vs_mutT": 0.8927788119165132,
+  "cos_dist_WT_vs_mutT": 0.6974267572948747,
+  "shannon_entropy_bits_WT": 6.073167990678076,
+  "shannon_entropy_bits_MMR": 4.760747923875606,
+  "shannon_entropy_bits_mutT": 4.1015114490267255,
+  "entropy_compression_WT_to_MMR_bits": 1.3124200668024706,
+  "mae_neutral_syn_vs_intergenic": {
+    "syn_obs": 40,
+    "igd_obs": 38,
+    "syn_rate_per_opp": 9.577219625399026e-07,
+    "igd_rate_per_opp": 1.745589114506282e-06,
+    "raw_syn_to_igd_ratio": 0.5486525749851403,
+    "spectrum_matched_syn_to_igd_ratio": 0.4495860834450596,
+    "poisson_two_sided_p": 9.383542441948598e-09
+  },
+  "mmr_neutral_syn_vs_intergenic": {
+    "syn_obs": 1243,
+    "igd_obs": 392,
+    "syn_rate_per_opp": 0.00011160453744722802,
+    "igd_rate_per_opp": 6.752673679800617e-05,
+    "raw_syn_to_igd_ratio": 1.6527459009469463,
+    "spectrum_matched_syn_to_igd_ratio": 1.1510588267119004,
+    "poisson_two_sided_p": 1.319858469418673e-06
+  },
+  "stacking_spearman_all32_r": 0.33785518441200335,
+  "stacking_spearman_all32_p": 0.058598222439112536,
+  "stacking_spearman_CT_r": 0.8735294117647058,
+  "stacking_spearman_CT_p": 9.869651666147373e-06,
+  "stacking_spearman_TC_r": 0.37058823529411766,
+  "stacking_spearman_TC_p": 0.15765046473782077
+}

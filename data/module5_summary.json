@@ -1,0 +1,245 @@
+{
+  "wall_clock_timings_s": {
+    "part1_rel606_2000_windows_s": 23.8153,
+    "part2_8766h_ephemeris_and_neutrinos_s": 0.0058,
+    "part3a_240k_3d_monte_carlo_scattering_s": 6.2816,
+    "part3b_chiral_channels_and_odes_s": 0.1611,
+    "total_module5_wall_clock_s": 32.003
+  },
+  "github_audit_and_upgrade": {
+    "trace_orig_nc": 0.9199999999999999,
+    "trace_orig_c": 0.92,
+    "product_state_qmi_bits": -4.440892098500626e-16,
+    "product_state_negativity": 0.0,
+    "bloch_entropy_nc_bits": 0.9907469525932152,
+    "bloch_entropy_c_bits": 0.9811628354541694,
+    "dinuc_nc": {
+      "shannon_1site_bits": 1.9767102305232624,
+      "intra_base_RY_WS_MI_bits": 0.01866820829696314,
+      "dinucleotide_MI_bits": 0.05062699599278542,
+      "gc_fraction": 0.54,
+      "g_fraction": 0.31
+    },
+    "dinuc_c": {
+      "shannon_1site_bits": 1.927127708090447,
+      "intra_base_RY_WS_MI_bits": 0.04122447493196124,
+      "dinucleotide_MI_bits": 0.09378426101982917,
+      "gc_fraction": 0.6000000000000001,
+      "g_fraction": 0.34
+    },
+    "tight_binding_nc": {
+      "homo_hole_ground_eV": -0.13942428837472254,
+      "ground_hole_IPR": 0.2923754627678011,
+      "effective_localization_bp": 3.4202596569951584,
+      "thermal_hole_G3plus_fraction": 0.6285232053066456
+    },
+    "tight_binding_c": {
+      "homo_hole_ground_eV": -0.12096529898695776,
+      "ground_hole_IPR": 0.3728009262536414,
+      "effective_localization_bp": 2.682396768831076,
+      "thermal_hole_G3plus_fraction": 0.5871851972591504
+    },
+    "real_rel606_windows": {
+      "n_coding_windows": 1000,
+      "n_intergenic_windows": 1000,
+      "total_bp_evaluated": 300000,
+      "coding_gc_mean": 0.52178,
+      "intergenic_gc_mean": 0.4260333333333333,
+      "orig_product_QMI_max_abs_bits": 8.881784197001252e-16,
+      "orig_unnorm_S_coding_mean": 0.7940391544564461,
+      "orig_unnorm_S_coding_sd": 0.07526008607088709,
+      "orig_unnorm_S_intergenic_mean": 0.8630579861017202,
+      "orig_unnorm_S_intergenic_sd": 0.0803362820281454,
+      "mwu_p_orig_unnorm_S": 7.003976998205016e-76,
+      "repaired_bloch_S_coding_mean": 0.9931797417976036,
+      "repaired_bloch_S_coding_sd": 0.0077096664023930854,
+      "repaired_bloch_S_intergenic_mean": 0.9921476811887996,
+      "repaired_bloch_S_intergenic_sd": 0.008046879913904546,
+      "mwu_p_repaired_bloch_S": 0.0003405661333122057,
+      "coding_dinuc_MI_mean_bits": 0.07195599397532691,
+      "coding_dinuc_MI_sd_bits": 0.03141811660855984,
+      "intergenic_dinuc_MI_mean_bits": 0.06346307401125707,
+      "intergenic_dinuc_MI_sd_bits": 0.030862493327657402,
+      "mwu_p_dinuc_MI": 4.4404453734109354e-11,
+      "coding_G3plus_hole_frac_mean": 0.3472983973032427,
+      "coding_G3plus_hole_frac_sd": 0.25722839877969783,
+      "intergenic_G3plus_hole_frac_mean": 0.37014196146466727,
+      "intergenic_G3plus_hole_frac_sd": 0.2994517522731414,
+      "mwu_p_G3plus_hole_frac": 0.017168547899307808
+    },
+    "tunneling_lambda_1uVm_J": 1.602176634e-35,
+    "tunneling_lambda_1uVm_eV": 1e-16,
+    "tunneling_orig_noise_eV": 3.1207545372303814e+17,
+    "ratio_orig_noise_to_field": 3.120754537230381e+33,
+    "euler_instability_courant": 12.154139583029009,
+    "fractional_diurnal_chirp_s_inv": 1.1313064569755463e-10,
+    "propagator_norm_diff_1ps_1uVm": 5.1395349919636246e-11
+  },
+  "solar_neutrino_astrodynamics": {
+    "ephemeris_total_hours": 8766,
+    "total_solar_nu_flux_1AU_cm2_s": 65277160000.0,
+    "keplerian_flux_half_amp_pct": 3.3435866441755504,
+    "keplerian_flux_peak_to_trough_pct": 6.687173288351101,
+    "borexino_measured_2ecc_pct": "3.68 +/- 0.65% (>5 sigma; Appel et al. 2022)",
+    "be7_862keV_orbital_doppler_amp_eV": 1.4308042678667796,
+    "be7_862keV_diurnal_equator_amp_eV": 1.3370054974325432,
+    "be7_862keV_diurnal_midlat41N_amp_eV": 1.0090508577228532,
+    "be7_total_max_doppler_swing_eV": 2.7631060225886928,
+    "pep_1442keV_orbital_doppler_amp_eV": 2.394413918678892,
+    "quadrature_phase_ellipse_min_max_norm": [
+      0.9754840223780206,
+      1.0256331547496544
+    ],
+    "neutrino_chirality_helicity_7Be": -0.9999999999999983,
+    "diploid_DNA_nu_e_scatter_rate_per_yr": 4.1509841628002325e-15,
+    "whole_cell_nu_e_scatter_rate_per_yr": 6.855363480890414e-13,
+    "human_body_37T_cells_nu_e_events_per_yr": 25.36484487929453,
+    "diploid_DNA_CEvNS_8B_rate_per_yr": 3.86528530754479e-16,
+    "be7_max_12C_nuclear_recoil_eV": 132.88589014134908,
+    "stodolsky_coherent_WNC_splitting_eV": 2.7310258030377803e-37,
+    "cells_required_5sigma_orbital_clock_1yr": 6.5312965317613176e+16,
+    "branches": [
+      {
+        "branch": "pp_continuum",
+        "flux_cm2_s": 59800000000.0,
+        "mean_or_line_energy_MeV": 0.267,
+        "msw_P_ee": 0.55,
+        "sigma_nu_e_cm2": 7.655140869672498e-46,
+        "max_electron_recoil_keV": 136.4384146031917,
+        "rate_per_diploid_DNA_yr": 2.9216312064772185e-15,
+        "rate_per_cell_yr": 4.825083183165501e-13
+      },
+      {
+        "branch": "7Be_862keV_line",
+        "flux_cm2_s": 4340000000.0,
+        "mean_or_line_energy_MeV": 0.8618,
+        "msw_P_ee": 0.52,
+        "sigma_nu_e_cm2": 3.691451258297883e-45,
+        "max_electron_recoil_keV": 664.7271001357984,
+        "rate_per_diploid_DNA_yr": 1.022487227304637e-15,
+        "rate_per_cell_yr": 1.6886408916126815e-13
+      },
+      {
+        "branch": "7Be_384keV_line",
+        "flux_cm2_s": 500000000.0,
+        "mean_or_line_energy_MeV": 0.3843,
+        "msw_P_ee": 0.54,
+        "sigma_nu_e_cm2": 1.2915958049889326e-45,
+        "max_electron_recoil_keV": 230.83246512510811,
+        "rate_per_diploid_DNA_yr": 4.121617200980455e-17,
+        "rate_per_cell_yr": 6.806863850511629e-15
+      },
+      {
+        "branch": "pep_1442keV_line",
+        "flux_cm2_s": 144000000.0,
+        "mean_or_line_energy_MeV": 1.4422,
+        "msw_P_ee": 0.5,
+        "sigma_nu_e_cm2": 6.678416048987525e-45,
+        "max_electron_recoil_keV": 1225.152549452252,
+        "rate_per_diploid_DNA_yr": 6.137718793037942e-17,
+        "rate_per_cell_yr": 1.01364620098629e-14
+      },
+      {
+        "branch": "CNO_continuum",
+        "flux_cm2_s": 488000000.0,
+        "mean_or_line_energy_MeV": 0.74,
+        "msw_P_ee": 0.52,
+        "sigma_nu_e_cm2": 3.04636799656644e-45,
+        "max_electron_recoil_keV": 550.0756291207487,
+        "rate_per_diploid_DNA_yr": 9.487967971238233e-17,
+        "rate_per_cell_yr": 1.566940912971504e-14
+      },
+      {
+        "branch": "8B_continuum",
+        "flux_cm2_s": 5160000.0,
+        "mean_or_line_energy_MeV": 6.7,
+        "msw_P_ee": 0.36,
+        "sigma_nu_e_cm2": 2.8521294585303545e-44,
+        "max_electron_recoil_keV": 6453.885901558493,
+        "rate_per_diploid_DNA_yr": 9.39268936580991e-18,
+        "rate_per_cell_yr": 1.551205621133559e-15
+      }
+    ]
+  },
+  "solar_modulated_muon_astrodynamics": {
+    "v_orb_min_km_s": 29.291163256260095,
+    "v_orb_max_km_s": 30.286624683102627,
+    "v_radial_sun_max_m_s": 497.7307129040059,
+    "v_rot_equator_m_s": 465.101142300783,
+    "compton_getting_orbital_dipole_frac": 0.0004688853633526081,
+    "compton_getting_diurnal_equator_frac": 7.29162896023782e-06,
+    "seasonal_stratospheric_surface_muon_amp_pct": 1.8,
+    "seasonal_stratospheric_highE_IceCube_amp_pct": 8.0,
+    "carrington_27d_solar_rotation_amp_pct": 1.5,
+    "diurnal_solar_time_muon_dip_pct": 0.3,
+    "solar_cycle_11yr_muon_amp_pct": 4.5,
+    "young_archean_sun_SEP_enhancement_factor_range": [
+      100.0,
+      10000.0
+    ],
+    "electromagnetic_to_weak_cross_section_ratio": 2.7089616793724024e+27
+  },
+  "monte_carlo_helical_deflection": {
+    "total_3d_trajectories_integrated": 240000,
+    "total_3d_force_evaluations": 76800000,
+    "psi_crit_deg": 26.939623246685787,
+    "c_geom_calibrated": 1.178089420592183,
+    "exact_quadrature_D_DNA_m": -5.395765775227836e-19,
+    "exact_quadrature_L_DNA_m": 5.395765775227836e-19,
+    "exact_quadrature_antisymmetry_sum_m": 0.0,
+    "monte_carlo_ensembles": {
+      "D_DNA_m_plus2_isotropic_pos": {
+        "mean_dr_m": -5.372119124311837e-19,
+        "sem_dr_m": 6.577016875415745e-21,
+        "z_score": -81.68017850755865,
+        "inward_fraction": 0.8909
+      },
+      "L_DNA_m_minus2_isotropic_pos": {
+        "mean_dr_m": 5.249974183127365e-19,
+        "sem_dr_m": 6.5975512540526204e-21,
+        "z_score": 79.5745873122624,
+        "inward_fraction": 0.11093333333333333
+      },
+      "D_DNA_m_plus2_helicity_rev_ctrl": {
+        "mean_dr_m": 5.32246248802339e-19,
+        "sem_dr_m": 6.567188294285072e-21,
+        "z_score": 81.04629027699916,
+        "inward_fraction": 0.11063333333333333
+      },
+      "D_DNA_m_plus2_zenith_oriented": {
+        "mean_dr_m": -6.883090987637444e-19,
+        "sem_dr_m": 3.414940133352638e-21,
+        "z_score": -201.55817434140283,
+        "inward_fraction": 0.98285
+      }
+    },
+    "oriented_to_isotropic_amplification_ratio": 1.2812617941563538
+  },
+  "cosmic_ray_chiral_mutagenesis": {
+    "pion_muon_kinematics": {
+      "r_pi": 0.5730879463777747,
+      "beta_mu_rest": 0.27138473383210515,
+      "spectrum_weighted_lodacity_mu_plus": -0.3293850686814462,
+      "muon_charge_ratio_R": 1.3,
+      "muon_charge_asymmetry_factor": 0.13043478260869568,
+      "effective_net_electrostatic_lodacity_mu": 0.042963269828014725
+    },
+    "g4_hole_sink_enrichment_fold": 17.950962377857877,
+    "g4_hole_sink_capture_fraction": 0.9565751699537648,
+    "chiral_bias_1keV_isotropic_positron": 6.256118898421263e-10,
+    "chiral_bias_100eV_isotropic_positron": 6.2314070098091796e-09,
+    "chiral_bias_100eV_zenith_oriented_positron": 7.984063725506588e-09,
+    "chiral_bias_2GeV_muon_helix": 1.0513432688938015e-12,
+    "chiral_bias_500eV_lab_polarized_e_G4": 2.1597306362758854e-07,
+    "sea_level_CR_8oxoG_rate_per_G_h": 7.757243896874288e-15,
+    "metabolic_ROS_8oxoG_rate_per_G_h": 4.5e-06,
+    "metabolic_ROS_to_CR_ratio": 580102941.1764705,
+    "somatic_8oxoG_shift_seasonal_muon": 3.102897558749715e-11,
+    "somatic_8oxoG_shift_11yr_solar_cycle": 7.757243896874288e-11,
+    "cr_8oxoG_events_per_diploid_cell_yr": 0.1768,
+    "young_sun_1000x_SEP_8oxoG_per_cell_yr": 176.8,
+    "tau_99pct_no_conflict_dM_1e6": 5293304.824724492,
+    "repair_uncollapsing_gain_mutM_mutY_mutS": 83.61,
+    "min_GtoT_counts_3sigma_at_1e3_asym": 9000000.0
+  }
+}

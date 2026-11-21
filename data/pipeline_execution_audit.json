@@ -1,0 +1,449 @@
+{
+  "total_reexecution_wall_clock_seconds": 344.1265,
+  "executed_scripts": [
+    {
+      "script": "scripts/01_open_quantum_resolvent_and_nogo.py",
+      "exit_code": 0,
+      "wall_clock_seconds": 3.5742
+    },
+    {
+      "script": "scripts/02_rate_distortion_and_circadian_kinetics.py",
+      "exit_code": 0,
+      "wall_clock_seconds": 7.2193
+    },
+    {
+      "script": "scripts/03_ecoli_mmr_quotient_and_human_promoters.py",
+      "exit_code": 0,
+      "wall_clock_seconds": 24.5838
+    },
+    {
+      "script": "scripts/05_generate_figures.py",
+      "exit_code": 0,
+      "wall_clock_seconds": 25.4636
+    },
+    {
+      "script": "scripts/06_upgraded_github_and_astrodynamics_cosmic_chirality.py",
+      "exit_code": 0,
+      "wall_clock_seconds": 23.7292
+    },
+    {
+      "script": "scripts/07_generate_fig5.py",
+      "exit_code": 0,
+      "wall_clock_seconds": 8.6028
+    },
+    {
+      "script": "scripts/08_table6_empirical_wetlab_validation.py",
+      "exit_code": 0,
+      "wall_clock_seconds": 243.956
+    },
+    {
+      "script": "scripts/09_generate_fig6.py",
+      "exit_code": 0,
+      "wall_clock_seconds": 6.9976
+    }
+  ],
+  "note_module4_alphagenome": "Module 4 1-Mb GRCh38 human liver UBERON:0002107 predictions were executed via cloud AlphaGenome API and verified in data/module4_*.csv & module4_summary.json.",
+  "verified_artifacts": [
+    {
+      "relative_path": "data/module1_guanine_hole_trapping.csv",
+      "size_bytes": 830,
+      "sha256_prefix": "62878fc54bba6051",
+      "sha256": "62878fc54bba60519287d972f3f5667747d97dbd514347db24292d64f7d978e0"
+    },
+    {
+      "relative_path": "data/module1_resolvent_convergence.csv",
+      "size_bytes": 7146,
+      "sha256_prefix": "4cfb3212868e5b73",
+      "sha256": "4cfb3212868e5b7302b076caa0deb84fd824a0a8a8e11a021321690d2ac90680"
+    },
+    {
+      "relative_path": "data/module1_summary.json",
+      "size_bytes": 3823,
+      "sha256_prefix": "01dc83dcb3c20206",
+      "sha256": "01dc83dcb3c2020662301179f0834fb6ebe176fc796bb6cc90ca1f7a8ec16297"
+    },
+    {
+      "relative_path": "data/module1_weak_field_nogo.csv",
+      "size_bytes": 14786,
+      "sha256_prefix": "c6e153f4ec164165",
+      "sha256": "c6e153f4ec164165cdd746c62944a77b5b2996ed960cd59ed7bdcec713f4f726"
+    },
+    {
+      "relative_path": "data/module2_ensemble_rate_distortion.csv",
+      "size_bytes": 4266,
+      "sha256_prefix": "e60f3995fb6102dd",
+      "sha256": "e60f3995fb6102dddcc148251e8d58b2cfefe3c977aa667f90b06c4343f34df8"
+    },
+    {
+      "relative_path": "data/module2_memory_sensing_crossover.csv",
+      "size_bytes": 7589,
+      "sha256_prefix": "1ea31d89ff5dd69d",
+      "sha256": "1ea31d89ff5dd69dbc6398c605057654a732e39afa778379c3af6f21da28f9e6"
+    },
+    {
+      "relative_path": "data/module2_single_cell_sparsity.csv",
+      "size_bytes": 421,
+      "sha256_prefix": "e5b7282cf04c822e",
+      "sha256": "e5b7282cf04c822e88f148def3db9f0665754741ca8e82a4c45f36e12e07217e"
+    },
+    {
+      "relative_path": "data/module3_ecoli_mmr_stacking_regression.csv",
+      "size_bytes": 2682,
+      "sha256_prefix": "f5da227fc11b3b4a",
+      "sha256": "f5da227fc11b3b4aede870ff166ec560410fa7242e2aa33de9150fe467a4e0c8"
+    },
+    {
+      "relative_path": "data/module3_ecoli_populations.csv",
+      "size_bytes": 3237,
+      "sha256_prefix": "fc3916168e2c0aa2",
+      "sha256": "fc3916168e2c0aa252c82710885b096d9913a063d3eec34cca93d8eb45d16bcc"
+    },
+    {
+      "relative_path": "data/module3_ecoli_sbs96_spectra.csv",
+      "size_bytes": 11129,
+      "sha256_prefix": "7b4e587eb0b0b318",
+      "sha256": "7b4e587eb0b0b3183e35c83907ebc3c11201930bccdc7d63e8c96ad5c2f6ded0"
+    },
+    {
+      "relative_path": "data/module3_human_circadian_10_promoters.csv",
+      "size_bytes": 1869,
+      "sha256_prefix": "d8e048d3461cc1ea",
+      "sha256": "d8e048d3461cc1ea44f5c7d7e6584b31cc227ae935cde8bbcad9433be71c273e"
+    },
+    {
+      "relative_path": "data/module3_human_matched_1500_controls.csv",
+      "size_bytes": 275654,
+      "sha256_prefix": "1cd82d449b8fbede",
+      "sha256": "1cd82d449b8fbede1c559a5fb42583c90cfcb1b7c0d77236cfda36222bf2e9f8"
+    },
+    {
+      "relative_path": "data/module3_human_promoter_comparison.csv",
+      "size_bytes": 2044,
+      "sha256_prefix": "b3f7b5de0f67afc7",
+      "sha256": "b3f7b5de0f67afc73a6644157ac37c0e765747acce0a4efa914b6c8abfd9d92c"
+    },
+    {
+      "relative_path": "data/module3_summary.json",
+      "size_bytes": 2443,
+      "sha256_prefix": "92f341e5ed7ff9a6",
+      "sha256": "92f341e5ed7ff9a606badd9a05703ce8c6754b9478bb86573c3453817d808571"
+    },
+    {
+      "relative_path": "data/module4_alphagenome_circadian_variants.csv",
+      "size_bytes": 7458,
+      "sha256_prefix": "63ccd5bc649b64f8",
+      "sha256": "63ccd5bc649b64f89075712357e1af4af9772c6582f086ed3fa469210c340881"
+    },
+    {
+      "relative_path": "data/module4_cry1_ism_cage_liver.csv",
+      "size_bytes": 1171,
+      "sha256_prefix": "2b3d10f8b6b48a70",
+      "sha256": "2b3d10f8b6b48a7081f6e82d8d72d188bff8d67e62f49ef74e10686641b2b5d1"
+    },
+    {
+      "relative_path": "data/module4_cry1_ism_dnase_liver.csv",
+      "size_bytes": 1147,
+      "sha256_prefix": "7e64f135d38bcf67",
+      "sha256": "7e64f135d38bcf671da4ebfdd99acfd36443302a3babbb016e812be713c0520b"
+    },
+    {
+      "relative_path": "data/module4_cry1_ref_alt_cage_tracks.csv",
+      "size_bytes": 19256,
+      "sha256_prefix": "9b49db67b51f04f3",
+      "sha256": "9b49db67b51f04f32f5f12141997dbe1989638c9dc31a2be5222ede5b9c6738f"
+    },
+    {
+      "relative_path": "data/module4_cry1_ref_alt_dnase_tracks.csv",
+      "size_bytes": 17400,
+      "sha256_prefix": "e29b24275b21d756",
+      "sha256": "e29b24275b21d7560c1be814c4cad9020c03eeef85e4320f1d36bbaa088e94a9"
+    },
+    {
+      "relative_path": "data/module4_summary.json",
+      "size_bytes": 1828,
+      "sha256_prefix": "de95b688a3b4a996",
+      "sha256": "de95b688a3b4a996aff0c61561cdbc3705a330215469d522a44c161d13b06abd"
+    },
+    {
+      "relative_path": "data/module5_astrodynamics_doppler_and_flux.csv",
+      "size_bytes": 73116,
+      "sha256_prefix": "f87dd66a811ac4f5",
+      "sha256": "f87dd66a811ac4f54a9aa67b1f2fc38b6784eaebb1e747bfdcf798d8327ba5a1"
+    },
+    {
+      "relative_path": "data/module5_cosmic_ray_chiral_channels.csv",
+      "size_bytes": 1889,
+      "sha256_prefix": "067a3f937e31e7c1",
+      "sha256": "067a3f937e31e7c1fa4df0c2e2ab8e16cc0699273e586fc06dcdbc835a25278d"
+    },
+    {
+      "relative_path": "data/module5_diurnal_24h_solar_clock.csv",
+      "size_bytes": 1906,
+      "sha256_prefix": "15a9ce30eb5962be",
+      "sha256": "15a9ce30eb5962bebae4a8c5ed6e91b3f71d50ab71ffabe183e1a9476db870bb"
+    },
+    {
+      "relative_path": "data/module5_github_code_audit_and_upgrade.csv",
+      "size_bytes": 1583,
+      "sha256_prefix": "f8461b72f7366247",
+      "sha256": "f8461b72f7366247fa030bb3b1e926afddf9015f7a99dedafb407f0223867232"
+    },
+    {
+      "relative_path": "data/module5_homochirality_evolution.csv",
+      "size_bytes": 45702,
+      "sha256_prefix": "cde8bce41608b0a7",
+      "sha256": "cde8bce41608b0a7b70245c103a73f5ee560a0f94110c53e315ff67f22690630"
+    },
+    {
+      "relative_path": "data/module5_monte_carlo_helical_convergence.csv",
+      "size_bytes": 2740,
+      "sha256_prefix": "56d41a47dfe10a45",
+      "sha256": "56d41a47dfe10a45f4807482754f61fef542b514f98d05db1c00dafc580ec6c5"
+    },
+    {
+      "relative_path": "data/module5_rel606_coding_vs_intergenic_windows.csv",
+      "size_bytes": 179833,
+      "sha256_prefix": "9047ca47266b1c93",
+      "sha256": "9047ca47266b1c93cc0020ddc84e1768eff9d3a0014dd8fa6b87e112e8a210db"
+    },
+    {
+      "relative_path": "data/module5_summary.json",
+      "size_bytes": 10301,
+      "sha256_prefix": "f6e5944db6fea7d2",
+      "sha256": "f6e5944db6fea7d2d4e195b98c876200bf5a3013e063460db094c276b4c483e9"
+    },
+    {
+      "relative_path": "data/module6_ecoli_mutator_wgs.csv",
+      "size_bytes": 1184,
+      "sha256_prefix": "5a064115990f4d27",
+      "sha256": "5a064115990f4d278b15ced7ffb3e0edaf16694f8b0329bfb2026243ab25918b"
+    },
+    {
+      "relative_path": "data/module6_hepg2_mpra_variants.csv",
+      "size_bytes": 230395,
+      "sha256_prefix": "f6bc5c7327f9aff7",
+      "sha256": "f6bc5c7327f9aff75fa7ead8b910ce87909cf0c15afefe93a4f22e4f37f08c04"
+    },
+    {
+      "relative_path": "data/module6_nucleosome_rotational_clashes.csv",
+      "size_bytes": 17634,
+      "sha256_prefix": "c58a8c567a7e7a65",
+      "sha256": "c58a8c567a7e7a657928d5172713e927a51f2c7f6ceed7079053011487246e56"
+    },
+    {
+      "relative_path": "data/module6_sc_h2o2_ensemble_scaling.csv",
+      "size_bytes": 1349,
+      "sha256_prefix": "3af8d9a9ff19c37f",
+      "sha256": "3af8d9a9ff19c37ffc5dfbb61d67f76e2bfb186b1ca959793cf8b3bedf101748"
+    },
+    {
+      "relative_path": "data/module6_sc_h2o2_gene_erasure.csv",
+      "size_bytes": 1761,
+      "sha256_prefix": "9285a2fb61669f55",
+      "sha256": "9285a2fb61669f55df6663280c3acd3849b3c108b0d0804027bc40e275db0ab0"
+    },
+    {
+      "relative_path": "data/module6_summary.json",
+      "size_bytes": 24697,
+      "sha256_prefix": "82d97630189f16fa",
+      "sha256": "82d97630189f16fa7ce3cc819a1dba4f552d4cadf0e1e2667d49248f3afa9d87"
+    },
+    {
+      "relative_path": "data/module6_table6_empirical_validation.csv",
+      "size_bytes": 2076,
+      "sha256_prefix": "232a3724bc4f8159",
+      "sha256": "232a3724bc4f81593ab065ba7dbf3455e7e9c76f316770991319eeffd582fe74"
+    },
+    {
+      "relative_path": "assets/fig1_resolvent_and_nogo.png",
+      "size_bytes": 736528,
+      "sha256_prefix": "ebff6dc4d300a0b6",
+      "sha256": "ebff6dc4d300a0b64a2605e7a40f32c3d94724b490bb0296898ddf3e233301bf"
+    },
+    {
+      "relative_path": "assets/fig1_resolvent_and_nogo.svg",
+      "size_bytes": 222191,
+      "sha256_prefix": "4dd6ce0bff9c85da",
+      "sha256": "4dd6ce0bff9c85da31f3e50a591b4d1075c081cf9a31e81ffbcbc02155824140"
+    },
+    {
+      "relative_path": "assets/fig2_circadian_rate_distortion.png",
+      "size_bytes": 806872,
+      "sha256_prefix": "de34e37b74595999",
+      "sha256": "de34e37b7459599917279e001800cd436f129b0f1e1408ba9baf9f708ddf9736"
+    },
+    {
+      "relative_path": "assets/fig2_circadian_rate_distortion.svg",
+      "size_bytes": 271932,
+      "sha256_prefix": "2737280160642b6f",
+      "sha256": "2737280160642b6ff920aeaf80be6e15ae7fd43bb5938d90c572fc216d01f965"
+    },
+    {
+      "relative_path": "assets/fig3_ecoli_quotient_uncollapsing.png",
+      "size_bytes": 582073,
+      "sha256_prefix": "eef4f3ce85c9865e",
+      "sha256": "eef4f3ce85c9865e0f6354446b72aad4fbeef7602e150405248f1689e155f1fc"
+    },
+    {
+      "relative_path": "assets/fig3_ecoli_quotient_uncollapsing.svg",
+      "size_bytes": 220971,
+      "sha256_prefix": "7bf8102b7a3fe2e3",
+      "sha256": "7bf8102b7a3fe2e30f4c956cc31080b288492ad0599109ec6b0a1f17fa7059b7"
+    },
+    {
+      "relative_path": "assets/fig4_human_promoters_and_alphagenome.png",
+      "size_bytes": 865279,
+      "sha256_prefix": "322e80d1e2149414",
+      "sha256": "322e80d1e2149414b7c2a07efcd369910ff838ce157cb05b3b0daeeae666b009"
+    },
+    {
+      "relative_path": "assets/fig4_human_promoters_and_alphagenome.svg",
+      "size_bytes": 276240,
+      "sha256_prefix": "855ad5d6bcd2569e",
+      "sha256": "855ad5d6bcd2569ec7eebcf4a6d47e6813e4b2c113eef20c1f711dbb95b1c47a"
+    },
+    {
+      "relative_path": "assets/fig5_astrodynamics_and_cosmic_chirality.png",
+      "size_bytes": 1123184,
+      "sha256_prefix": "456ea2c5f1b2f043",
+      "sha256": "456ea2c5f1b2f0430878c63f94b1c4962c9e07e9e918c08d4f73180a40f32e8a"
+    },
+    {
+      "relative_path": "assets/fig5_astrodynamics_and_cosmic_chirality.svg",
+      "size_bytes": 326798,
+      "sha256_prefix": "83beac152b4e5913",
+      "sha256": "83beac152b4e591305b829262b9d365b4da3e3491d33e8564aaf1317e0163ba4"
+    },
+    {
+      "relative_path": "assets/fig6_table6_empirical_wetlab_validation.png",
+      "size_bytes": 1216441,
+      "sha256_prefix": "73c0f8b5e4026c3e",
+      "sha256": "73c0f8b5e4026c3ea2e8846b88f69319b5c1794516b61228aa45f7603bc456e9"
+    },
+    {
+      "relative_path": "assets/fig6_table6_empirical_wetlab_validation.svg",
+      "size_bytes": 421708,
+      "sha256_prefix": "10daff31833e5ed4",
+      "sha256": "10daff31833e5ed44cda688c3805eeaa40108601f8525fce662c5cf5dad2e3af"
+    }
+  ],
+  "module6_final_artifacts": {
+    "observer_bounded_dna_evolution.tex": {
+      "bytes": 123173,
+      "sha256": "4636cfeced94e879c6fabb87ef36f03aabd1317f3bc34e37aa04e169c6b5185f"
+    },
+    "observer_bounded_dna_evolution.pdf": {
+      "bytes": 5146211,
+      "sha256": "adaa93ad25392a7a0da3620b86ea70d5db8212c210fbe86850dd8e34f122cf34"
+    },
+    "references.bib": {
+      "bytes": 22385,
+      "sha256": "d21f674ae3a2292e1bca3039b7a8e20e71f7c1da8fed481ab39a34e9a8d16e1c"
+    },
+    "assets/fig6_table6_empirical_wetlab_validation.png": {
+      "bytes": 1216441,
+      "sha256": "73c0f8b5e4026c3ea2e8846b88f69319b5c1794516b61228aa45f7603bc456e9"
+    },
+    "assets/fig6_table6_empirical_wetlab_validation.svg": {
+      "bytes": 421708,
+      "sha256": "10daff31833e5ed44cda688c3805eeaa40108601f8525fce662c5cf5dad2e3af"
+    },
+    "data/module6_table6_empirical_validation.csv": {
+      "bytes": 2076,
+      "sha256": "232a3724bc4f81593ab065ba7dbf3455e7e9c76f316770991319eeffd582fe74"
+    },
+    "data/module6_summary.json": {
+      "bytes": 24697,
+      "sha256": "82d97630189f16fa7ce3cc819a1dba4f552d4cadf0e1e2667d49248f3afa9d87"
+    },
+    "scripts/08_table6_empirical_wetlab_validation.py": {
+      "bytes": 70105,
+      "sha256": "d9ea9af31a4311653fbbeafe22ecbea4fbb6665aad953a5ca9e3440a692b44ff"
+    },
+    "scripts/09_generate_fig6.py": {
+      "bytes": 18980,
+      "sha256": "8c00101af19fddd84081b1992552d252b5cdf88afab9e2d1881587bd9bfdc9b0"
+    }
+  },
+  "verified_scripts": {
+    "scripts/01_open_quantum_resolvent_and_nogo.py": {
+      "bytes": 19919,
+      "sha256": "38d7af8fd1885444fde5b65728c513d9bc15610f363da404837bc16bbcd54001"
+    },
+    "scripts/02_rate_distortion_and_circadian_kinetics.py": {
+      "bytes": 7390,
+      "sha256": "ae2ff6ce4ce92fa475d058e42d80df45340cd4cc1d3c9a14ef74b725bf471100"
+    },
+    "scripts/03_ecoli_mmr_quotient_and_human_promoters.py": {
+      "bytes": 26405,
+      "sha256": "5fcd15253c22a71377b40eb1af00823ed2cc3ae1fb9e86a0555f9761256761a4"
+    },
+    "scripts/04_alphagenome_circadian_regulome.py": {
+      "bytes": 13313,
+      "sha256": "de385703abb00517dc86e020d7774869dd0fc77ccbb5d3532747bae7e6edbe7d"
+    },
+    "scripts/05_generate_figures.py": {
+      "bytes": 30942,
+      "sha256": "a045053584ee9a15c9854c4dff5c06818c0f87fc2bd1619408d65742c4192f95"
+    },
+    "scripts/06_upgraded_github_and_astrodynamics_cosmic_chirality.py": {
+      "bytes": 58378,
+      "sha256": "065b7b31a3d73423bda9d341f339b1d48718e1284800bc0bfd624a8ded455cbf"
+    },
+    "scripts/07_generate_fig5.py": {
+      "bytes": 14204,
+      "sha256": "2e01de439294ac0bad57b5d764e0520bab3bb9c86d6a5ba0410a15d8e0f9b8fb"
+    },
+    "scripts/08_table6_empirical_wetlab_validation.py": {
+      "bytes": 70105,
+      "sha256": "d9ea9af31a4311653fbbeafe22ecbea4fbb6665aad953a5ca9e3440a692b44ff"
+    },
+    "scripts/09_generate_fig6.py": {
+      "bytes": 18980,
+      "sha256": "8c00101af19fddd84081b1992552d252b5cdf88afab9e2d1881587bd9bfdc9b0"
+    }
+  },
+  "submission_deliverables": {
+    "observer_bounded_dna_evolution.tex": {
+      "bytes": 123173,
+      "sha256": "4636cfeced94e879c6fabb87ef36f03aabd1317f3bc34e37aa04e169c6b5185f"
+    },
+    "observer_bounded_dna_evolution.pdf": {
+      "bytes": 5146211,
+      "sha256": "adaa93ad25392a7a0da3620b86ea70d5db8212c210fbe86850dd8e34f122cf34",
+      "pages": 25
+    },
+    "observer_bounded_dna_supplementary_materials.tex": {
+      "bytes": 22589,
+      "sha256": "b91db215e26d19910303a0e28c7c80a2ef9d94dacc04759f42a9bb3604cec354"
+    },
+    "observer_bounded_dna_supplementary_materials.pdf": {
+      "bytes": 510913,
+      "sha256": "402b1134eb647fc714aa88b7a2fed8512f747403d88364979de284dd5d01720f",
+      "pages": 5
+    },
+    "observer_bounded_dna_combined_submission.pdf": {
+      "bytes": 5820599,
+      "sha256": "145d4a574574b14c3ae2a85673f724d9f1534d52fe6053cbe30e8f5c4a8901d5",
+      "pages": 30
+    },
+    "cover_letter_science_advances.tex": {
+      "bytes": 6513,
+      "sha256": "f80fdd381392108b71767f0c7c99d28163abe6ec6c7ac7161a3de24b8af77ec8"
+    },
+    "cover_letter_science_advances.pdf": {
+      "bytes": 209252,
+      "sha256": "b1892fe6538fcfb43dd1d4bc594a5782b478044243b122819e76e4646a1c5b2a",
+      "pages": 2
+    },
+    "references.bib": {
+      "bytes": 22385,
+      "sha256": "d21f674ae3a2292e1bca3039b7a8e20e71f7c1da8fed481ab39a34e9a8d16e1c"
+    },
+    "science_advances_latex_source.zip": {
+      "bytes": 4878689,
+      "sha256": "b7e0a1fbc78cca99433c7c3b5f017e70a06a9f150dcd49d08b6c392a03497cd6"
+    }
+  },
+  "audit_timestamp_utc": "2026-11-21T03:45:00Z"
+}

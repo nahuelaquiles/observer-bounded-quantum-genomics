@@ -1,0 +1,783 @@
+{
+  "total_module6_wall_clock_s": 206.899,
+  "row1_thermal_vs_ac": {
+    "runtime_s": 0.0781,
+    "emp_rel_rates_25_28_37C": [
+      0.63,
+      0.62,
+      1.0
+    ],
+    "mod1_predicted_rel_rates_25_28_37C": [
+      0.53127,
+      0.62523,
+      1.0
+    ],
+    "emp_ratio_37C_vs_28C": 1.6129,
+    "mod1_predicted_ratio_37C_vs_28C": 1.5994,
+    "arrhenius_ratio_agreement_pct": 99.16,
+    "emp_apparent_Ea_eV": 0.3337,
+    "mod1_a_priori_Ea_eV": 0.42,
+    "chu2018_25_vs_28C_t": 0.08,
+    "chu2018_25_vs_28C_padj": 0.469,
+    "chu2018_28_vs_37C_t": -7.12,
+    "chu2018_28_vs_37C_padj": 6e-08,
+    "chu2018_25_vs_37C_t": -5.26,
+    "chu2018_25_vs_37C_padj": 7e-06,
+    "ac_bounds": {
+      "E0_1e-06_Vm": {
+        "E_field_V_per_m": 1e-06,
+        "lambda_eV": 1e-16,
+        "ac_rectified_rel_shift": 1.1291367602966074e-28,
+        "thermal_50mK_rel_shift": 0.0025333945666646,
+        "thermal_10mK_rel_shift": 0.0005067909524469894
+      },
+      "E0_1_Vm": {
+        "E_field_V_per_m": 1.0,
+        "lambda_eV": 1e-10,
+        "ac_rectified_rel_shift": 1.1291367602966072e-16,
+        "thermal_50mK_rel_shift": 0.0025333945666646,
+        "thermal_10mK_rel_shift": 0.0005067909524469894
+      },
+      "E0_10_Vm": {
+        "E_field_V_per_m": 10.0,
+        "lambda_eV": 1e-09,
+        "ac_rectified_rel_shift": 1.1291367602966074e-14,
+        "thermal_50mK_rel_shift": 0.0025333945666646,
+        "thermal_10mK_rel_shift": 0.0005067909524469894
+      }
+    }
+  },
+  "row2_nucleosome_rotational_gate": {
+    "runtime_s": 18.4814,
+    "pdb_cli_validation": {
+      "8VWT": {
+        "verdict": "STRONG SUPPORT",
+        "reason": "Screened 6 residue specs against J:13 (6 within 5.0 \u00c5).",
+        "details": {
+          "status": "PASSED",
+          "check": "batch_distance",
+          "target": "J:13",
+          "heavy_atoms_only": true,
+          "results": [
+            {
+              "residue": "K:249",
+              "target": "J:13",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "GLN",
+                "8OG"
+              ],
+              "min_distance_angstroms": 3.24,
+              "heavy_atom_min_distance_angstroms": 3.24,
+              "ca_distance_angstroms": null,
+              "atom_pair": "K:249(NE2) - J:13(N3)",
+              "heavy_atom_pair": "K:249(NE2) - J:13(N3)",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            },
+            {
+              "residue": "K:268",
+              "target": "J:13",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "ASP",
+                "8OG"
+              ],
+              "min_distance_angstroms": 3.38,
+              "heavy_atom_min_distance_angstroms": 3.38,
+              "ca_distance_angstroms": null,
+              "atom_pair": "K:268(OD2) - J:13(C1')",
+              "heavy_atom_pair": "K:268(OD2) - J:13(C1')",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            },
+            {
+              "residue": "K:270",
+              "target": "J:13",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "HIS",
+                "8OG"
+              ],
+              "min_distance_angstroms": 3.39,
+              "heavy_atom_min_distance_angstroms": 3.39,
+              "ca_distance_angstroms": null,
+              "atom_pair": "K:270(NE2) - J:13(OP2)",
+              "heavy_atom_pair": "K:270(NE2) - J:13(OP2)",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            },
+            {
+              "residue": "K:319",
+              "target": "J:13",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "PHE",
+                "8OG"
+              ],
+              "min_distance_angstroms": 3.16,
+              "heavy_atom_min_distance_angstroms": 3.16,
+              "ca_distance_angstroms": null,
+              "atom_pair": "K:319(CE1) - J:13(N3)",
+              "heavy_atom_pair": "K:319(CE1) - J:13(N3)",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            },
+            {
+              "residue": "K:253",
+              "target": "J:13",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "CYS",
+                "8OG"
+              ],
+              "min_distance_angstroms": 4.3,
+              "heavy_atom_min_distance_angstroms": 4.3,
+              "ca_distance_angstroms": null,
+              "atom_pair": "K:253(SG) - J:13(N1)",
+              "heavy_atom_pair": "K:253(SG) - J:13(N1)",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            },
+            {
+              "residue": "K:42",
+              "target": "J:13",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "GLY",
+                "8OG"
+              ],
+              "min_distance_angstroms": 2.81,
+              "heavy_atom_min_distance_angstroms": 2.81,
+              "ca_distance_angstroms": null,
+              "atom_pair": "K:42(O) - J:13(O6)",
+              "heavy_atom_pair": "K:42(O) - J:13(O6)",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            }
+          ]
+        },
+        "pdb_ids": [],
+        "residues_checked": [
+          "K:249",
+          "K:268",
+          "K:270",
+          "K:319",
+          "K:253",
+          "K:42"
+        ]
+      },
+      "8VWV": {
+        "verdict": "STRONG SUPPORT",
+        "reason": "Screened 6 residue specs against I:34 (6 within 5.0 \u00c5).",
+        "details": {
+          "status": "PASSED",
+          "check": "batch_distance",
+          "target": "I:34",
+          "heavy_atoms_only": true,
+          "results": [
+            {
+              "residue": "K:249",
+              "target": "I:34",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "GLN",
+                "8OG"
+              ],
+              "min_distance_angstroms": 3.41,
+              "heavy_atom_min_distance_angstroms": 3.41,
+              "ca_distance_angstroms": null,
+              "atom_pair": "K:249(NE2) - I:34(N3)",
+              "heavy_atom_pair": "K:249(NE2) - I:34(N3)",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            },
+            {
+              "residue": "K:268",
+              "target": "I:34",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "ASP",
+                "8OG"
+              ],
+              "min_distance_angstroms": 2.71,
+              "heavy_atom_min_distance_angstroms": 2.71,
+              "ca_distance_angstroms": null,
+              "atom_pair": "K:268(OD2) - I:34(O4')",
+              "heavy_atom_pair": "K:268(OD2) - I:34(O4')",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            },
+            {
+              "residue": "K:270",
+              "target": "I:34",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "HIS",
+                "8OG"
+              ],
+              "min_distance_angstroms": 2.95,
+              "heavy_atom_min_distance_angstroms": 2.95,
+              "ca_distance_angstroms": null,
+              "atom_pair": "K:270(NE2) - I:34(OP2)",
+              "heavy_atom_pair": "K:270(NE2) - I:34(OP2)",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            },
+            {
+              "residue": "K:319",
+              "target": "I:34",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "PHE",
+                "8OG"
+              ],
+              "min_distance_angstroms": 2.97,
+              "heavy_atom_min_distance_angstroms": 2.97,
+              "ca_distance_angstroms": null,
+              "atom_pair": "K:319(CE1) - I:34(N3)",
+              "heavy_atom_pair": "K:319(CE1) - I:34(N3)",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            },
+            {
+              "residue": "K:253",
+              "target": "I:34",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "CYS",
+                "8OG"
+              ],
+              "min_distance_angstroms": 4.76,
+              "heavy_atom_min_distance_angstroms": 4.76,
+              "ca_distance_angstroms": null,
+              "atom_pair": "K:253(SG) - I:34(C2)",
+              "heavy_atom_pair": "K:253(SG) - I:34(C2)",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            },
+            {
+              "residue": "K:42",
+              "target": "I:34",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "GLY",
+                "8OG"
+              ],
+              "min_distance_angstroms": 2.79,
+              "heavy_atom_min_distance_angstroms": 2.79,
+              "ca_distance_angstroms": null,
+              "atom_pair": "K:42(O) - I:34(O6)",
+              "heavy_atom_pair": "K:42(O) - I:34(O6)",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            }
+          ]
+        },
+        "pdb_ids": [],
+        "residues_checked": [
+          "K:249",
+          "K:268",
+          "K:270",
+          "K:319",
+          "K:253",
+          "K:42"
+        ]
+      },
+      "9EOZ": {
+        "verdict": "STRONG SUPPORT",
+        "reason": "Screened 6 residue specs against Z:137 (6 within 5.0 \u00c5).",
+        "details": {
+          "status": "PASSED",
+          "check": "batch_distance",
+          "target": "Z:137",
+          "heavy_atoms_only": true,
+          "results": [
+            {
+              "residue": "A:249",
+              "target": "Z:137",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "GLN",
+                "8OG"
+              ],
+              "min_distance_angstroms": 3.45,
+              "heavy_atom_min_distance_angstroms": 3.45,
+              "ca_distance_angstroms": null,
+              "atom_pair": "A:249(OE1) - Z:137(N3)",
+              "heavy_atom_pair": "A:249(OE1) - Z:137(N3)",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            },
+            {
+              "residue": "A:268",
+              "target": "Z:137",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "ASP",
+                "8OG"
+              ],
+              "min_distance_angstroms": 2.84,
+              "heavy_atom_min_distance_angstroms": 2.84,
+              "ca_distance_angstroms": null,
+              "atom_pair": "A:268(OD2) - Z:137(N3)",
+              "heavy_atom_pair": "A:268(OD2) - Z:137(N3)",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            },
+            {
+              "residue": "A:270",
+              "target": "Z:137",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "HIS",
+                "8OG"
+              ],
+              "min_distance_angstroms": 2.45,
+              "heavy_atom_min_distance_angstroms": 2.45,
+              "ca_distance_angstroms": null,
+              "atom_pair": "A:270(NE2) - Z:137(OP2)",
+              "heavy_atom_pair": "A:270(NE2) - Z:137(OP2)",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            },
+            {
+              "residue": "A:319",
+              "target": "Z:137",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "PHE",
+                "8OG"
+              ],
+              "min_distance_angstroms": 3.52,
+              "heavy_atom_min_distance_angstroms": 3.52,
+              "ca_distance_angstroms": null,
+              "atom_pair": "A:319(CE2) - Z:137(C6)",
+              "heavy_atom_pair": "A:319(CE2) - Z:137(C6)",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            },
+            {
+              "residue": "A:253",
+              "target": "Z:137",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "CYS",
+                "8OG"
+              ],
+              "min_distance_angstroms": 3.84,
+              "heavy_atom_min_distance_angstroms": 3.84,
+              "ca_distance_angstroms": null,
+              "atom_pair": "A:253(SG) - Z:137(C2)",
+              "heavy_atom_pair": "A:253(SG) - Z:137(C2)",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            },
+            {
+              "residue": "A:42",
+              "target": "Z:137",
+              "status": "PASSED",
+              "check": "distance",
+              "resnames": [
+                "GLY",
+                "8OG"
+              ],
+              "min_distance_angstroms": 2.86,
+              "heavy_atom_min_distance_angstroms": 2.86,
+              "ca_distance_angstroms": null,
+              "atom_pair": "A:42(O) - Z:137(N7)",
+              "heavy_atom_pair": "A:42(O) - Z:137(N7)",
+              "conformer_distances": {},
+              "heavy_conformer_distances": {},
+              "conformer_occupancies": {}
+            }
+          ]
+        },
+        "pdb_ids": [],
+        "residues_checked": [
+          "A:249",
+          "A:268",
+          "A:270",
+          "A:319",
+          "A:253",
+          "A:42"
+        ]
+      }
+    },
+    "cryo_em_native_structures": {
+      "8VWT": {
+        "ogg1_heavy_atoms": 2433,
+        "histone_heavy_atoms": 5990,
+        "altloc_atoms_total": 0,
+        "occupancy_range": [
+          1.0,
+          1.0
+        ],
+        "min_ogg1_histone_dist_A": 5.689,
+        "clashes_lt_2p5A": 0,
+        "contacts_lt_3p5A": 0,
+        "inward_angle_deg": 17.84
+      },
+      "8VWV": {
+        "ogg1_heavy_atoms": 2442,
+        "histone_heavy_atoms": 6004,
+        "altloc_atoms_total": 0,
+        "occupancy_range": [
+          1.0,
+          1.0
+        ],
+        "min_ogg1_histone_dist_A": 7.787,
+        "clashes_lt_2p5A": 0,
+        "contacts_lt_3p5A": 0,
+        "inward_angle_deg": 10.94
+      },
+      "9EOZ": {
+        "ogg1_heavy_atoms": 2265,
+        "histone_heavy_atoms": 5936,
+        "altloc_atoms_total": 0,
+        "occupancy_range": [
+          1.0,
+          1.0
+        ],
+        "min_ogg1_histone_dist_A": 8.246,
+        "clashes_lt_2p5A": 0,
+        "contacts_lt_3p5A": 0,
+        "inward_angle_deg": 18.15
+      }
+    },
+    "cryo_em_inward_angles_deg": {
+      "8VWT": 17.84,
+      "8VWV": 10.94,
+      "9EOZ": 18.15
+    },
+    "1kx5_altloc_atoms_checked": 0,
+    "n_nucleosome_positions_scanned": 266,
+    "outward_le_60deg_n": 111,
+    "outward_mean_clashes_2p5A": 118.96,
+    "outward_mean_core_clashes_2p5A": 54.24,
+    "outward_core_zero_clash_fraction": 0.3514,
+    "intermediate_60_120deg_n": 61,
+    "intermediate_mean_core_clashes_2p5A": 364.93,
+    "inward_ge_120deg_n": 94,
+    "inward_mean_clashes_2p5A": 830.26,
+    "inward_mean_core_clashes_2p5A": 785.32,
+    "inward_core_nonzero_clash_fraction": 1.0,
+    "mwu_p_inward_vs_outward_clashes": 2.0182278073295488e-30,
+    "mwu_p_inward_vs_outward_core_clashes": 1.1806989689484785e-32,
+    "outward_vs_inward_accessibility_ratio": 8.29
+  },
+  "row3_single_cell_erasure_and_scaling": {
+    "runtime_s": 66.189,
+    "gse218316_n_untreated_cells": 2201,
+    "gse218316_n_H2O2_cells": 2097,
+    "gse218316_total_cells_analyzed": 4298,
+    "gse218316_n_donors": 3,
+    "cv_protocol": "cell_disjoint_5fold_stratified_plus_LODO",
+    "detected_target_genes": [
+      "HMOX1",
+      "NQO1",
+      "TXNRD1",
+      "PRDX1",
+      "NR1D1",
+      "DBP",
+      "GCLC"
+    ],
+    "detected_clock_genes": [
+      "NR1D1",
+      "DBP"
+    ],
+    "absent_below_filter_genes": [
+      "ARNTL",
+      "CLOCK",
+      "CRY1",
+      "CRY2",
+      "PER1",
+      "PER2",
+      "NR1D2",
+      "NPAS2",
+      "OGG1",
+      "MUTYH",
+      "APEX1",
+      "PARP1",
+      "NFE2L2",
+      "GCLM",
+      "SOD1"
+    ],
+    "donor_pseudobulk_consistency": [
+      {
+        "donor": "D1",
+        "n_untreated": 591,
+        "n_H2O2": 528,
+        "TXNRD1_delta_log1p_cp10k": 0.0005,
+        "HMOX1_delta_log1p_cp10k": -0.001
+      },
+      {
+        "donor": "D2",
+        "n_untreated": 642,
+        "n_H2O2": 672,
+        "TXNRD1_delta_log1p_cp10k": 0.0345,
+        "HMOX1_delta_log1p_cp10k": 0.0053
+      },
+      {
+        "donor": "D3",
+        "n_untreated": 968,
+        "n_H2O2": 897,
+        "TXNRD1_delta_log1p_cp10k": 0.0033,
+        "HMOX1_delta_log1p_cp10k": -0.0008
+      }
+    ],
+    "lodo_cv_summary": {
+      "nu_1": {
+        "clock_lodo_mean": 0.5025,
+        "clock_lodo_per_donor": [
+          0.5003,
+          0.5043,
+          0.5029
+        ],
+        "combined_lodo_mean": 0.4997,
+        "combined_lodo_per_donor": [
+          0.497,
+          0.5017,
+          0.5003
+        ]
+      },
+      "nu_500": {
+        "clock_lodo_mean": 0.9641,
+        "clock_lodo_per_donor": [
+          1.0,
+          1.0,
+          0.8923
+        ],
+        "combined_lodo_mean": 0.6785,
+        "combined_lodo_per_donor": [
+          0.636,
+          0.8518,
+          0.5478
+        ]
+      },
+      "nu_1000": {
+        "clock_lodo_mean": 0.9013,
+        "clock_lodo_per_donor": [
+          0.843,
+          0.9909,
+          0.8699
+        ],
+        "combined_lodo_mean": 0.643,
+        "combined_lodo_per_donor": [
+          0.5575,
+          0.8335,
+          0.5379
+        ]
+      }
+    },
+    "mean_detected_clock_gene_zero_erasure": 0.99569,
+    "mean_all10_clock_gene_zero_erasure": 0.99914,
+    "nu1_zero_all_clock_genes_cell_fraction": 0.985,
+    "nu1_clock10_auc": 0.5023,
+    "nu1_combined_auc": 0.5103,
+    "nu1_combined_bits": 0.0108,
+    "nu1000_clock10_auc": 0.9365,
+    "nu1000_clock10_lodo_auc": 0.9013,
+    "nu1000_combined_auc": 0.651,
+    "nu1000_combined_lodo_auc": 0.643,
+    "nu1000_combined_bits": 0.5229,
+    "snr_scaling_slope_log10": 0.6752,
+    "gds3342_bulk_monocyte_n": 24,
+    "gds3342_records_retrieved": 33,
+    "gds3342_significant_probes_p_lt_0p05": [
+      {
+        "gene": "TXNRD1",
+        "probe_id": "201266_at",
+        "log2_fc": 0.6092,
+        "welch_t": 3.014,
+        "df": 21.8,
+        "p_two_sided": 0.006426628925724615
+      },
+      {
+        "gene": "CLOCK",
+        "probe_id": "204980_at",
+        "log2_fc": -0.2605,
+        "welch_t": -2.899,
+        "df": 21.9,
+        "p_two_sided": 0.008349226364984894
+      }
+    ]
+  },
+  "row4_hepg2_mpra_hole_sinks": {
+    "runtime_s": 109.8826,
+    "library_qc": {
+      "LDLR": {
+        "n_high_conf_barcodes": 53151,
+        "n_wt_barcodes": 10852,
+        "n_fitted_snvs": 956,
+        "pearson_r_ridge_vs_pure_single_mutant_tags": 0.9632
+      },
+      "LDLR.2": {
+        "n_high_conf_barcodes": 118698,
+        "n_wt_barcodes": 51527,
+        "n_fitted_snvs": 955,
+        "pearson_r_ridge_vs_pure_single_mutant_tags": 0.9901
+      },
+      "F9": {
+        "n_high_conf_barcodes": 113783,
+        "n_wt_barcodes": 51843,
+        "n_fitted_snvs": 907,
+        "pearson_r_ridge_vs_pure_single_mutant_tags": 0.8395
+      },
+      "PKLR_48h": {
+        "n_high_conf_barcodes": 55291,
+        "n_wt_barcodes": 13816,
+        "n_fitted_snvs": 1410,
+        "pearson_r_ridge_vs_pure_single_mutant_tags": 0.8727
+      }
+    },
+    "ldlr_vs_ldlr2_snv_pearson_r": 0.9794,
+    "n_unique_promoter_8oxoG_transversions": 541,
+    "n_isolated_G1_8oxoG_transversions": 264,
+    "n_G2_8oxoG_transversions": 138,
+    "n_G3_8oxoG_transversions": 87,
+    "n_G4plus_8oxoG_transversions": 48,
+    "n_G3plus_all_8oxoG_transversions": 135,
+    "n_F9_G3plus_8oxoG_transversions": 21,
+    "n_SP1_Ebox_G3plus_sink_transversions": 22,
+    "mean_abs_log2_G1": 0.3075,
+    "mean_abs_log2_G2": 0.2913,
+    "mean_abs_log2_G3": 0.4026,
+    "mean_abs_log2_G4plus": 0.8057,
+    "mean_abs_log2_G3plus_all": 0.5459,
+    "mean_abs_log2_F9_G3plus": 0.0946,
+    "mean_abs_log2_SP1_G3plus_sinks": 1.291,
+    "pooled_SP1_sink_vs_G1_fold_ratio": 4.198,
+    "mwu_p_G2_vs_G1_two_sided": 0.27478788892974615,
+    "mwu_p_G3_vs_G1_two_sided": 0.11062805659032375,
+    "mwu_p_G4plus_vs_G1_two_sided": 8.487861765427201e-08,
+    "mwu_p_G3plus_vs_G1": 5.643692939559384e-05,
+    "mwu_p_F9_G3plus_vs_G1_two_sided": 0.017008580305316514,
+    "mwu_p_SP1_G3plus_vs_G1": 2.3546813301099674e-09,
+    "ldlr_SP1_sink_mean_abs_log2": 2.0838,
+    "ldlr_G1_mean_abs_log2": 0.2877,
+    "ldlr_SP1_sink_vs_G1_fold_ratio": 7.244,
+    "ldlr_mwu_p_SP1_sink_vs_G1": 0.0003528767730925628,
+    "ldlr_frac_gt30pct_reporter_loss_SP1_sinks": 0.75,
+    "ldlr_frac_gt30pct_reporter_loss_G1": 0.1319,
+    "frac_gt30pct_reporter_loss_SP1_sinks": 0.8182,
+    "frac_gt30pct_reporter_loss_G1": 0.125,
+    "ldlr_sre1_peak": {
+      "pos": 190,
+      "log2": -2.518
+    },
+    "ldlr_sp1_peak": {
+      "pos": 204,
+      "log2": -3.4297
+    }
+  },
+  "row5_ecoli_go_and_beamline": {
+    "runtime_s": 12.1595,
+    "wt_GC_to_TA_fraction": 0.1627,
+    "mmr_GC_to_TA_fraction": 0.0118,
+    "mutY_GC_to_TA_fraction": 0.9141,
+    "mutMmutY_GC_to_TA_fraction": 0.9862,
+    "mutMmutY_total_SNVs_parsed": 4282,
+    "mutMmutY_vs_MMR_fraction_ratio": 83.61,
+    "mutMmutY_vs_WT_fraction_ratio": 6.06,
+    "strain_unit_mwu_p_GO_vs_WT_MMR": 0.016666666666666666,
+    "go_deficient_G_run_normalized": {
+      "G1": {
+        "observed_GC_to_TA": 2782,
+        "genome_GC_bp_opportunity": 1368127,
+        "per_bp_relative_to_G1": 1.0
+      },
+      "G2": {
+        "observed_GC_to_TA": 1242,
+        "genome_GC_bp_opportunity": 737688,
+        "per_bp_relative_to_G1": 0.828
+      },
+      "G3": {
+        "observed_GC_to_TA": 542,
+        "genome_GC_bp_opportunity": 189288,
+        "per_bp_relative_to_G1": 1.4081
+      },
+      "G4": {
+        "observed_GC_to_TA": 148,
+        "genome_GC_bp_opportunity": 48336,
+        "per_bp_relative_to_G1": 1.5058
+      },
+      "G5+": {
+        "observed_GC_to_TA": 41,
+        "genome_GC_bp_opportunity": 13038,
+        "per_bp_relative_to_G1": 1.5465
+      }
+    },
+    "go_deficient_3prime_flank_normalized": {
+      "5prime_G_G_3prime": {
+        "observed_GC_to_TA": 1156,
+        "genome_opportunity": 541810,
+        "enrichment_over_genome_mean": 1.0574
+      },
+      "5prime_G_A_3prime": {
+        "observed_GC_to_TA": 1176,
+        "genome_opportunity": 534535,
+        "enrichment_over_genome_mean": 1.0903
+      },
+      "5prime_G_C_3prime": {
+        "observed_GC_to_TA": 2149,
+        "genome_opportunity": 767862,
+        "enrichment_over_genome_mean": 1.387
+      },
+      "5prime_G_T_3prime": {
+        "observed_GC_to_TA": 274,
+        "genome_opportunity": 512270,
+        "enrichment_over_genome_mean": 0.2651
+      }
+    },
+    "row5b_beamline_protocol": {
+      "status": "UNEXECUTED_PHYSICAL_EXPERIMENT",
+      "reason_not_in_public_archives": "No published dataset combines helicity-reversed (L <-> -L) 100-500 eV polarized electrons or surface mu+ across tilt angles spanning psi_crit = 26.9 deg on SAM-oriented D/L-GGGG DNA or Delta_mutM_Delta_mutY_Delta_mutS Duplex-Seq.",
+      "critical_pitch_cone_deg": 26.9,
+      "recommended_tilt_pair_deg": [
+        15.0,
+        45.0
+      ],
+      "beam_polarization_abs_L": 0.8,
+      "target_asymmetry_threshold": 0.001,
+      "eta_oxog_per_electron": 3e-05,
+      "min_lesion_events_per_helicity_arm_3sigma": 9000000,
+      "standard_GaAs_e_gun_current_nA": 10.0,
+      "estimated_irradiation_seconds_per_arm": 4.81
+    }
+  }
+}

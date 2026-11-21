@@ -21,7 +21,7 @@ Code, derived datasets, and publication figures accompanying the manuscript:
   8. `08_table6_empirical_wetlab_validation.py`: Cross-cohort wet-lab empirical validations across *E. coli* thermal/RF MA, cryo-EM/X-ray nucleosomes (`8VWT`, `8VWV`, `9EOZ`, `1KX5`), `GSE218316` primary human islets, `GDS3342` human monocytes, `GSE126550` HepG2 MPRA, and 14 *E. coli* repair-knockout WGS MA cohorts (Module 6).
   9. `09_generate_fig6.py`: Generates publication Figure 6 (`assets/fig6_*`).
 - `data/` — All 35 derived CSV/JSON summary tables plus `pipeline_execution_audit.json` containing SHA-256 verification checksums.
-- `assets/` — Publication Figures 1–6 in both 300-dpi `.png` and vector `.svg` formats.
+- `assets/` — Publication Figures 1–6 in vector `.svg` format (plus `fig1` and `fig3` 300-dpi `.png`; 300-dpi rasters for Figures 2, 4, 5, and 6 are deterministically regenerated from `data/` by `scripts/05`, `07`, and `09`).
 - `PRE_SUBMISSION_AUDIT_REPORT.md` — Independent clean-room verification and pre-submission audit summary.
 
 ## Public Experimental Datasets Analyzed

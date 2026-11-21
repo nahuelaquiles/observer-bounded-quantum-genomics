@@ -1,0 +1,15 @@
+cohort,repair_class,n_strain_groups,total_snvs,ref_fasta_match_pct,GC_to_TA_count,GC_to_TA_fraction,AT_to_CG_fraction,transition_fraction
+WT_MG1655_Foster2015,wild_type,2,523,100.0,75,0.1434,0.13958,0.57935
+WT_ED1a_Foster2015,wild_type,1,407,100.0,58,0.14251,0.13268,0.62899
+WT_IAI1_Foster2015,wild_type,1,422,100.0,87,0.20616,0.14455,0.51659
+mutY_Foster2015,GO_glycosylase_deficient,1,485,100.0,443,0.9134,0.02474,0.05155
+mutY_SaneAgashe,GO_glycosylase_deficient,1,97,100.0,89,0.91753,0.01031,0.06186
+mutM_mutY_Foster2015,GO_double_deficient,1,4282,99.91,4223,0.98622,0.00234,0.0056
+mutT_Foster2015,dGTP_sanitizer_deficient,1,2234,100.0,2,0.0009,0.99552,0.00269
+mutS_SaneAgashe,MMR_deficient,1,768,100.0,7,0.00911,0.00391,0.96875
+mutL_SaneAgashe,MMR_deficient,1,875,100.0,14,0.016,0.01029,0.95771
+mutH_SaneAgashe,MMR_deficient,1,985,100.0,10,0.01015,0.00508,0.97056
+nth_nei_Foster2015,pyrimidine_BER_deficient,1,209,100.0,10,0.04785,0.00957,0.88995
+xthA_nfo_Foster2015,AP_endonuclease_deficient,1,339,100.0,47,0.13864,0.16519,0.50147
+uvrA_Foster2015,NER_deficient,1,316,100.0,60,0.18987,0.14873,0.52848
+dnaQ_SaneAgashe,proofreading_deficient,1,2626,100.0,392,0.14928,0.09177,0.60472

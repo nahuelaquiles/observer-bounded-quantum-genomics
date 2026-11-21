@@ -1,0 +1,99 @@
+{
+  "runtime_seconds": 0.27388974699988466,
+  "temperature_K": 310.15,
+  "kBT_eV": 0.02672665911254327,
+  "spectral_gap_s_inv": 10109877135313.5,
+  "tau_mem_fs": 98.91317041895887,
+  "trace_conservation_err": 0.001033782958984375,
+  "gibbs_stationary_fro_err": 1.6056053676340845e-11,
+  "eigenstate_gibbs_populations": {
+    "E0_ground": 0.9999998523408644,
+    "E1_tautomer_eigenstate": 1.4601383261440485e-07,
+    "E2_anionic_eigenstate": 1.6453029917052345e-09
+  },
+  "bare_basis_populations_with_tunnel_dressing": {
+    "WC_bare": 0.9990706368465377,
+    "tautomer_bare": 0.0008096859767001895,
+    "anionic_bare": 0.0001196771928180359
+  },
+  "k01_effective_s_inv": 190109002.34127045,
+  "moment_annihilation_norms": {
+    "m=0": 0.0,
+    "m=1": 0.0,
+    "m=2": 0.0,
+    "m=3": 7.003246302821999e+38,
+    "m=4": 3.262056377190693e+53,
+    "m=5": 9.958822092198259e+68
+  },
+  "m3_identity_rel_err": 2.6540883574356932e-14,
+  "resolvent_error_at_1ps": 0.0024197753985335316,
+  "resolvent_error_at_1ns": 2.8792662250423644e-11,
+  "ambient_subgap_1uVm_reference": {
+    "E0_V_per_m": 1e-06,
+    "lambda_eV": 1e-16,
+    "thermo_ceiling_dmu_over_mu": 7.483164998581385e-15,
+    "dc_gibbs_dmu_over_mu": 3.6256536970163105e-15,
+    "ac_subgap_rectified_dmu_over_mu": 1.1291367602966074e-28,
+    "ac_thz_rectified_dmu_over_mu": 5.707378381325978e-29,
+    "drazin_floquet_subgap_dmu_over_mu": 1.2628757969774461e-26,
+    "drazin_floquet_thz_dmu_over_mu": 1.263803114226377e-26,
+    "adiabatic_kms_ac_dmu_over_mu": 3.484086422762612e-30,
+    "metabolic_thermal_floor_50mK": 0.0025333945666646636,
+    "cohort_poisson_snr_ac_subgap": 3.57064395236086e-26,
+    "cohort_poisson_snr_dc": 1.1465323689581574e-12
+  },
+  "approx_crossover_E0_V_per_m": 100000.0,
+  "metabolic_50mK_noise_floor": 0.0025333945666646636,
+  "guanine_hole_trapping": [
+    {
+      "g_run_length": 1,
+      "homo_sink_eV": 0.0,
+      "mean_phi_8oxoG_per_tract_G": 0.0015360026608518807,
+      "peak_phi_8oxoG_in_tract": 0.0015360026608518807,
+      "total_window_8oxoG_yield": 0.010748400617378653,
+      "tract_capture_fraction": 0.14290522985981563,
+      "fiveprime_G_fraction": 1.0,
+      "fold_enrichment_per_G_vs_G1": 1.0
+    },
+    {
+      "g_run_length": 2,
+      "homo_sink_eV": -0.30901438774457846,
+      "mean_phi_8oxoG_per_tract_G": 0.016628673396347753,
+      "peak_phi_8oxoG_in_tract": 0.03324772571898665,
+      "total_window_8oxoG_yield": 0.04026474787814602,
+      "tract_capture_fraction": 0.8259668455727789,
+      "fiveprime_G_fraction": 0.9997107083205155,
+      "fold_enrichment_per_G_vs_G1": 10.825940488361748
+    },
+    {
+      "g_run_length": 3,
+      "homo_sink_eV": -0.5148669244186761,
+      "mean_phi_8oxoG_per_tract_G": 0.02366128413111264,
+      "peak_phi_8oxoG_in_tract": 0.06150490085886186,
+      "total_window_8oxoG_yield": 0.07748854902907978,
+      "tract_capture_fraction": 0.9160560274099235,
+      "fiveprime_G_fraction": 0.1335343491835837,
+      "fold_enrichment_per_G_vs_G1": 15.404455170663494
+    },
+    {
+      "g_run_length": 4,
+      "homo_sink_eV": -0.6059408891598955,
+      "mean_phi_8oxoG_per_tract_G": 0.0275727259772417,
+      "peak_phi_8oxoG_in_tract": 0.0915756793543199,
+      "total_window_8oxoG_yield": 0.11529768634314187,
+      "tract_capture_fraction": 0.9565751699537648,
+      "fiveprime_G_fraction": 0.04169550733609111,
+      "fold_enrichment_per_G_vs_G1": 17.950962377857877
+    },
+    {
+      "g_run_length": 5,
+      "homo_sink_eV": -0.6624050847338337,
+      "mean_phi_8oxoG_per_tract_G": 0.02556850647080483,
+      "peak_phi_8oxoG_in_tract": 0.08261414330684672,
+      "total_window_8oxoG_yield": 0.13229841124051134,
+      "tract_capture_fraction": 0.966319483017928,
+      "fiveprime_G_fraction": 0.015370882136317652,
+      "fold_enrichment_per_G_vs_G1": 16.64613423040837
+    }
+  ]
+}
