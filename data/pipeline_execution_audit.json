@@ -400,15 +400,15 @@
     },
     {
       "relative_path": "response_to_editorial_review.pdf",
-      "size_bytes": 500803,
-      "sha256_prefix": "1a21a30e36f1925a",
-      "sha256": "1a21a30e36f1925a63b8337fd090d8fce2086645c9152108b40185081f681da6"
+      "size_bytes": 474048,
+      "sha256_prefix": "de77b4c4bc06c276",
+      "sha256": "de77b4c4bc06c276f1b48a89278cd2895f8b5c042d97aedfa54358171a681808"
     },
     {
       "relative_path": "response_to_editorial_review.tex",
-      "size_bytes": 25887,
-      "sha256_prefix": "4d7274df084a15fe",
-      "sha256": "4d7274df084a15fe3251ad1bfd8a84f01c52009ea8b06567b31a3b08dda4d834"
+      "size_bytes": 25931,
+      "sha256_prefix": "8b655d2d0bacbdd2",
+      "sha256": "8b655d2d0bacbdd22d7f4b1b8cff1aa12bdcc6bf8198daa64a8b3096f3129404"
     },
     {
       "relative_path": "science_advances_latex_source.zip",
