@@ -34,7 +34,7 @@ Following both multi-round biophysics editorial review and the Round-1 (`reprodu
   - Short Title: `44` chars (`<= 50`) — **PASS**
   - Teaser: `119` chars (`<= 125`, no `"We"`, ends with period) — **PASS**
   - Abstract: `145` words / `148` math-expanded tokens (`<= 150`, single paragraph, zero citations) — **PASS**
-  - Main Body Length: `6,871` prose words / `11,500` math-inclusive tokens before `References and Notes` (`< 15,000` limit) — **PASS**
+  - Main Body Length: `7,015` prose words / `11,644` math-inclusive tokens before `References and Notes` (`< 15,000` limit) — **PASS**
   - Display Items: `6` figures + `4` tables (`= 10`, at the `<= 10` limit) — **PASS**
   - References: `49` sequential references (`(1)`–`(49)`), `0` missing/uncited keys, `0` `et al.` truncations — **PASS**
   - Solo-Author Voice & Legacy Terms: `0` occurrences of `we/our/ours/us/ourselves`; `0` occurrences of `34 GHz`, `CMB`, `GDS3342`, `EFO:0001187`, or `Theorem 4` — **PASS**
@@ -50,15 +50,15 @@ Following both multi-round biophysics editorial review and the Round-1 (`reprodu
 
 | Deliverable File | Pages | Size (Bytes / MB) | SHA-256 Prefix |
 | :--- | :---: | :---: | :--- |
-| `observer_bounded_dna_combined_submission.pdf` | 34 | `3,493,302` (`3.49 MB`) | `65e34e48ebcdc8a3` |
-| `observer_bounded_dna_evolution.pdf` | 28 | `2,787,847` (`2.79 MB`) | `21455364ab8d284c` |
+| `observer_bounded_dna_combined_submission.pdf` | 34 | `3,494,245` (`3.49 MB`) | `039b933ed70be08d` |
+| `observer_bounded_dna_evolution.pdf` | 28 | `2,788,852` (`2.79 MB`) | `fdcc78cbaf7e2d65` |
 | `observer_bounded_dna_supplementary_materials.pdf` | 6 | `538,152` (`0.54 MB`) | `2f73fec07491ef5e` |
-| `cover_letter_science_advances.pdf` | 2 | `236,780` (`0.24 MB`) | `2793c8c51dacfd5d` |
+| `cover_letter_science_advances.pdf` | 2 | `237,537` (`0.24 MB`) | `a524c6453cbfa3bb` |
 | `response_to_editorial_review.pdf` | 3 | `433,413` (`0.43 MB`) | `d994aa652a017249` |
-| `science_advances_latex_source.zip` | — | `1,831,212` (`1.83 MB`) | `4fa55fcd1e6e9bb9` |
-| `observer_bounded_dna_evolution.tex` | — | `145,100` (`0.15 MB`) | `62eb757bafffa94e` |
+| `science_advances_latex_source.zip` | — | `1,831,647` (`1.83 MB`) | `4ad3d8f8a0c50453` |
+| `observer_bounded_dna_evolution.tex` | — | `146,162` (`0.15 MB`) | `b195ade146c12301` |
 | `observer_bounded_dna_supplementary_materials.tex` | — | `30,263` (`0.03 MB`) | `7c2fce7a24f958a7` |
-| `cover_letter_science_advances.tex` | — | `8,478` (`0.01 MB`) | `86abb36983f188ed` |
+| `cover_letter_science_advances.tex` | — | `9,215` (`0.01 MB`) | `e6c5d625b15f54ec` |
 | `response_to_editorial_review.tex` | — | `15,191` (`0.02 MB`) | `daf1752b6924548b` |
 | `RESPONSE_TO_EDITORIAL_REVIEW.md` | — | `5,949` (`0.01 MB`) | `b0930af827dd9bff` |
 | `requirements.txt` | — | `385` (`<0.01 MB`) | `4e928b736389d122` |

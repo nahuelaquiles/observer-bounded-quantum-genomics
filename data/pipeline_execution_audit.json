@@ -1,21 +1,21 @@
 {
-  "audit_round": "round_2_synchronized",
-  "abstract_pdf_words": 149,
-  "main_prose_words": 6871,
-  "main_math_inclusive_tokens": 11500,
+  "audit_round": "round_2_synchronized_with_unifying_anchors",
+  "abstract_words": 145,
+  "main_prose_words": 7015,
+  "main_math_inclusive_tokens": 11644,
   "reference_count": 49,
   "deliverables": {
     "observer_bounded_dna_combined_submission.pdf": {
-      "bytes": 3493302,
-      "sha256": "65e34e48ebcdc8a313b96417dc271c3624f03bdba8db3bde451b11fb14011409",
-      "sha256_prefix16": "65e34e48ebcdc8a3",
+      "bytes": 3494245,
+      "sha256": "039b933ed70be08daa396e647e16e488b71c2b2cd0bc44b1038551501cc08e4d",
+      "sha256_prefix16": "039b933ed70be08d",
       "pages": 34,
       "unresolved_qmarks": []
     },
     "observer_bounded_dna_evolution.pdf": {
-      "bytes": 2787847,
-      "sha256": "21455364ab8d284c3c3ecfe911f20d034b21a39b3f4a96d2c89f273863c210ff",
-      "sha256_prefix16": "21455364ab8d284c",
+      "bytes": 2788852,
+      "sha256": "fdcc78cbaf7e2d6584f543d33178e090b5905c530a39090957dcb222c28e434b",
+      "sha256_prefix16": "fdcc78cbaf7e2d65",
       "pages": 28,
       "unresolved_qmarks": []
     },
@@ -27,9 +27,9 @@
       "unresolved_qmarks": []
     },
     "cover_letter_science_advances.pdf": {
-      "bytes": 236780,
-      "sha256": "2793c8c51dacfd5dc1f8322367571057232aa202818f0a6c1e0c7ee160bcb0c2",
-      "sha256_prefix16": "2793c8c51dacfd5d",
+      "bytes": 237537,
+      "sha256": "a524c6453cbfa3bbb6dbd452809810029f438350d8b76213006a8635b0534e33",
+      "sha256_prefix16": "a524c6453cbfa3bb",
       "pages": 2,
       "unresolved_qmarks": []
     },
@@ -41,14 +41,14 @@
       "unresolved_qmarks": []
     },
     "science_advances_latex_source.zip": {
-      "bytes": 1831212,
-      "sha256": "4fa55fcd1e6e9bb97a2274ccf0d0f1816f5e67ed992253c89e62a0451491ef3d",
-      "sha256_prefix16": "4fa55fcd1e6e9bb9"
+      "bytes": 1831647,
+      "sha256": "4ad3d8f8a0c50453cdbaaf3782e10db963ca330974c9444b960812a9d92e768d",
+      "sha256_prefix16": "4ad3d8f8a0c50453"
     },
     "observer_bounded_dna_evolution.tex": {
-      "bytes": 145100,
-      "sha256": "62eb757bafffa94e5f77a5b4875f6e6ea08b4ba3e0e25dd3b7ed0b5b1d8db568",
-      "sha256_prefix16": "62eb757bafffa94e"
+      "bytes": 146162,
+      "sha256": "b195ade146c123014ca10661d401e12b5361e607a6490b93073a83820a48627b",
+      "sha256_prefix16": "b195ade146c12301"
     },
     "observer_bounded_dna_supplementary_materials.tex": {
       "bytes": 30263,
@@ -56,9 +56,9 @@
       "sha256_prefix16": "7c2fce7a24f958a7"
     },
     "cover_letter_science_advances.tex": {
-      "bytes": 8478,
-      "sha256": "86abb36983f188ed6586494f5e56822e7a9bafa69fba106bca803c218c8b3fb8",
-      "sha256_prefix16": "86abb36983f188ed"
+      "bytes": 9215,
+      "sha256": "e6c5d625b15f54ec28aabd005f84627f7c1e127668be3e9e6be0940f5b26592d",
+      "sha256_prefix16": "e6c5d625b15f54ec"
     },
     "response_to_editorial_review.tex": {
       "bytes": 15191,
